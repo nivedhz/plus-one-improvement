@@ -11,6 +11,13 @@ export async function findUserByEmail(email: string): Promise<User | null> {
   return db.user.findUnique({ where: { email: email.toLowerCase() } });
 }
 
+export async function revokeUserSessions(userId: string): Promise<void> {
+  await db.user.update({
+    where: { id: userId },
+    data: { tokenVersion: { increment: 1 } },
+  });
+}
+
 export async function createUser(input: {
   name: string;
   email: string;
