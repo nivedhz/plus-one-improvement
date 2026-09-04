@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
-import { ArrowLeft, ArrowRight, FileText, Layers, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, Layers, Play } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Navbar from "../../components/Navbar";
 import SubjectIcon from "../../components/SubjectIcon";
 import { getSession } from "../../lib/auth";
 import { getUserProgressMap } from "../../lib/progress";
-import {
-  getSubject,
-  totalLessons,
-  totalQuestions,
-} from "../../lib/subjects";
+import { getSubject } from "../../lib/subjects";
+import { chapterVideos, subjectVideoCount } from "../../lib/videos";
 
 export async function generateMetadata({
   params,
@@ -84,8 +81,7 @@ export default async function SubjectPage({
           <div className="mt-6 flex flex-wrap gap-2.5 text-xs font-medium">
             {[
               { icon: Layers, text: `${subject.chapters.length} chapters` },
-              { icon: Play, text: `${totalLessons(subject)} lessons` },
-              { icon: FileText, text: `${totalQuestions(subject)} prev. questions` },
+              { icon: Play, text: `${subjectVideoCount(subject.slug)} video lessons` },
             ].map((s) => (
               <span
                 key={s.text}
@@ -114,7 +110,7 @@ export default async function SubjectPage({
                         {c.title}
                       </span>
                       <span className="mt-0.5 block text-xs text-slate-500 dark:text-neutral-400">
-                        {c.lessons} lessons · {c.questions} prev. questions
+                        {chapterVideos(subject.slug, c.slug).length} videos
                       </span>
                       <span className="mt-2 block h-1 overflow-hidden rounded-full bg-slate-200/80 dark:bg-neutral-800">
                         <span

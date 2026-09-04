@@ -5,7 +5,6 @@ import {
   Bot,
   CheckCircle2,
   ExternalLink,
-  FileText,
   Play,
 } from "lucide-react";
 import Link from "next/link";
@@ -95,14 +94,12 @@ export default async function ChapterPage({
             {chapter.title}
           </h1>
           <div className="mt-4 flex flex-wrap gap-2.5 text-xs font-medium">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/70 px-3.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900/70">
-              <Play size={13} aria-hidden />
-              {chapter.lessons} lessons
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/70 px-3.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900/70">
-              <FileText size={13} aria-hidden />
-              {chapter.questions} prev. questions
-            </span>
+            {videos.length > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/70 px-3.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900/70">
+                <Play size={13} aria-hidden />
+                {videos.length} video lessons
+              </span>
+            )}
             <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/70 px-3.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900/70">
               {progress}% complete
             </span>
