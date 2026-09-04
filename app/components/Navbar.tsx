@@ -4,14 +4,20 @@ import { getSession } from "../lib/auth";
 import LogoutButton from "./LogoutButton";
 import ThemeToggle from "./ThemeToggle";
 
-const LINKS = [
+const VISITOR_LINKS = [
   { href: "/#why", label: "Why" },
   { href: "/#resources", label: "Resources" },
   { href: "/#how", label: "How it works" },
 ];
 
+const MEMBER_LINKS = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/subjects", label: "Subjects" },
+];
+
 export default async function Navbar() {
   const user = await getSession();
+  const links = user ? MEMBER_LINKS : VISITOR_LINKS;
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-[#fafaf8]/85 backdrop-blur dark:border-neutral-800/70 dark:bg-[#111]/85">
@@ -28,7 +34,7 @@ export default async function Navbar() {
           aria-label="Primary"
           className="hidden items-center gap-7 text-sm text-slate-600 sm:flex dark:text-neutral-300"
         >
-          {LINKS.map((l) => (
+          {links.map((l) => (
             <a
               key={l.href}
               href={l.href}
@@ -42,12 +48,6 @@ export default async function Navbar() {
           <ThemeToggle />
           {user ? (
             <>
-              <a
-                href="/dashboard"
-                className="hidden rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:text-slate-950 sm:inline dark:text-neutral-300 dark:hover:text-white"
-              >
-                Dashboard
-              </a>
               <span
                 aria-hidden
                 className="hidden h-9 w-9 items-center justify-center rounded-full bg-emerald-600/15 text-sm font-bold text-emerald-700 sm:inline-flex dark:bg-indigo-500/15 dark:text-indigo-300"

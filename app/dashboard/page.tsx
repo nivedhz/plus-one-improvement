@@ -7,30 +7,26 @@ import {
   Layers,
   Play,
 } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import CountdownTimer from "../components/CountdownTimer";
 import Navbar from "../components/Navbar";
 import QuoteRotator from "../components/QuoteRotator";
+import SubjectIcon from "../components/SubjectIcon";
 import { getSession } from "../lib/auth";
 import { EXAM_LABEL } from "../lib/site";
+import { SUBJECTS, mockProgress } from "../lib/subjects";
 
 export const metadata: Metadata = {
   title: "Dashboard | improve.",
   description: "Your Plus One improvement study dashboard.",
 };
 
-// TODO: replace every MOCK block below with real progress from the database.
-const MOCK_SUBJECTS = [
-  { name: "Physics", chapters: "12 / 18 chapters", progress: 67 },
-  { name: "Chemistry", chapters: "9 / 16 chapters", progress: 56 },
-  { name: "Mathematics", chapters: "7 / 14 chapters", progress: 50 },
-  { name: "Biology", chapters: "5 / 12 chapters", progress: 42 },
-];
-
+// TODO: replace mock progress with real per-user progress from the database.
 const MOCK_CONTINUE = [
-  { subject: "Physics", title: "Motion in a straight line", progress: 68 },
-  { subject: "Chemistry", title: "Structure of atom", progress: 42 },
-  { subject: "Mathematics", title: "Sets and functions", progress: 81 },
+  { subject: "physics", title: "Motion in a Straight Line", progress: 68 },
+  { subject: "chemistry", title: "Structure of Atom", progress: 42 },
+  { subject: "mathematics", title: "Sets", progress: 81 },
 ];
 
 export default async function DashboardPage() {
@@ -94,7 +90,7 @@ export default async function DashboardPage() {
                 Today&apos;s focus
               </p>
               <h2 id="focus-heading" className="mt-3 text-2xl font-bold tracking-tight">
-                Motion in a straight line
+                Motion in a Straight Line
               </h2>
               <p className="mt-1 text-sm text-white/60">
                 Physics · Chapter 02 · 25 min
@@ -113,8 +109,8 @@ export default async function DashboardPage() {
                 />
               </div>
               <p className="mt-2 text-xs text-white/60">68% complete</p>
-              <a
-                href="#continue"
+              <Link
+                href="/subjects/physics/motion-in-a-straight-line"
                 className="group mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-emerald-500 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-400 dark:bg-indigo-500 dark:hover:bg-indigo-400"
               >
                 <Play size={15} aria-hidden />
@@ -124,41 +120,54 @@ export default async function DashboardPage() {
                   aria-hidden
                   className="transition-transform group-hover:translate-x-0.5"
                 />
-              </a>
+              </Link>
             </section>
           </div>
 
           <section aria-labelledby="subjects-heading" className="mt-10">
-            <h2
-              id="subjects-heading"
-              className="inline-flex items-center gap-2 text-lg font-bold tracking-tight"
-            >
-              <Layers size={18} aria-hidden />
-              Subjects
-            </h2>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              {MOCK_SUBJECTS.map((s) => (
-                <article
-                  key={s.name}
-                  className="rounded-3xl border border-slate-200/80 bg-white/80 p-5 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70"
-                >
-                  <div className="flex items-baseline justify-between">
-                    <h3 className="font-semibold">{s.name}</h3>
-                    <span className="text-sm font-bold tabular-nums">
-                      {s.progress}%
+            <div className="flex items-end justify-between gap-4">
+              <h2
+                id="subjects-heading"
+                className="inline-flex items-center gap-2 text-lg font-bold tracking-tight"
+              >
+                <Layers size={18} aria-hidden />
+                Subjects
+              </h2>
+              <Link
+                href="/subjects"
+                className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white"
+              >
+                View all
+                <ArrowRight size={15} aria-hidden />
+              </Link>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {SUBJECTS.map((s) => {
+                const progress = mockProgress(s.slug);
+                return (
+                  <Link
+                    key={s.slug}
+                    href={`/subjects/${s.slug}`}
+                    className="group rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70"
+                  >
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+                      <SubjectIcon slug={s.slug} size={18} />
                     </span>
-                  </div>
-                  <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
-                    {s.chapters}
-                  </p>
-                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-neutral-800">
-                    <div
-                      className="h-full rounded-full bg-emerald-500 dark:bg-indigo-500"
-                      style={{ width: `${s.progress}%` }}
-                    />
-                  </div>
-                </article>
-              ))}
+                    <span className="mt-3 block truncate text-sm font-semibold">
+                      {s.name}
+                    </span>
+                    <span className="mt-1 block text-xs tabular-nums text-slate-500 dark:text-neutral-400">
+                      {s.chapters.length} chapters · {progress}%
+                    </span>
+                    <span className="mt-2 block h-1 overflow-hidden rounded-full bg-slate-200/80 dark:bg-neutral-800">
+                      <span
+                        className="block h-full rounded-full bg-emerald-500 dark:bg-indigo-500"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </span>
+                  </Link>
+                );
+              })}
             </div>
           </section>
 
