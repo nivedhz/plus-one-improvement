@@ -11,3 +11,10 @@
 - Pushing: push `main` first and keep it free of unreviewed feats, then push feature branches oldest-first.
 - PRs: one PR per branch against `main`, opened oldest-first (stacked). Merge in PR-number order — once an earlier PR merges, later diffs narrow automatically and nothing conflicts.
 - Always return the PR URLs when done.
+
+## Local dev and verification
+
+- Never kill the user's running dev server with broad patterns. If a restart is required (new `.env` values, regenerated Prisma client), kill only the exact `next dev` PID and start it again immediately.
+- Restart `npm run dev` after adding or changing `.env` values — they load at boot only.
+- Verify auth/backend changes live with curl (sign-up → login → me → logout → replay old token), then delete test users/rows from Postgres.
+- Leave the dev database free of test rows when done.
