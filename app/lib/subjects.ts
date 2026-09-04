@@ -48,7 +48,9 @@ export const SUBJECTS: Subject[] = [
       ch("mechanical-properties-of-fluids", "Mechanical Properties of Fluids", 9, ["Bernoulli's principle", "Viscosity", "Surface tension"], 11),
       ch("thermal-properties-of-matter", "Thermal Properties of Matter", 8, ["Heat transfer modes", "Newton's law of cooling", "Thermal expansion"], 10),
       ch("thermodynamics", "Thermodynamics", 9, ["Laws of thermodynamics", "Carnot engine", "Entropy basics"], 12),
-      ch("oscillations-and-waves", "Oscillations and Waves", 11, ["SHM equations", "Pendulums", "Wave speed and superposition"], 14),
+      ch("kinetic-theory", "Kinetic Theory", 7, ["Ideal gas laws", "Temperature interpretation", "Degrees of freedom"], 9),
+      ch("oscillations", "Oscillations", 7, ["SHM equations", "Pendulums", "Damped oscillations"], 9),
+      ch("waves", "Waves", 7, ["Wave speed", "Superposition", "Standing waves"], 9),
     ],
   },
   {
