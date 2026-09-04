@@ -5,11 +5,36 @@ import {
   setSessionCookie,
   verifyPassword,
 } from "../../../lib/auth";
+import {
+  clientIp,
+  isRateLimitEnabled,
+  rateLimit,
+} from "../../../lib/rate-limit";
 import { findUserByEmail, toPublicUser } from "../../../lib/users";
 
 export const runtime = "nodejs";
 
+// 10 attempts per 10 minutes per IP — slows password guessing to a crawl.
+const LOGIN_LIMIT = { max: 10, windowMs: 10 * 60 * 1000 };
+
 export async function POST(req: Request) {
+  if (isRateLimitEnabled()) {
+    const limit = rateLimit(
+      `login:${clientIp(req)}`,
+      LOGIN_LIMIT.max,
+      LOGIN_LIMIT.windowMs,
+    );
+    if (!limit.ok) {
+      return NextResponse.json(
+        { error: "Too many attempts. Please try again later." },
+        {
+          status: 429,
+          headers: { "Retry-After": String(limit.retryAfterSec) },
+        },
+      );
+    }
+  }
+
   let body: unknown;
   try {
     body = await req.json();
@@ -41,6 +66,9 @@ export async function POST(req: Request) {
 
   const publicUser = toPublicUser(user);
   const res = NextResponse.json({ user: publicUser });
-  setSessionCookie(res, await createSessionToken(publicUser));
+  setSessionCookie(
+    res,
+    await createSessionToken({ ...publicUser, tokenVersion: user.tokenVersion }),
+  );
   return res;
 }

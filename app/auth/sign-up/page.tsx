@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import { ArrowLeft, GraduationCap } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import AuthForm from "../../components/AuthForm";
+import { getSession } from "../../lib/auth";
 
 export const metadata: Metadata = {
   title: "Create account | improve.",
   description: "Create your free improve. account and start October prep.",
 };
 
-export default function SignUpPage() {
+export default async function SignUpPage() {
+  if (await getSession()) redirect("/");
   return (
     <div className="relative flex min-h-screen flex-col overflow-clip">
       <div aria-hidden className="backdrop-mesh absolute inset-0" />
