@@ -12,10 +12,12 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Navbar from "../../../components/Navbar";
 import ProgressUpdater from "../../../components/ProgressUpdater";
+import VideoFacade from "../../../components/VideoFacade";
 import { getSession } from "../../../lib/auth";
 import { getUserProgressMap } from "../../../lib/progress";
 import { PARTNERS } from "../../../lib/site";
 import { getChapter, getSubject } from "../../../lib/subjects";
+import { chapterVideos } from "../../../lib/videos";
 
 type Params = { subject: string; chapter: string };
 
@@ -47,6 +49,7 @@ export default async function ChapterPage({
 
   const progressMap = await getUserProgressMap(session.id);
   const progress = progressMap[`${subject.slug}:${chapter.slug}`] ?? 0;
+  const videos = chapterVideos(subject.slug, chapter.slug);
   const index = subject.chapters.findIndex((c) => c.slug === chapter.slug);
   const prev = subject.chapters[index - 1];
   const next = subject.chapters[index + 1];
@@ -188,6 +191,23 @@ export default async function ChapterPage({
               </section>
             </div>
           </div>
+
+          {videos.length > 0 && (
+            <section aria-labelledby="videos-heading" className="mt-8">
+              <h2 id="videos-heading" className="text-lg font-bold tracking-tight">
+                Video lessons
+              </h2>
+              <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
+                Hand-picked video lessons — the creators keep the views, you
+                keep the context.
+              </p>
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                {videos.map((video) => (
+                  <VideoFacade key={video.youtubeId} video={video} />
+                ))}
+              </div>
+            </section>
+          )}
 
           <nav
             aria-label="Chapter navigation"
