@@ -97,32 +97,50 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
     ],
   },
   chemistry: {
+    "some-basic-concepts": [
+      v("yI8CkASrpXY", "Plus One Chemistry | Chapter 1 Some Basic Concepts Of Chemistry Summary", "Eduport"),
+      v("QNiZafNKdtk", "Plus One Chemistry | Chapter 1 - Some Basic Concepts of Chemistry | Full Chapter", "Exam Winner"),
+      v("EoEJKMpEKd0", "Plus One Chemistry | Chapter 1 Some Basic Concepts Of Chemistry - Full Chapter Revision", "Xylem"),
+    ],
     "structure-of-atom": [
-      v("b5A9QIAMnfI", "Structure of Atom — Full Chapter", "Xylem"),
-      v("HN7yLa4LzvE", "Structure of Atom — Part 1", "Eduport"),
-      v("qTwxtlwK5U0", "Structure of Atom — Full Chapter One Shot", "Exam Winner"),
+      v("qTwxtlwK5U0", "Plus One Chemistry | Chapter 2 - Structure Of Atom | Full Chapter Oneshot", "Exam Winner"),
+      v("Ji_a1YfttNI", "Plus One Improvement Exam - Chemistry - Structure of Atom", "Xylem Plus Two"),
+      v("O0ouJtHZ79A", "Plus One Chemistry | Structure of Atom Summary", "Eduport"),
     ],
     "classification-of-elements": [
-      v("yXEdN0UjFjg", "Classification of Elements — Full Chapter Revision", "Xylem"),
+      v("rYd5NqDr9w4", "Plus One Chemistry | Classification Of Elements And Periodicity In Properties | Oneshot", "Exam Winner"),
+      v("XymTwLcE93c", "Classification of Elements and Periodicity in Properties in 22 Minutes", "Eduport"),
+      v("9uyWKl3D8xg", "Plus One Chemistry | Classification of Elements & Periodicity in Properties | Full Chapter Revision", "Xylem"),
     ],
     "chemical-bonding": [
-      v("GW33EhK7-FU", "Chemical Bonding and Molecular Structure", "Exam Winner"),
+      v("r8uW4yjkgMA", "Plus One Chemistry | Chemical Bonding and Molecular Structure | Full Chapter", "Exam Winner"),
+      v("o3BObQg1BoM", "Plus One Chemistry | Chemical Bonding & Molecular Structure - Full Chapter Revision", "Xylem"),
+      v("5h81iAsfjeA", "Plus One Chemistry Chemical Bonding and Molecular Structure Chapter 4 Christmas Exam 2025", "Eduport"),
     ],
     thermodynamics: [
-      v("0U07F8Akrbg", "Thermodynamics — Full Chapter Revision", "Xylem"),
-      v("gqtNFUR0M18", "Thermodynamics — Full Chapter", "Exam Winner"),
+      v("VOIQM5yUlFU", "Plus One Chemistry | Thermodynamics | Full Chapter", "Exam Winner"),
+      v("0U07F8Akrbg", "Plus One Chemistry |Thermodynamics | Full Chapter Revision", "Xylem"),
+      v("WG9ErGYG_e8", "Thermodynamics in 35 Minutes | Plus one Chemistry Chapter 5", "Eduport"),
     ],
     equilibrium: [
-      v("_0HnIVmlMg0", "Equilibrium — Full Chapter", "Exam Winner"),
+      v("W8eTVvkPq1I", "Plus One Chemistry | Equilibrium - Full Chapter Revision", "Xylem"),
+      v("kSg5LQiG3cE", "Plus One Chemistry | Equilibrium | Full Chapter", "Exam Winner"),
+      v("1LMShVXOcgs", "Plus One Chemistry Equilibrium Chapter 6 Christmas Exam 2025", "Eduport"),
     ],
     "redox-reactions": [
-      v("AU2oFz2_Vi4", "Redox Reactions — Full Chapter Revision", "Xylem"),
+      v("9KlwOz_5XdE", "Plus One Chemistry | Redox Reactions | Full Chapter", "Exam Winner"),
+      v("zliJClnv6vU", "Redox Reactions in 33 Minutes | Chapter 7", "Eduport"),
+      v("AU2oFz2_Vi4", "Plus One Chemistry: Redox Reactions | Full Chapter Revision", "Xylem"),
     ],
     "organic-chemistry-basics": [
-      v("JaCEgk9GNgk", "Organic Chemistry: Basic Principles and Techniques", "Xylem"),
+      v("J4KoQ-K6uFs", "+1 Chemistry | Organic Chemistry: Some Basic Principles and Techniques | Full Chapter", "Exam Winner"),
+      v("RMULYGp212M", "Plus One Chemistry Organic Chemistry Oneshot | Chapter 8", "Eduport"),
+      v("JaCEgk9GNgk", "Plus One Chemistry - Organic Chemistry : Some Basic Principles and Techniques", "Xylem"),
     ],
     hydrocarbons: [
-      v("2d8RPhWB5I0", "Hydrocarbons", "Xylem"),
+      v("2Xnn6jhQUnw", "+1 Chemistry | Hydrocarbons | Full Chapter", "Exam Winner"),
+      v("2d8RPhWB5I0", "Plus One Chemistry - Hydrocarbons", "Xylem"),
+      v("ce4En671A74", "Plus One Chemistry Hydrocarbons One Shot", "Eduport"),
     ],
   },
   mathematics: {
