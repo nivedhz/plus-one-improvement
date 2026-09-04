@@ -1,13 +1,15 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { Eye, EyeOff, LoaderCircle, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { api, apiErrorMessage } from "../lib/api";
 
 type Mode = "login" | "sign-up";
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-500";
+  "w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-500/20";
 
 export default function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
@@ -18,40 +20,30 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setPending(true);
-    try {
-      const res = await fetch(`/api/auth/${mode}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          isSignUp ? { name, email, password } : { email, password },
-        ),
-      });
-      const data: unknown = await res.json().catch(() => null);
-      if (!res.ok) {
-        const message =
-          typeof data === "object" && data !== null && "error" in data
-            ? String((data as { error: unknown }).error)
-            : "Something went wrong. Please try again.";
-        setError(message);
-        return;
-      }
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const payload = isSignUp ? { name, email, password } : { email, password };
+      const { data } = await api.post(`/auth/${mode}`, payload);
+      return data;
+    },
+    onSuccess: () => {
       router.push("/");
       router.refresh();
-    } catch {
-      setError("Could not reach the server. Check your connection.");
-    } finally {
-      setPending(false);
-    }
+    },
+    onError: (err) => setError(apiErrorMessage(err)),
+  });
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    mutation.mutate();
   }
 
+  const pending = mutation.isPending;
+
   return (
-    <form onSubmit={onSubmit} className="mt-6 space-y-4" noValidate={false}>
+    <form onSubmit={onSubmit} className="mt-6 space-y-4">
       {error && (
         <p
           role="alert"
@@ -138,7 +130,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
       <button
         type="submit"
         disabled={pending}
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70"
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-emerald-500 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-indigo-600 dark:shadow-indigo-600/25 dark:hover:bg-indigo-500"
       >
         {pending && <LoaderCircle size={16} aria-hidden className="animate-spin" />}
         {pending
