@@ -28,7 +28,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
       return data;
     },
     onSuccess: () => {
-      router.push("/");
+      router.push("/dashboard");
       router.refresh();
     },
     onError: (err) => setError(apiErrorMessage(err)),

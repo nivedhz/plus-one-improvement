@@ -42,6 +42,12 @@ export default async function Navbar() {
           <ThemeToggle />
           {user ? (
             <>
+              <a
+                href="/dashboard"
+                className="hidden rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:text-slate-950 sm:inline dark:text-neutral-300 dark:hover:text-white"
+              >
+                Dashboard
+              </a>
               <span
                 aria-hidden
                 className="hidden h-9 w-9 items-center justify-center rounded-full bg-emerald-600/15 text-sm font-bold text-emerald-700 sm:inline-flex dark:bg-indigo-500/15 dark:text-indigo-300"

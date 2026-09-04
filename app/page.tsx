@@ -11,9 +11,11 @@ import {
   Sparkles,
   TvMinimalPlay,
 } from "lucide-react";
+import { redirect } from "next/navigation";
 import CountdownTimer from "./components/CountdownTimer";
 import Navbar from "./components/Navbar";
 import QuoteRotator from "./components/QuoteRotator";
+import { getSession } from "./lib/auth";
 import { EXAM_LABEL, PARTNERS } from "./lib/site";
 
 const FEATURES = [
@@ -52,7 +54,10 @@ const STEPS = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  // Marketing page is for visitors only — members go to their dashboard.
+  if (await getSession()) redirect("/dashboard");
+
   return (
     <div id="top" className="relative min-h-screen overflow-clip">
       {/* Minimal backdrop: soft glow + faint dots, no grid lines */}
