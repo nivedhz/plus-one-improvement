@@ -86,8 +86,10 @@ export const SUBJECTS: Subject[] = [
       ch("sequences-and-series", "Sequences and Series", 9, ["AP and GP formulas", "Sum to n terms", "Special series"], 12),
       ch("straight-lines", "Straight Lines", 8, ["Slope forms", "Distance formulas", "Family of lines"], 11),
       ch("conic-sections", "Conic Sections", 9, ["Circle, parabola, ellipse", "Standard equations", "Tangents"], 12),
+      ch("introduction-to-three-dimensional-geometry", "Introduction to Three Dimensional Geometry", 6, ["Coordinate axes and planes", "Distance formula in 3D", "Section formula"], 8),
       ch("limits-and-derivatives", "Limits and Derivatives", 10, ["Standard limits", "First principles", "Rules of differentiation"], 14),
-      ch("statistics-and-probability", "Statistics and Probability", 8, ["Mean, median, mode", "Variance", "Classical probability"], 10),
+      ch("statistics", "Statistics", 6, ["Mean, median, mode", "Variance and standard deviation", "Grouped data"], 8),
+      ch("probability", "Probability", 6, ["Classical probability", "Addition theorems", "Conditional basics"], 8),
     ],
   },
   {

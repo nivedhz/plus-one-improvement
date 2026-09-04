@@ -145,39 +145,74 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
   },
   mathematics: {
     sets: [
-      v("qgsaTdGcLt4", "Sets — Full Chapter Revision", "Xylem"),
-      v("YALEUfz4PDU", "Sets in 28 Minutes", "Eduport"),
-      v("Mk7EPtnYOK0", "Sets Part 1 — Chapter 1", "Exam Winner"),
+      v("YALEUfz4PDU", "Sets In 28 Minutes | Plus One Maths Chapter 1", "Eduport"),
+      v("KbXXlaI-_tI", "Plus One Maths | Chapter 1 - Sets | Full Chapter One Shot", "Exam Winner"),
+      v("_Y_CVe8osn0", "Plus One Maths - Sets", "Xylem"),
     ],
     "relations-and-functions": [
-      v("F0H7kwWA99I", "Relations and Functions in 35 Minutes", "Eduport"),
+      v("bIjQKlvu5Cs", "Plus One Maths | Chapter 2 - Relations And Functions | Full Chapter Oneshot", "Exam Winner"),
+      v("F0H7kwWA99I", "Relations and Functions in 35 Minutes | Plus One Maths", "Eduport"),
+      v("Q96ZWfe9iYs", "Plus One Mathematics | Onam Exam Chapter 2 - Relations And Function - Full Chapter Revision", "Xylem"),
     ],
     "trigonometric-functions": [
-      v("LlRIjLWrDmA", "Trigonometric Functions — Full Chapter Revision", "Xylem"),
+      v("XQjf139YlUU", "Plus One Maths | Chapter 3 | Trigonometric Functions | Oneshot", "Exam Winner"),
+      v("LlRIjLWrDmA", "Plus One Maths | Trigonometric Functions - Full Chapter Revision", "Xylem", 8411),
+      v("ZqDm9ljeNmU", "Trigonometric Functions | One Shot | Plus One Maths Chapter 3", "Eduport"),
     ],
     "complex-numbers": [
-      v("jG6ZtPxq80s", "Complex Numbers and Quadratic Equations — Full", "Exam Winner"),
+      v("jG6ZtPxq80s", "+1 Maths | Complex Numbers and Quadratic Equations | Full Chapter Revision | Chapter 4", "Exam Winner"),
+      v("zt25bVEqQGw", "Plus One Maths | Complex Numbers And Quadratic Equations - Full Chapter Revision", "Xylem"),
+      v("1e11M1mGgvE", "Plus One Maths Complex Numbers and Quadratic Equations, Relations and Functions", "Eduport"),
+    ],
+    "linear-inequalities": [
+      v("AiIs41AN_Qw", "Plus One Maths - Linear Inequalities in 15 Minutes", "Xylem"),
+      v("CT405oFbt8Q", "Plus One Maths | Sure Questions | Linear Inequalities | Public Exam 2025", "Eduport"),
+      v("XZ4rk2VgaLw", "Plus One Maths | Linear Inequalities | Limits and Derivatives | Probability", "Exam Winner", 8758),
     ],
     "permutations-combinations": [
-      v("IeLgMOlLXL0", "Permutations and Combinations", "Xylem"),
+      v("-2k_e9ql9pg", "Plus One Maths | Permutations And Combinations | Full Chapter", "Exam Winner"),
+      v("zpiqvf0Yvck", "Permutations and Combinations in 40 Minutes | Plus One Maths Chapter 6", "Eduport"),
+      v("bFYNHsJh0fY", "Plus One Maths | Permutation And Combination - Full Chapter Revision", "Xylem", 6348),
     ],
     "binomial-theorem": [
-      v("Co6HMuVY71o", "Binomial Theorem", "Eduport"),
+      v("8CeFWL5DMt0", "Plus One Maths | Binomial Theorem | Full Chapter", "Exam Winner"),
+      v("NUGNHRRl3Ig", "Binomial Theorem 5 മിനുട്ടിൽ ?", "Eduport"),
+      v("kk9SgC4ZFVY", "Plus One Maths - Concept Revision - Binomial Theorem in Just 15 Minutes", "Xylem"),
     ],
     "sequences-and-series": [
-      v("9Saw1VTe4bc", "Sequences and Series — Full Chapter", "Xylem"),
+      v("lE88H7dNHTo", "Plus One Maths Christmas Exam | Sequences and Series | Chapter 9", "Exam Winner"),
+      v("w9tYCSj7O5Y", "Sequence & Series in 30 Minutes | Plus one Maths", "Eduport"),
+      v("9Saw1VTe4bc", "Plus One Maths | Maths | Sequences and Series - Full Chapter Revision", "Xylem", 3491),
     ],
     "straight-lines": [
-      v("oGYHmsCE5Og", "Straight Lines — Full Chapter Revision", "Xylem"),
+      v("O2eu0dW9YPc", "Plus One Maths | Straight Lines | Full Chapter", "Exam Winner"),
+      v("TTUL82cR81A", "Plus One Maths | Straight Lines Summary", "Eduport"),
+      v("JDEGBeFKS2E", "Plus One Maths | Straight Lines - Full Chapter Revision", "Xylem"),
     ],
     "conic-sections": [
-      v("D_kJBxMs4NE", "Conic Sections", "Xylem"),
+      v("NFryKwj_2KA", "Plus One Improvement Maths | Conic Section In 50 Minutes", "Xylem Plus Two"),
+      v("a7fHnQtnKJQ", "Plus One Maths | Conic Sections | Full Chapter", "Exam Winner"),
+      v("MDeEvvnvPZU", "Plus One Maths | Conic Section | In 40 Minutes", "Eduport"),
+    ],
+    "introduction-to-three-dimensional-geometry": [
+      v("UgbCDY_qPW0", "Introduction to 3D Geometry in 28 Minutes | Plus One Maths Chapter 11", "Eduport"),
+      v("7UiYBREuplE", "Plus One Maths - Introduction To 3d Geometry In 10 Minutes", "Xylem"),
+      v("2EWNcURPHZs", "Plus One Maths | Straight Lines | Conic Sections | Introduction to 3 D Geometry", "Exam Winner", 5484),
     ],
     "limits-and-derivatives": [
-      v("uvAYhF3gw4A", "Limits and Derivatives — One Shot", "Exam Winner"),
+      v("4_5L8DQW4DY", "Plus One Maths | Chapters : 12, 14 | Full Chapters", "Exam Winner", 374),
+      v("P8rqbjAtbGo", "Limits and Derivatives in 47 Minutes | Plus One Maths Chapter 12", "Eduport"),
+      v("ja2fujK-o0w", "Plus One Christmas Exam Maths | Limits And Derivatives", "Xylem"),
     ],
-    "statistics-and-probability": [
-      v("puEhbfMtchA", "Probability", "Xylem"),
+    statistics: [
+      v("0p_IW3tEX7I", "Plus One Maths | Sure Questions | Statistics | Public Exam 2025", "Eduport"),
+      v("O1BPiZCU2fg", "Plus One Mathematics | Statistics - Full Chapter Revision", "Xylem"),
+      v("4_5L8DQW4DY", "Plus One Maths | Chapters : 12, 14 | Full Chapters", "Exam Winner", 4164),
+    ],
+    probability: [
+      v("puEhbfMtchA", "Plus One Mathematics - Probability", "Xylem"),
+      v("NyrmOIoaWjo", "Plus One Maths Public Exam | Probabilty One Shot in 54 Minutes | Chapter 13", "Eduport"),
+      v("XZ4rk2VgaLw", "Plus One Maths | Linear Inequalities | Limits and Derivatives | Probability", "Exam Winner", 6679),
     ],
   },
   english: {
