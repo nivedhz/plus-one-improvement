@@ -7,7 +7,8 @@ import StreamSwitcher from "../components/StreamSwitcher";
 import SubjectIcon from "../components/SubjectIcon";
 import { getSession } from "../lib/auth";
 import { getUserProgressMap } from "../lib/progress";
-import { subjectsForStream, totalLessons } from "../lib/subjects";
+import { subjectsForStream } from "../lib/subjects";
+import { subjectVideoCount } from "../lib/videos";
 import { getUserStream } from "../lib/users";
 
 export const metadata: Metadata = {
@@ -90,7 +91,7 @@ export default async function SubjectsPage() {
                         />
                       </span>
                       <span className="block text-xs text-slate-500 dark:text-neutral-400">
-                        {s.chapters.length} chapters · {totalLessons(s)} lessons
+                        {s.chapters.length} chapters · {subjectVideoCount(s.slug)} videos
                       </span>
                     </div>
                     <span className="text-sm font-bold tabular-nums">

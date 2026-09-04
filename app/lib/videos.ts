@@ -216,11 +216,81 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
     ],
   },
   english: {
-    "grammar-tenses": [
-      v("rdBFGjLuzM0", "Grammar Revision for the Public Exam", "Xylem"),
+    "his-first-flight": [
+      v("au1bwb1t2rE", "Plus One English Chapter 1 | His First Flight Short Summary in Malayalam", "Eduport"),
+      v("3ru1AlsMI8o", "Plus One English - His First Flight | I Will Fly | Quest for a Theory of Everything - One Shot Revision", "Xylem", 59),
     ],
-    comprehension: [
-      v("oeISzJIVcgs", "English — Full Chapter Revision", "Xylem"),
+    "i-will-fly": [
+      v("aPSv99r0UGs", "Plus One English Chapter 2 | I Will Fly Short Summary in Malayalam", "Eduport"),
+      v("3ru1AlsMI8o", "Plus One English - His First Flight | I Will Fly | Quest for a Theory of Everything - One Shot Revision", "Xylem", 646),
+    ],
+    "quest-for-a-theory-of-everything": [
+      v("Cf37_Np3Prk", "Plus One English Improvement Exam - Quest for a Theory of Everything", "Xylem Plus Two"),
+      v("3ru1AlsMI8o", "Plus One English - His First Flight | I Will Fly | Quest for a Theory of Everything - One Shot Revision", "Xylem", 1181),
+    ],
+    if: [
+      v("yL0u2G1D3Yw", "Plus One English | Chapter 4 IF Summary", "Eduport"),
+      v("NiZbvBaUQgM", "Plus One English - IF Poem - A Quick Revision", "Xylem"),
+    ],
+    "and-then-gandhi-came": [
+      v("1sgzvmxXKj4", "Plus One English - And Then Gandhi Came", "Xylem"),
+      v("qYYRuNCDkaw", "Plus One English | Focus Area | And Then Gandhi Came | Malayalam", "Exam Winner"),
+    ],
+    "price-of-flowers": [
+      v("VcI7aR157QE", "Price of Flowers in 18 minutes | Plus One English Summary", "Eduport"),
+      v("W0Zc-rIstyU", "Plus One Improvement Exam - English - And Then Gandhi Came The Price Of Flowers", "Xylem Plus Two", 1592),
+    ],
+    "death-the-leveller": [
+      v("OumMDotku7c", "Plus One English | Christmas Exam Special - Death the Leveller | Line by Line Explanation", "Xylem"),
+      v("hZFd4chhdag", "Plus One English Exam | Death the Leveller | Poem", "Exam Winner"),
+    ],
+    "sunrise-on-the-hills": [
+      v("xYHA2lZAHGg", "Plus One English | Sunrise On The Hills", "Xylem"),
+      v("_YDGp8-9Trw", "Plus One English Exam | Sunrise on the Hills | Poem | Summary and Revision", "Exam Winner"),
+    ],
+    "the-trip-of-le-horla": [
+      v("7lqeU4y87GA", "Plus One English | The Trip Of Le Horla", "Xylem"),
+      v("KUvT0pKqURI", "The Trip of Le Horla in 10 minutes | Chapter Summary", "Eduport"),
+    ],
+    "the-sacred-turtles-of-kadavu": [
+      v("JXLefv9DrpI", "Sacred Turtles of Kadavu in 10 Mins | Chapter Summary", "Eduport"),
+      v("UsO3OKM_azM", "PlusOne-English-Sunrise on the Hills | The Trip of Le Horla | The Sacred Turtles of Kadavu", "Xylem", 2201),
+    ],
+    "disasters-and-disaster-management-in-india": [
+      v("xberPMZMBK8", "Plus One English | Disasters and Disaster Management in India - Short Summary", "Eduport"),
+      v("zq5s_sYnnSo", "Plus One English | Disaster And Disaster Management In India", "Xylem"),
+    ],
+    "the-serang-of-ranaganji": [
+      v("beYoho9zAzw", "Plus One English - The Serang of Ranaganji - A Quick Revision", "Xylem"),
+      v("gWOIhS7tZog", "Plus One Model Exam | English | Serang of Ranaganji", "Exam Winner"),
+      v("b4ojH6_2zV4", "Serang of Ranagangi in 15 minutes | Plus One English", "Eduport"),
+    ],
+    "the-wreck-of-the-titanic": [
+      v("htzVzS7FQfc", "Plus One English Public Exam | The Wreck of the Titanic", "Exam Winner"),
+      v("c7Yt950tUTE", "Plus One English - Revision Series : Poem - the Wreck of the Titanic - in One Shot", "Xylem"),
+    ],
+    gooseberries: [
+      v("JzChc-K_-80", "Plus One English | Gooseberries Summary", "Eduport"),
+      v("yanjHV7Ijeg", "Plus One English - Gooseberries - Quick Summary", "Xylem"),
+    ],
+    "to-sleep": [
+      v("3Sm77Um6e3I", "Plus One English Public Exam | To Sleep | Poem | Summary and Revision", "Exam Winner"),
+      v("UO7_xk1S_wY", "Plus One English | To Sleep - Revision Series", "Xylem"),
+    ],
+    "going-out-for-a-walk": [
+      v("m8DoQN2SWp4", "Going out for a walk Essay in 17 Minutes | Unit 5 Chapter 3", "Eduport"),
+      v("QmDv1KbpwAA", "Plus One Improvement Exam - English - Going Out for a Walk & The Cyberspace", "Xylem Plus Two", 661),
+    ],
+    "the-cyberspace": [
+      v("DT5HGJf56UM", "Plus One English - Cyber Space - Quick Summary", "Xylem"),
+    ],
+    "is-society-dead": [
+      v("F_4XeY2CaxI", "Plus One English | Is Society Dead - Quick Revision", "Xylem"),
+      v("3YDVywUayzs", "To sleep | The trip of le horla | Cyberspace | Is society dead? | Conceptual fruit", "Exam Winner", 3709),
+    ],
+    "conceptual-fruit": [
+      v("pzYUgSwyJIk", "Plus One English - Conceptual Fruit - Quick Summary", "Xylem"),
+      v("4JUKhoe9zGM", "Plus One English Public Exam | All Chapters in One live", "Exam Winner", 11045),
     ],
   },
   malayalam: {
@@ -267,4 +337,12 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
 
 export function chapterVideos(subject: string, chapter: string): ChapterVideo[] {
   return CHAPTER_VIDEOS[subject]?.[chapter] ?? [];
+}
+
+// Real counts derived from the curated mapping — safe to display.
+export function subjectVideoCount(subject: string): number {
+  return Object.values(CHAPTER_VIDEOS[subject] ?? {}).reduce(
+    (sum, list) => sum + list.length,
+    0,
+  );
 }
