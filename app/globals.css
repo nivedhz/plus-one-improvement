@@ -27,21 +27,21 @@ body {
 }
 
 ::selection {
-  background: #059669;
+  background: #4f46e5;
   color: #fff;
 }
 
 /* Soft mesh glow, theme-aware — no grid lines */
 .backdrop-mesh {
   background-image:
-    radial-gradient(42rem 22rem at 12% -6%, rgb(16 185 129 / 0.14), transparent 60%),
-    radial-gradient(36rem 20rem at 88% 4%, rgb(56 189 248 / 0.12), transparent 60%),
-    radial-gradient(30rem 18rem at 55% 110%, rgb(167 139 250 / 0.1), transparent 60%);
+    radial-gradient(42rem 22rem at 12% -6%, rgb(99 102 241 / 0.14), transparent 60%),
+    radial-gradient(36rem 20rem at 88% 4%, rgb(168 85 247 / 0.12), transparent 60%),
+    radial-gradient(30rem 18rem at 55% 110%, rgb(217 70 239 / 0.1), transparent 60%);
 }
 
 .dark .backdrop-mesh {
   background-image:
-    radial-gradient(40rem 20rem at 15% -6%, rgb(16 185 129 / 0.12), transparent 60%),
+    radial-gradient(40rem 20rem at 15% -6%, rgb(99 102 241 / 0.14), transparent 60%),
     radial-gradient(30rem 16rem at 85% 2%, rgb(245 197 120 / 0.06), transparent 60%);
 }
 
