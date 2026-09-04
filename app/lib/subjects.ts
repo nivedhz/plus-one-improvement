@@ -15,6 +15,8 @@ export type Subject = {
   slug: string;
   name: string;
   tagline: string;
+  // Maximum marks for this subject in the Plus One exam.
+  maxMarks: number;
   chapters: Chapter[];
 };
 
@@ -33,6 +35,7 @@ export const SUBJECTS: Subject[] = [
     slug: "physics",
     name: "Physics",
     tagline: "Concepts, derivations and numericals that carry the most marks.",
+    maxMarks: 60,
     chapters: [
       ch("units-and-measurements", "Units and Measurements", 8, ["SI units and dimensions", "Significant figures", "Error analysis"], 14),
       ch("motion-in-a-straight-line", "Motion in a Straight Line", 12, ["Distance vs displacement", "Velocity-time graphs", "Equations of motion"], 18),
@@ -52,6 +55,7 @@ export const SUBJECTS: Subject[] = [
     slug: "chemistry",
     name: "Chemistry",
     tagline: "Reactions, mechanisms and named processes in one revision loop.",
+    maxMarks: 60,
     chapters: [
       ch("some-basic-concepts", "Some Basic Concepts of Chemistry", 9, ["Mole concept", "Stoichiometry", "Limiting reagent"], 15),
       ch("structure-of-atom", "Structure of Atom", 11, ["Quantum numbers", "Electronic configuration", "Bohr model limits"], 18),
@@ -68,6 +72,7 @@ export const SUBJECTS: Subject[] = [
     slug: "mathematics",
     name: "Mathematics",
     tagline: "Pattern-first practice: formulas, then previous questions.",
+    maxMarks: 60,
     chapters: [
       ch("sets", "Sets", 7, ["Types of sets", "Venn diagrams", "De Morgan's laws"], 10),
       ch("relations-and-functions", "Relations and Functions", 9, ["Domain and range", "Types of functions", "Composition"], 12),
@@ -87,6 +92,7 @@ export const SUBJECTS: Subject[] = [
     slug: "english",
     name: "English",
     tagline: "Lessons, language skills and writing formats for full marks.",
+    maxMarks: 80,
     chapters: [
       ch("of-studies", "Of Studies (Essay)", 6, ["Main arguments", "Vocabulary in context", "Summary writing"], 8),
       ch("the-price-of-flowers", "The Price of Flowers (Story)", 7, ["Character sketch", "Theme of sacrifice", "Comprehension"], 9),
@@ -102,6 +108,7 @@ export const SUBJECTS: Subject[] = [
     slug: "malayalam",
     name: "Malayalam",
     tagline: "Padavali lessons, vyakaranam and upanyasam formats.",
+    maxMarks: 80,
     chapters: [
       ch("kavitha-aswadanam", "Kavitha Aswadanam (Poetry)", 7, ["Bhavam and alankaram", "Vritham basics", "Appreciation format"], 9),
       ch("gadya-padanam", "Gadya Padanam (Prose)", 7, ["Aasayam grahiccal", "Character notes", "Summary practice"], 9),
@@ -117,6 +124,7 @@ export const SUBJECTS: Subject[] = [
     slug: "computer-science",
     name: "Computer Science",
     tagline: "Python-first: concepts, then code you can actually run.",
+    maxMarks: 60,
     chapters: [
       ch("introduction-to-computers", "Introduction to Computers", 6, ["Hardware vs software", "Memory hierarchy", "Number systems"], 9),
       ch("computational-thinking", "Computational Thinking", 7, ["Decomposition", "Algorithms and flowcharts", "Pseudocode"], 10),
@@ -134,6 +142,7 @@ export const SUBJECTS: Subject[] = [
     slug: "zoology",
     name: "Zoology",
     tagline: "Diagrams, terms and processes of the animal world.",
+    maxMarks: 30,
     chapters: [
       ch("animal-kingdom", "Animal Kingdom", 8, ["Basis of classification", "Major phyla", "Examples that repeat"], 12),
       ch("structural-organisation", "Structural Organisation in Animals", 7, ["Tissues", "Cockroach anatomy", "Frog systems"], 10),
@@ -149,6 +158,7 @@ export const SUBJECTS: Subject[] = [
     slug: "botany",
     name: "Botany",
     tagline: "Plant science with diagrams examiners love.",
+    maxMarks: 30,
     chapters: [
       ch("the-living-world", "The Living World", 6, ["Taxonomy ranks", "Binomial nomenclature", "Herbarium basics"], 8),
       ch("plant-kingdom", "Plant Kingdom", 8, ["Algae to angiosperms", "Alternation of generations", "Examples"], 11),
@@ -173,13 +183,24 @@ export function getChapter(
   return subject.chapters.find((c) => c.slug === chapterSlug);
 }
 
-// Deterministic placeholder progress (stable across SSR and client).
-export function mockProgress(seed: string): number {
-  let hash = 0;
-  for (let i = 0; i < seed.length; i++) {
-    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
-  }
-  return 20 + (hash % 71); // 20–90
+// Science batches split on the sixth subject: the CS group takes Computer
+// Science instead of the Biology pair (Botany + Zoology).
+export const STREAM_SUBJECTS: Record<string, string[]> = {
+  cs: ["physics", "chemistry", "mathematics", "english", "malayalam", "computer-science"],
+  biology: ["physics", "chemistry", "mathematics", "english", "malayalam", "botany", "zoology"],
+};
+
+export const STREAM_LABELS: Record<string, string> = {
+  cs: "Computer Science stream",
+  biology: "Biology stream",
+};
+
+export function subjectsForStream(stream: string): Subject[] {
+  const slugs = STREAM_SUBJECTS[stream] ?? STREAM_SUBJECTS.biology;
+  return slugs.flatMap((slug) => {
+    const s = getSubject(slug);
+    return s ? [s] : [];
+  });
 }
 
 export function totalLessons(subject: Subject): number {

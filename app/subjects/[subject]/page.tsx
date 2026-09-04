@@ -5,9 +5,9 @@ import { notFound, redirect } from "next/navigation";
 import Navbar from "../../components/Navbar";
 import SubjectIcon from "../../components/SubjectIcon";
 import { getSession } from "../../lib/auth";
+import { getUserProgressMap } from "../../lib/progress";
 import {
   getSubject,
-  mockProgress,
   totalLessons,
   totalQuestions,
 } from "../../lib/subjects";
@@ -29,10 +29,13 @@ export default async function SubjectPage({
 }: {
   params: Promise<{ subject: string }>;
 }) {
-  if (!(await getSession())) redirect("/auth/login");
+  const session = await getSession();
+  if (!session) redirect("/auth/login");
 
   const subject = getSubject((await params).subject);
   if (!subject) notFound();
+
+  const progressMap = await getUserProgressMap(session.id);
 
   return (
     <div className="relative min-h-screen overflow-clip">
@@ -96,7 +99,7 @@ export default async function SubjectPage({
 
           <ol className="mt-8 space-y-2.5">
             {subject.chapters.map((c, i) => {
-              const progress = mockProgress(`${subject.slug}:${c.slug}`);
+              const progress = progressMap[`${subject.slug}:${c.slug}`] ?? 0;
               return (
                 <li key={c.slug}>
                   <Link

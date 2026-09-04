@@ -3,9 +3,12 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import Navbar from "../components/Navbar";
+import StreamSwitcher from "../components/StreamSwitcher";
 import SubjectIcon from "../components/SubjectIcon";
 import { getSession } from "../lib/auth";
-import { SUBJECTS, mockProgress, totalLessons } from "../lib/subjects";
+import { getUserProgressMap } from "../lib/progress";
+import { subjectsForStream, totalLessons } from "../lib/subjects";
+import { getUserStream } from "../lib/users";
 
 export const metadata: Metadata = {
   title: "Subjects | improve.",
@@ -13,7 +16,13 @@ export const metadata: Metadata = {
 };
 
 export default async function SubjectsPage() {
-  if (!(await getSession())) redirect("/auth/login");
+  const session = await getSession();
+  if (!session) redirect("/auth/login");
+  const [progress, stream] = await Promise.all([
+    getUserProgressMap(session.id),
+    getUserStream(session.id),
+  ]);
+  const visible = subjectsForStream(stream);
 
   return (
     <div className="relative min-h-screen overflow-clip">
@@ -42,9 +51,25 @@ export default async function SubjectsPage() {
             questions — everything grouped, nothing scattered.
           </p>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            {SUBJECTS.map((s) => {
-              const progress = mockProgress(s.slug);
+          <div className="mt-6">
+            <p className="mb-2.5 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-neutral-400">
+              Your stream
+            </p>
+            <StreamSwitcher initial={stream} />
+          </div>
+
+          <h2 className="mt-10 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-neutral-400">
+            Subjects
+          </h2>
+
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {visible.map((s) => {
+              const avg = Math.round(
+                s.chapters.reduce(
+                  (sum, c) => sum + (progress[`${s.slug}:${c.slug}`] ?? 0),
+                  0,
+                ) / s.chapters.length,
+              );
               return (
                 <Link
                   key={s.slug}
@@ -69,7 +94,7 @@ export default async function SubjectsPage() {
                       </span>
                     </div>
                     <span className="text-sm font-bold tabular-nums">
-                      {progress}%
+                      {avg}%
                     </span>
                   </div>
                   <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-neutral-300">
@@ -78,7 +103,7 @@ export default async function SubjectsPage() {
                   <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-neutral-800">
                     <div
                       className="h-full rounded-full bg-emerald-500 dark:bg-indigo-500"
-                      style={{ width: `${progress}%` }}
+                      style={{ width: `${avg}%` }}
                     />
                   </div>
                 </Link>

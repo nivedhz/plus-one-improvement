@@ -18,6 +18,30 @@ export async function revokeUserSessions(userId: string): Promise<void> {
   });
 }
 
+export const STREAMS = ["cs", "biology"] as const;
+export type Stream = (typeof STREAMS)[number];
+
+export function isStream(value: unknown): value is Stream {
+  return value === "cs" || value === "biology";
+}
+
+export async function getUserStream(userId: string): Promise<Stream> {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { stream: true },
+  });
+  return isStream(user?.stream) ? user.stream : "biology";
+}
+
+export async function setUserStream(userId: string, stream: Stream): Promise<Stream> {
+  const user = await db.user.update({
+    where: { id: userId },
+    data: { stream },
+    select: { stream: true },
+  });
+  return isStream(user.stream) ? user.stream : "biology";
+}
+
 export async function createUser(input: {
   name: string;
   email: string;
