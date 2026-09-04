@@ -17,11 +17,11 @@ export default async function Navbar() {
     <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-[#fafaf8]/85 backdrop-blur dark:border-neutral-800/70 dark:bg-[#111]/85">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-sm dark:bg-indigo-600">
             <GraduationCap size={19} aria-hidden />
           </span>
           <span className="text-xl font-bold tracking-tight">
-            improve<span className="text-indigo-600">.</span>
+            improve<span className="text-emerald-500 dark:text-indigo-400">.</span>
           </span>
         </Link>
         <nav
@@ -44,7 +44,7 @@ export default async function Navbar() {
             <>
               <span
                 aria-hidden
-                className="hidden h-9 w-9 items-center justify-center rounded-full bg-indigo-600/15 text-sm font-bold text-indigo-700 sm:inline-flex dark:text-indigo-300"
+                className="hidden h-9 w-9 items-center justify-center rounded-full bg-emerald-600/15 text-sm font-bold text-emerald-700 sm:inline-flex dark:bg-indigo-500/15 dark:text-indigo-300"
               >
                 {user.name.charAt(0).toUpperCase()}
               </span>

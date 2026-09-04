@@ -60,7 +60,7 @@ export default function Home() {
       <div aria-hidden className="backdrop-dots absolute inset-0" />
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent dark:via-indigo-400/50"
       />
 
       <div className="relative">
@@ -70,14 +70,14 @@ export default function Home() {
           {/* Hero */}
           <section className="grid gap-10 py-12 sm:py-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
-              <p className="inline-flex items-center gap-2 rounded-full border border-indigo-600/20 bg-indigo-500/10 px-3.5 py-1.5 text-xs font-semibold text-indigo-800 dark:text-indigo-300">
+              <p className="inline-flex items-center gap-2 rounded-full border border-emerald-600/20 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-semibold text-emerald-800 dark:border-indigo-500/25 dark:bg-indigo-500/10 dark:text-indigo-300">
                 <Sparkles size={14} aria-hidden />
                 Kerala Plus One Improvement · October 2026
               </p>
               <h1 className="mt-5 text-4xl font-bold leading-[1.04] tracking-tight sm:text-6xl">
                 All your notes,
                 <br />
-                <span className="bg-gradient-to-r from-indigo-600 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 bg-clip-text dark:from-indigo-400 dark:via-violet-400 dark:to-fuchsia-400 text-transparent">
                   in one space.
                 </span>
               </h1>
@@ -89,7 +89,7 @@ export default function Home() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a
                   href="/auth/sign-up"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-indigo-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-700"
+                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-600 dark:bg-indigo-600 dark:shadow-indigo-600/25 dark:hover:bg-indigo-500"
                 >
                   Start now
                   <ArrowRight
@@ -138,7 +138,7 @@ export default function Home() {
             aria-labelledby="why-heading"
             className="scroll-mt-24 py-12"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-700 dark:text-indigo-400">
+            <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-indigo-400">
               Why improve.
             </p>
             <h2
@@ -153,7 +153,7 @@ export default function Home() {
                   key={f.title}
                   className="group rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70"
                 >
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-600/10 text-indigo-700 dark:text-indigo-300">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
                     <f.icon size={19} aria-hidden />
                   </span>
                   <h3 className="mt-4 font-semibold">{f.title}</h3>
@@ -171,7 +171,7 @@ export default function Home() {
             aria-labelledby="resources-heading"
             className="scroll-mt-24 border-t border-slate-200/70 py-12 dark:border-neutral-800/70"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-700 dark:text-indigo-400">
+            <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-indigo-400">
               Trusted sources
             </p>
             <h2
@@ -191,7 +191,7 @@ export default function Home() {
                   href={p.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-3.5 rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:border-indigo-500/40 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70 dark:hover:border-indigo-400/30"
+                  className="group flex items-center gap-3.5 rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:border-emerald-500/40 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70 dark:hover:border-indigo-400/30"
                 >
                   <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-900/[0.04] text-slate-700 dark:bg-white/[0.06] dark:text-slate-200">
                     {p.kind === "youtube" ? (
@@ -206,7 +206,7 @@ export default function Home() {
                       <ArrowUpRight
                         size={15}
                         aria-hidden
-                        className="text-slate-400 transition group-hover:translate-x-px group-hover:text-indigo-600"
+                        className="text-slate-400 transition group-hover:translate-x-px group-hover:text-emerald-600 dark:group-hover:text-indigo-400"
                       />
                     </span>
                     <span className="block truncate text-sm text-slate-500 dark:text-slate-400">
@@ -227,7 +227,7 @@ export default function Home() {
             aria-labelledby="how-heading"
             className="scroll-mt-24 border-t border-slate-200/70 py-12 dark:border-neutral-800/70"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-indigo-700 dark:text-indigo-400">
+            <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-indigo-400">
               Study loop
             </p>
             <h2
@@ -282,7 +282,7 @@ export default function Home() {
                 <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
                   <a
                     href="/auth/login"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-indigo-500 px-7 py-3 text-sm font-semibold text-white transition hover:bg-indigo-400"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-7 py-3 text-sm font-semibold text-white transition hover:bg-emerald-400 dark:bg-indigo-500 dark:hover:bg-indigo-400"
                   >
                     Log in to start
                     <ArrowRight size={16} aria-hidden />

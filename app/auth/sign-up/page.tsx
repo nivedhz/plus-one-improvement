@@ -24,7 +24,7 @@ export default function SignUpPage() {
         </Link>
 
         <div className="mt-6 rounded-3xl border border-white/60 bg-white/80 p-7 shadow-xl shadow-slate-900/5 ring-1 ring-slate-900/5 backdrop-blur-xl sm:p-8 dark:border-neutral-800 dark:bg-neutral-900/80 dark:ring-white/5 dark:shadow-black/40">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-sm">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-sm dark:bg-indigo-600">
             <GraduationCap size={22} aria-hidden />
           </span>
           <h1 className="mt-4 text-2xl font-bold tracking-tight">
@@ -40,7 +40,7 @@ export default function SignUpPage() {
             Already have an account?{" "}
             <Link
               href="/auth/login"
-              className="font-semibold text-indigo-700 hover:underline dark:text-indigo-400"
+              className="font-semibold text-emerald-700 hover:underline dark:text-indigo-400"
             >
               Log in
             </Link>
