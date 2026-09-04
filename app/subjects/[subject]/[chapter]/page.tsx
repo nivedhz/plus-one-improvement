@@ -11,13 +11,11 @@ import {
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Navbar from "../../../components/Navbar";
+import ProgressUpdater from "../../../components/ProgressUpdater";
 import { getSession } from "../../../lib/auth";
+import { getUserProgressMap } from "../../../lib/progress";
 import { PARTNERS } from "../../../lib/site";
-import {
-  getChapter,
-  getSubject,
-  mockProgress,
-} from "../../../lib/subjects";
+import { getChapter, getSubject } from "../../../lib/subjects";
 
 type Params = { subject: string; chapter: string };
 
@@ -39,14 +37,16 @@ export default async function ChapterPage({
 }: {
   params: Promise<Params>;
 }) {
-  if (!(await getSession())) redirect("/auth/login");
+  const session = await getSession();
+  if (!session) redirect("/auth/login");
 
   const { subject: subjectSlug, chapter: chapterSlug } = await params;
   const subject = getSubject(subjectSlug);
   const chapter = subject && getChapter(subject, chapterSlug);
   if (!subject || !chapter) notFound();
 
-  const progress = mockProgress(`${subject.slug}:${chapter.slug}`);
+  const progressMap = await getUserProgressMap(session.id);
+  const progress = progressMap[`${subject.slug}:${chapter.slug}`] ?? 0;
   const index = subject.chapters.findIndex((c) => c.slug === chapter.slug);
   const prev = subject.chapters[index - 1];
   const next = subject.chapters[index + 1];
@@ -113,6 +113,13 @@ export default async function ChapterPage({
               <h2 id="keys-heading" className="text-lg font-bold tracking-tight">
                 Key points
               </h2>
+              <div className="mt-4">
+                <ProgressUpdater
+                  subject={subject.slug}
+                  chapter={chapter.slug}
+                  initial={progress}
+                />
+              </div>
               <ul className="mt-4 space-y-3">
                 {chapter.keyPoints.map((k) => (
                   <li key={k} className="flex items-start gap-2.5 text-sm leading-relaxed">

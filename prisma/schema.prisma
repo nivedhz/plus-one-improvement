@@ -16,7 +16,41 @@ model User {
   passwordHash String
   // Bumped on logout so previously issued session tokens stop working.
   tokenVersion Int      @default(0)
+  // Science stream: "cs" (Computer Science) or "biology" (Botany + Zoology).
+  stream       String   @default("biology")
   createdAt    DateTime @default(now())
 
   @@map("users")
+
+  progress ChapterProgress[]
+  marks    PreviousMark[]
+}
+
+// Per-user, per-chapter study progress (0–100).
+model ChapterProgress {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  chapter   String
+  percent   Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, subject, chapter])
+  @@map("chapter_progress")
+}
+
+// Last-exam marks per subject, private to each user. The server derives
+// individual study priorities from these — never an overall grouped score.
+model PreviousMark {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  got       Int      @default(0)
+  max       Int      @default(100)
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, subject])
+  @@map("previous_marks")
 }

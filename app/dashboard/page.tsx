@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {
   ArrowRight,
   Bot,
+  Calculator,
   CalendarDays,
   Flame,
   Layers,
@@ -13,21 +14,23 @@ import CountdownTimer from "../components/CountdownTimer";
 import Navbar from "../components/Navbar";
 import QuoteRotator from "../components/QuoteRotator";
 import SubjectIcon from "../components/SubjectIcon";
+import StudyCalendar from "../components/StudyCalendar";
 import { getSession } from "../lib/auth";
+import { computePriorities, getUserMarks } from "../lib/marks";
+import { buildSchedule } from "../lib/schedule";
+import {
+  activeChapters,
+  getUserProgressMap,
+  studyStreakFor,
+} from "../lib/progress";
 import { EXAM_LABEL } from "../lib/site";
-import { SUBJECTS, mockProgress } from "../lib/subjects";
+import { STREAM_LABELS, subjectsForStream } from "../lib/subjects";
+import { getUserStream } from "../lib/users";
 
 export const metadata: Metadata = {
   title: "Dashboard | improve.",
   description: "Your Plus One improvement study dashboard.",
 };
-
-// TODO: replace mock progress with real per-user progress from the database.
-const MOCK_CONTINUE = [
-  { subject: "physics", title: "Motion in a Straight Line", progress: 68 },
-  { subject: "chemistry", title: "Structure of Atom", progress: 42 },
-  { subject: "mathematics", title: "Sets", progress: 81 },
-];
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -35,6 +38,28 @@ export default async function DashboardPage() {
   if (!session) redirect("/auth/login");
 
   const firstName = session.name.split(" ")[0];
+  const [progressMap, streak, active, stream, savedMarks] = await Promise.all([
+    getUserProgressMap(session.id),
+    studyStreakFor(session.id),
+    activeChapters(session.id, 3),
+    getUserStream(session.id),
+    getUserMarks(session.id),
+  ]);
+  const schedule = buildSchedule(
+    subjectsForStream(stream).map((s) => {
+      const p = computePriorities(savedMarks).find((x) => x.subjectSlug === s.slug);
+      return { slug: s.slug, name: s.name, level: p ? p.level : null };
+    }),
+  );
+  const visibleSubjects = subjectsForStream(stream);
+  const subjectAvg = (slug: string) => {
+    const s = visibleSubjects.find((x) => x.slug === slug);
+    if (!s) return 0;
+    return Math.round(
+      s.chapters.reduce((sum, c) => sum + (progressMap[`${slug}:${c.slug}`] ?? 0), 0) /
+        s.chapters.length,
+    );
+  };
 
   return (
     <div id="top" className="relative min-h-screen overflow-clip">
@@ -57,24 +82,28 @@ export default async function DashboardPage() {
                 Small steps today. A stronger result in October.
               </p>
             </div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-4 py-2 text-sm font-medium backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70">
-              <Flame size={15} aria-hidden className="text-orange-500" />
-              4-day streak
-            </p>
           </div>
 
-          <div className="mt-8 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+          <StudyCalendar schedule={schedule} />
+
+          <div className="mt-4 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
             <section
               aria-labelledby="countdown-heading"
               className="rounded-3xl border border-slate-200/80 bg-white/80 p-6 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70"
             >
-              <h2
-                id="countdown-heading"
-                className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-neutral-400"
-              >
-                <CalendarDays size={14} aria-hidden />
-                Exam countdown
-              </h2>
+              <div className="flex items-center justify-between gap-3">
+                <h2
+                  id="countdown-heading"
+                  className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-neutral-400"
+                >
+                  <CalendarDays size={14} aria-hidden />
+                  Exam countdown
+                </h2>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium dark:border-neutral-800 dark:bg-neutral-900">
+                  <Flame size={13} aria-hidden className="text-orange-500" />
+                  {streak > 0 ? `${streak}-day streak` : "Start your streak"}
+                </span>
+              </div>
               <p className="mt-1.5 text-sm text-slate-600 dark:text-neutral-300">
                 {EXAM_LABEL}
               </p>
@@ -90,27 +119,35 @@ export default async function DashboardPage() {
                 Today&apos;s focus
               </p>
               <h2 id="focus-heading" className="mt-3 text-2xl font-bold tracking-tight">
-                Motion in a Straight Line
+                {active[0]?.title ?? "Motion in a Straight Line"}
               </h2>
               <p className="mt-1 text-sm text-white/60">
-                Physics · Chapter 02 · 25 min
+                {active[0]
+                  ? `${active[0].subjectName} · ${active[0].percent}% so far`
+                  : "Physics · a good place to start"}
               </p>
               <div
                 className="mt-5 h-2 overflow-hidden rounded-full bg-white/15"
                 role="progressbar"
-                aria-valuenow={68}
+                aria-valuenow={active[0]?.percent ?? 0}
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-label="Chapter progress"
               >
                 <div
                   className="h-full rounded-full bg-emerald-400 dark:bg-indigo-400"
-                  style={{ width: "68%" }}
+                  style={{ width: `${active[0]?.percent ?? 0}%` }}
                 />
               </div>
-              <p className="mt-2 text-xs text-white/60">68% complete</p>
+              <p className="mt-2 text-xs text-white/60">
+                {active[0] ? `${active[0].percent}% complete` : "Not started yet"}
+              </p>
               <Link
-                href="/subjects/physics/motion-in-a-straight-line"
+                href={
+                  active[0]
+                    ? `/subjects/${active[0].subjectSlug}/${active[0].chapterSlug}`
+                    : "/subjects/physics/motion-in-a-straight-line"
+                }
                 className="group mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-emerald-500 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-400 dark:bg-indigo-500 dark:hover:bg-indigo-400"
               >
                 <Play size={15} aria-hidden />
@@ -132,6 +169,9 @@ export default async function DashboardPage() {
               >
                 <Layers size={18} aria-hidden />
                 Subjects
+                <span className="rounded-full bg-slate-900/[0.05] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:bg-white/[0.07] dark:text-neutral-400">
+                  {STREAM_LABELS[stream] ?? stream}
+                </span>
               </h2>
               <Link
                 href="/subjects"
@@ -142,8 +182,8 @@ export default async function DashboardPage() {
               </Link>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {SUBJECTS.map((s) => {
-                const progress = mockProgress(s.slug);
+              {visibleSubjects.map((s) => {
+                const progress = subjectAvg(s.slug);
                 return (
                   <Link
                     key={s.slug}
@@ -171,6 +211,28 @@ export default async function DashboardPage() {
             </div>
           </section>
 
+          <Link
+            href="/calculator"
+            className="group mt-10 flex items-center gap-4 rounded-3xl border border-slate-200/80 bg-white/80 p-5 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70"
+          >
+            <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+              <Calculator size={20} aria-hidden />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-semibold">
+                Where should your hours go?
+              </span>
+              <span className="block text-xs text-slate-500 dark:text-neutral-400">
+                Priority planner · saved only to your account
+              </span>
+            </span>
+            <ArrowRight
+              size={17}
+              aria-hidden
+              className="shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500 dark:group-hover:text-neutral-300"
+            />
+          </Link>
+
           <div className="mt-10 grid gap-4 lg:grid-cols-2">
             <section
               id="continue"
@@ -180,33 +242,40 @@ export default async function DashboardPage() {
               <h2 id="continue-heading" className="text-lg font-bold tracking-tight">
                 Pick up where you left off
               </h2>
+              {active.length === 0 ? (
+                <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-neutral-300">
+                  Nothing in progress yet. Open any chapter and set your
+                  progress — it will show up here.
+                </p>
+              ) : (
               <ul className="mt-4 space-y-3">
-                {MOCK_CONTINUE.map((c) => (
-                  <li key={c.title}>
-                    <a
-                      href="#continue"
+                {active.map((c) => (
+                  <li key={`${c.subjectSlug}:${c.chapterSlug}`}>
+                    <Link
+                      href={`/subjects/${c.subjectSlug}/${c.chapterSlug}`}
                       className="group flex items-center gap-3 rounded-2xl border border-transparent p-2 transition hover:border-slate-200 hover:bg-slate-50 dark:hover:border-neutral-800 dark:hover:bg-neutral-800/50"
                     >
                       <span className="min-w-0 flex-1">
                         <span className="block text-xs text-slate-500 dark:text-neutral-400">
-                          {c.subject}
+                          {c.subjectName}
                         </span>
                         <span className="block truncate text-sm font-semibold">
                           {c.title}
                         </span>
                       </span>
                       <span className="text-xs font-bold tabular-nums text-slate-500 dark:text-neutral-400">
-                        {c.progress}%
+                        {c.percent}%
                       </span>
                       <ArrowRight
                         size={16}
                         aria-hidden
                         className="text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500 dark:group-hover:text-neutral-300"
                       />
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
+              )}
             </section>
 
             <section
