@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { ArrowLeft, ArrowRight, Check, FileText, Layers, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ExternalLink, FileText, Layers, Play } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Navbar from "../../components/Navbar";
 import SubjectIcon from "../../components/SubjectIcon";
 import { getSession } from "../../lib/auth";
-import { getUserProgressMap } from "../../lib/progress";
 import { chapterNotes, subjectNoteCount } from "../../lib/notes";
+import { getUserProgressMap } from "../../lib/progress";
+import { subjectPyq, subjectPyqCount } from "../../lib/pyq";
 import { getSubject } from "../../lib/subjects";
 import { chapterVideos, subjectVideoCount } from "../../lib/videos";
 
@@ -84,6 +85,7 @@ export default async function SubjectPage({
               { icon: Layers, text: `${subject.chapters.length} chapters` },
               { icon: Play, text: `${subjectVideoCount(subject.slug)} video lessons` },
               { icon: FileText, text: `${subjectNoteCount(subject.slug)} notes` },
+              { icon: FileText, text: `${subjectPyqCount(subject.slug)} papers` },
             ].map((s) => (
               <span
                 key={s.text}
@@ -136,6 +138,60 @@ export default async function SubjectPage({
               );
             })}
           </ol>
+
+          {subjectPyq(subject.slug).length > 0 && (
+            <section aria-labelledby="pyq-heading" className="mt-10">
+              <h2 id="pyq-heading" className="text-lg font-bold tracking-tight">
+                Previous Year Questions
+              </h2>
+              <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
+                Full papers with answers, newest first — linked from the
+                original publishers.
+              </p>
+              <div className="mt-4 space-y-5">
+                {subjectPyq(subject.slug).map((group) => (
+                  <div key={group.year}>
+                    <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-neutral-400">
+                      {group.year}
+                    </h3>
+                    <ul className="mt-2 space-y-2">
+                      {group.papers.map((paper) => (
+                        <li key={paper.url}>
+                          <a
+                            href={paper.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/80 p-3.5 backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
+                          >
+                            <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+                              <FileText size={17} aria-hidden />
+                            </span>
+                            <span className="min-w-0 flex-1 truncate text-sm font-semibold">
+                              {paper.title}
+                            </span>
+                            <span className="shrink-0 rounded-full bg-slate-900/[0.05] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-500 dark:bg-white/[0.07] dark:text-neutral-400">
+                              {paper.kind === "board"
+                                ? "Board"
+                                : paper.kind === "say"
+                                  ? "SAY"
+                                  : paper.kind === "improvement"
+                                    ? "Improvement"
+                                    : "Model"}
+                            </span>
+                            <ExternalLink
+                              size={15}
+                              aria-hidden
+                              className="shrink-0 text-slate-300 transition group-hover:text-slate-500 dark:group-hover:text-neutral-300"
+                            />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </main>
       </div>
     </div>
