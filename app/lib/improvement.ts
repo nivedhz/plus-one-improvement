@@ -23,6 +23,14 @@ export function sanitizeTrio(slugs: string[], stream: string): string[] {
   return out;
 }
 
+// Stored slugs that no longer belong to a stream (e.g. zoology/botany
+// after switching to CS). The raw list is kept so switching back restores
+// them — this only reports what sanitizeTrio would drop.
+export function orphanedSlugs(stored: string[], stream: string): string[] {
+  const valid = new Set(subjectsForStream(stream).map((s) => s.slug));
+  return stored.filter((slug) => !valid.has(slug));
+}
+
 // Calculator recommendation: the 3 weakest subjects by priority rank.
 // Fewer than 3 ranked subjects → return whatever exists.
 export function recommendedTrio(

@@ -5,11 +5,11 @@ import { Reveal } from "../components/animate";
 import Navbar from "../components/Navbar";
 import { redirect } from "next/navigation";
 import { getSession } from "../lib/auth";
-import { getImprovementSubjects } from "../lib/users";
+import { recommendedTrio } from "../lib/improvement";
+import { computePriorities, getUserMarks } from "../lib/marks";
 import { STREAM_LABELS, subjectsForStream } from "../lib/subjects";
 import { getUserStream } from "../lib/users";
 import Calculator from "./Calculator";
-import ImprovementPicker from "../components/ImprovementPicker";
 
 export const metadata: Metadata = {
   title: "Marks calculator",
@@ -24,7 +24,10 @@ export default async function CalculatorPage() {
   if (!session) redirect("/auth/login");
   const stream = await getUserStream(session.id);
   const subjects = subjectsForStream(stream);
-  const initialTrio = await getImprovementSubjects(session.id, stream);
+  const weakest = recommendedTrio(computePriorities(await getUserMarks(session.id)));
+  const weakestNames = weakest.map(
+    (slug) => subjects.find((s) => s.slug === slug)?.name ?? slug,
+  );
   return (
     <div className="relative min-h-screen overflow-clip">
       <div className="relative">
@@ -54,20 +57,29 @@ export default async function CalculatorPage() {
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-neutral-300">
               Enter your last Plus One marks. The server ranks each subject on its own
-              need — lower marks, higher priority. Then lock in the at most 3 subjects
-              you&apos;ll actually improve. Only you can see this.
+              need — lower marks, higher priority. Only you can see this.
             </p>
+            {weakestNames.length > 0 && (
+              <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-neutral-300">
+                Weakest {weakestNames.length === 1 ? "subject" : "subjects"} right now:{" "}
+                <strong className="text-slate-900 dark:text-white">
+                  {weakestNames.join(" · ")}
+                </strong>{" "}
+                — lock {weakestNames.length === 1 ? "it" : "them"} in on your{" "}
+                <Link
+                  href="/dashboard#improvement"
+                  className="font-semibold text-emerald-700 hover:underline dark:text-indigo-400"
+                >
+                  dashboard
+                </Link>
+                .
+              </p>
+            )}
           </Reveal>
 
           <Reveal delay={0.08}>
             <div className="mt-8">
               <Calculator subjects={subjects} />
-            </div>
-          </Reveal>
-
-          <Reveal>
-            <div className="mt-4">
-              <ImprovementPicker subjects={subjects} initialTrio={initialTrio} />
             </div>
           </Reveal>
         </main>

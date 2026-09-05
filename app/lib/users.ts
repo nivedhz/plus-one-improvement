@@ -1,6 +1,7 @@
 import type { User } from "../../prisma/generated/client";
 import { db } from "./db";
-import { sanitizeTrio } from "./improvement";
+import { orphanedSlugs, sanitizeTrio } from "./improvement";
+import { getSubject } from "./subjects";
 
 // User persistence backed by Postgres via Prisma.
 // Same function names as the old dev store, so API routes are unchanged
@@ -88,6 +89,21 @@ export async function setImprovementSubjects(
     data: { improvementSubjects: clean },
   });
   return clean;
+}
+
+// Display names of stored picks that fell out of the current stream.
+// Unknown slugs fall back to the raw slug so nothing renders blank.
+export async function getImprovementOrphans(
+  userId: string,
+  stream: string,
+): Promise<string[]> {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { improvementSubjects: true },
+  });
+  return orphanedSlugs(user?.improvementSubjects ?? [], stream).map(
+    (slug) => getSubject(slug)?.name ?? slug,
+  );
 }
 
 export function toPublicUser(user: User): {

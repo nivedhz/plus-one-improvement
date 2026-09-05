@@ -22,10 +22,9 @@ import { getSession } from "../lib/auth";
 import { computePriorities, getUserMarks } from "../lib/marks";
 import { buildSchedule } from "../lib/schedule";
 import { completedChapters, getUserProgressMap, studyStreakFor } from "../lib/progress";
-import { getImprovementSubjects } from "../lib/users";
+import { getStudyFocus } from "../lib/study-focus";
 import { EXAM_LABEL } from "../lib/site";
-import { STREAM_LABELS, subjectsForStream } from "../lib/subjects";
-import { getUserStream } from "../lib/users";
+import { STREAM_LABELS } from "../lib/subjects";
 import { MOTIVATION_VIDEOS, recentVideos } from "../lib/videos";
 import VideoFacade from "../components/VideoFacade";
 import Image from "next/image";
@@ -41,23 +40,16 @@ export default async function DashboardPage() {
   if (!session) redirect("/auth/login");
 
   const firstName = session.name.split(" ")[0];
-  const [progressMap, streak, done, stream, savedMarks] = await Promise.all([
+  const [progressMap, streak, done, savedMarks, focus] = await Promise.all([
     getUserProgressMap(session.id),
     studyStreakFor(session.id),
     completedChapters(session.id, 3),
-    getUserStream(session.id),
     getUserMarks(session.id),
+    getStudyFocus(session.id),
   ]);
-  // Improvement trio: when the student has locked in their (at most 3)
-  // subjects, the dashboard focuses on those alone — schedule, focus card
-  // and subject strip. Empty means undecided: show the full stream.
-  const trio = await getImprovementSubjects(session.id, stream);
-  const streamSubjects = subjectsForStream(stream);
-  const visibleSubjects =
-    trio.length > 0
-      ? streamSubjects.filter((s) => trio.includes(s.slug))
-      : streamSubjects;
-  const improvingNames = visibleSubjects.map((s) => s.name);
+  // Locked-in trio focuses the dashboard alone — schedule, focus card and
+  // subject strip. Empty means undecided: show the full stream.
+  const { stream, trio, dropped, streamSubjects, visible: visibleSubjects } = focus;
   const schedule = buildSchedule(
     visibleSubjects.map((s) => {
       const p = computePriorities(savedMarks).find((x) => x.subjectSlug === s.slug);
@@ -112,19 +104,19 @@ export default async function DashboardPage() {
             </div>
           </Reveal>
 
-          {trio.length === 0 && (
-            <Reveal delay={0.03}>
-              <div className="mt-4">
-                <ImprovementPicker
-                  subjects={streamSubjects.map((s) => ({
-                    slug: s.slug,
-                    name: s.name,
-                  }))}
-                  initialTrio={[]}
-                />
-              </div>
-            </Reveal>
-          )}
+          <Reveal delay={0.03}>
+            <div className="mt-4">
+              <ImprovementPicker
+                key={stream}
+                subjects={streamSubjects.map((s) => ({
+                  slug: s.slug,
+                  name: s.name,
+                }))}
+                initialTrio={trio}
+                dropped={dropped}
+              />
+            </div>
+          </Reveal>
 
           <Reveal delay={0.05}>
             <StudyCalendar schedule={schedule} />
@@ -226,17 +218,6 @@ export default async function DashboardPage() {
                   <ArrowRight size={15} aria-hidden />
                 </Link>
               </div>
-              {trio.length > 0 && (
-                <p className="mt-2 text-xs text-slate-500 dark:text-neutral-400">
-                  Improving {improvingNames.join(" · ")} —{" "}
-                  <Link
-                    href="/calculator"
-                    className="font-semibold text-emerald-700 hover:underline dark:text-indigo-400"
-                  >
-                    Change
-                  </Link>
-                </p>
-              )}
               <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {visibleSubjects.map((s, i) => {
                   const { done, total } = subjectDone(s.slug);
