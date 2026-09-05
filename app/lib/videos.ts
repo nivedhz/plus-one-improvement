@@ -5,7 +5,12 @@
 // YouTube ID below — never add a video you haven't title-checked.
 import { getChapter, getSubject } from "./subjects";
 
-export type VideoChannel = "Xylem" | "Xylem Plus Two" | "Eduport" | "Exam Winner";
+export type VideoChannel =
+  | "Xylem"
+  | "Xylem Plus Two"
+  | "Eduport"
+  | "Exam Winner"
+  | "Other";
 
 export type ChapterVideo = {
   youtubeId: string;
@@ -601,6 +606,18 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
 export function chapterVideos(subject: string, chapter: string): ChapterVideo[] {
   return CHAPTER_VIDEOS[subject]?.[chapter] ?? [];
 }
+
+// Improvement-season motivation and strategy picks for the dashboard.
+// Hand-verified titles; YUMtwCVoDDc is third-party commentary included
+// on explicit request.
+export const MOTIVATION_VIDEOS: ChapterVideo[] = [
+  v("YUMtwCVoDDc", "I analysed 37.5 hours of +2 youtube classes", "Other"),
+  v("K8v3xLi_asw", "+1 Improvement | Prove Them Wrong - KATTA MOTIVATION", "Eduport"),
+  v("dzg7hH5d_D0", "Plus One Improvement Study Plan Motivation", "Eduport"),
+  v("dxUBuJrLXWw", "+1 Improvement Exam - Big Trap | Preparation Strategy", "Exam Winner"),
+  v("FTtF4DEE_gk", "Plus One Improvement Exam Study Plan", "Exam Winner"),
+  v("HRrBk7VON7Y", "Plus One Improvement Exam Study Plan (Malayalam)", "Eduport"),
+];
 
 export type RecentVideo = {
   subjectSlug: string;
