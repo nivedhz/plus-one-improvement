@@ -176,8 +176,8 @@ export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
         {priorities.length === 0 ? (
           <p className="mt-3 text-sm leading-relaxed text-white/65">
             No saved marks yet. Fill in last time&apos;s scores and hit{" "}
-            <strong className="text-white">Save and plan priorities</strong> — each
-            subject gets its own priority, ranked by need.
+            <strong className="text-white">Save</strong> — each subject gets its own
+            priority, ranked by need.
           </p>
         ) : (
           <>

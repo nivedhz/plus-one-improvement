@@ -34,10 +34,10 @@
 - **Routing:** `/` and `/auth/*` are visitors-only; `/dashboard`,
   `/subjects/**`, `/calculator` require login. Guards live in pages plus
   Edge `proxy.ts` — middleware can't use Prisma, so never put DB calls there.
-- **Client data:** all browser requests go through the axios instance in
-  `app/lib/api.ts` (base URL from `NEXT_PUBLIC_APP_URL`) with TanStack
-  Query mutations. No native `fetch` in components. `router.refresh()`
-  re-reads server data after mutations.
+- **Client data:** all browser requests go through the native-`fetch`
+  wrapper in `app/lib/api.ts` (relative `/api` base, `{ data }` shape,
+  `ApiError`) with TanStack Query mutations. No axios anywhere.
+  `router.refresh()` re-reads server data after mutations.
 - **Backend:** Route Handlers return `NextResponse.json`, validate bodies
   with Zod (`safeParse`, first-issue message), and use the `{ error, code }`
   envelope from `app/lib/http.ts`. Mutating routes apply the same-origin
@@ -64,12 +64,12 @@
 ## Content libs (links + metadata only, never copied content)
 
 - `app/lib/subjects.ts` — 8-subject catalog (slugs, Malayalam titles where
-  applicable, `maxMarks`, key points). Slugs are stable IDs referenced by
+  applicable, `maxMarks`). Slugs are stable IDs referenced by
   progress, marks, videos, and notes — renaming a slug orphans user rows.
 - `app/lib/videos.ts` — hand-verified YouTube IDs per chapter (title-checked
   via oEmbed before adding); `startAt` seconds supported for deep links.
-- `app/lib/notes.ts` — live-verified (HTTP 200) HSSLive chapter pages, with
-  subject-level fallbacks.
+- `app/lib/notes.ts` — live-verified (HTTP 200) HSSLive chapter pages, plus
+  curated whole-subject HSSLive guides, with subject-level fallbacks.
 - `app/lib/pyq.ts` — live-verified HSSLive paper pages grouped by year,
   newest-first, model sets last.
 - Displayed counts (videos, notes, papers, chapters) must always derive
