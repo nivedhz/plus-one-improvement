@@ -27,7 +27,7 @@ const FEATURES = [
   },
   {
     icon: KeyRound,
-    title: "Key points first",
+    title: "Weakest first",
     text: "Start with what actually carries marks, then go deeper only where you need to.",
   },
   {
@@ -45,8 +45,8 @@ const STEPS = [
   },
   {
     icon: Play,
-    title: "Learn the key points",
-    text: "Revise a short summary first, then watch one trusted video if you need it.",
+    title: "Learn the chapter",
+    text: "Open the chapter, work through trusted videos and notes, then mark it complete.",
   },
   {
     icon: FileText,
@@ -304,7 +304,7 @@ export default async function Home() {
                   Your October self will thank you.
                 </h2>
                 <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-300">
-                  Pick one chapter today. Revise its key points. Solve 5 previous
+                  Pick one chapter today. Watch one trusted video. Solve 5 previous
                   questions. Repeat tomorrow.
                 </p>
                 <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">

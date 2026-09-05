@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Bot,
-  CheckCircle2,
-  ExternalLink,
-  Play,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Bot, ExternalLink, Play } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Navbar from "../../../components/Navbar";
@@ -110,87 +103,58 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
           <div className="mt-8 grid gap-4 lg:grid-cols-2">
             <Reveal className="h-full">
               <section
-                aria-labelledby="keys-heading"
-                className="h-full rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
+                aria-labelledby="tutor-heading"
+                className="flex h-full flex-col rounded-2xl bg-[#111] p-6 text-white ring-1 ring-black/5 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
               >
-                <h2 id="keys-heading" className="text-lg font-bold tracking-tight">
-                  Key points
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10">
+                  <Bot size={19} aria-hidden />
+                </span>
+                <h2 id="tutor-heading" className="mt-4 text-lg font-bold tracking-tight">
+                  Stuck on this chapter?
                 </h2>
-                <ul className="mt-4 space-y-3">
-                  {chapter.keyPoints.map((k) => (
-                    <li
-                      key={k}
-                      className="flex items-start gap-2.5 text-sm leading-relaxed"
-                    >
-                      <CheckCircle2
-                        size={17}
-                        aria-hidden
-                        className="mt-0.5 shrink-0 text-emerald-600 dark:text-indigo-400"
-                      />
-                      {k}
-                    </li>
-                  ))}
-                </ul>
+                <p className="mt-2 text-sm leading-relaxed text-white/65">
+                  The chapter tutor will answer only from {chapter.title} — definitions,
+                  examples and quiz questions on demand.
+                </p>
+                <span className="mt-5 inline-flex w-fit cursor-not-allowed rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white/50">
+                  Tutor coming soon
+                </span>
               </section>
             </Reveal>
 
             <Reveal delay={0.08} className="h-full">
-              <div className="h-full space-y-4">
-                <section
-                  aria-labelledby="tutor-heading"
-                  className="rounded-2xl bg-[#111] p-6 text-white ring-1 ring-black/5 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
-                >
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10">
-                    <Bot size={19} aria-hidden />
-                  </span>
-                  <h2
-                    id="tutor-heading"
-                    className="mt-4 text-lg font-bold tracking-tight"
-                  >
-                    Stuck on this chapter?
-                  </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-white/65">
-                    The chapter tutor will answer only from {chapter.title} — definitions,
-                    examples and quiz questions on demand.
-                  </p>
-                  <span className="mt-5 inline-flex w-fit cursor-not-allowed rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white/50">
-                    Tutor coming soon
-                  </span>
-                </section>
-
-                <section
-                  aria-labelledby="res-heading"
-                  className="rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
-                >
-                  <h2 id="res-heading" className="text-lg font-bold tracking-tight">
-                    Trusted resources
-                  </h2>
-                  <ul className="mt-4 space-y-2.5">
-                    {PARTNERS.map((p) => (
-                      <li key={p.name}>
-                        <a
-                          href={p.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="group flex items-center justify-between gap-3 text-sm"
-                        >
-                          <span>
-                            <span className="font-semibold">{p.name}</span>
-                            <span className="ml-2 text-xs text-slate-500 dark:text-neutral-400">
-                              {p.detail}
-                            </span>
+              <section
+                aria-labelledby="res-heading"
+                className="h-full rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
+              >
+                <h2 id="res-heading" className="text-lg font-bold tracking-tight">
+                  Trusted resources
+                </h2>
+                <ul className="mt-4 space-y-2.5">
+                  {PARTNERS.map((p) => (
+                    <li key={p.name}>
+                      <a
+                        href={p.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center justify-between gap-3 text-sm"
+                      >
+                        <span>
+                          <span className="font-semibold">{p.name}</span>
+                          <span className="ml-2 text-xs text-slate-500 dark:text-neutral-400">
+                            {p.detail}
                           </span>
-                          <ExternalLink
-                            size={15}
-                            aria-hidden
-                            className="shrink-0 text-slate-300 transition group-hover:text-slate-500 dark:group-hover:text-neutral-300"
-                          />
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              </div>
+                        </span>
+                        <ExternalLink
+                          size={15}
+                          aria-hidden
+                          className="shrink-0 text-slate-300 transition group-hover:text-slate-500 dark:group-hover:text-neutral-300"
+                        />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
             </Reveal>
           </div>
 
@@ -211,6 +175,31 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
                     </Reveal>
                   ))}
                 </div>
+              </section>
+            </Reveal>
+          )}
+
+          {notes.length > 0 && (
+            <Reveal>
+              <section aria-labelledby="notes-heading" className="mt-8">
+                <h2 id="notes-heading" className="text-lg font-bold tracking-tight">
+                  Chapter notes
+                </h2>
+                <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
+                  Linked reading from the original publishers — nothing copied, everything
+                  attributed.
+                </p>
+                <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
+                  {notes.map((note) => (
+                    <li key={note.url}>
+                      <ResourceCard
+                        title={note.title}
+                        url={note.url}
+                        detail={`${note.source}${note.scope === "subject" ? " · covers full subject" : ""}`}
+                      />
+                    </li>
+                  ))}
+                </ul>
               </section>
             </Reveal>
           )}
@@ -237,31 +226,6 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
               </div>
             </section>
           </Reveal>
-
-          {notes.length > 0 && (
-            <Reveal>
-              <section aria-labelledby="notes-heading" className="mt-8">
-                <h2 id="notes-heading" className="text-lg font-bold tracking-tight">
-                  Chapter notes
-                </h2>
-                <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
-                  Linked reading from the original publishers — nothing copied, everything
-                  attributed.
-                </p>
-                <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
-                  {notes.map((note) => (
-                    <li key={note.url}>
-                      <ResourceCard
-                        title={note.title}
-                        url={note.url}
-                        detail={`${note.source}${note.scope === "subject" ? " · covers full subject" : ""}`}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            </Reveal>
-          )}
 
           <nav aria-label="Chapter navigation" className="mt-8 grid gap-3 sm:grid-cols-2">
             {prev ? (

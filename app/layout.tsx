@@ -4,8 +4,7 @@ import Providers from "./components/Providers";
 import "./globals.css";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
-  "http://localhost:3000";
+  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "http://localhost:3000";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s | improve.",
   },
   description:
-    "A focused study companion for Kerala Plus One improvement exams — key points, trusted videos and previous questions, organised by chapter.",
+    "A focused study companion for Kerala Plus One improvement exams — trusted videos, notes and previous questions, organised by chapter.",
   manifest: "/manifest.webmanifest",
   robots: { index: true, follow: true },
   openGraph: {
@@ -38,8 +37,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "improve. | All your notes, in one space",
-    description:
-      "Key points, trusted videos and previous questions, organised by chapter.",
+    description: "Trusted videos, notes and previous questions, organised by chapter.",
   },
 };
 
@@ -56,11 +54,7 @@ const themeInitScript = `(function(){try{var t=localStorage.getItem("improve-the
 
 // Explicit props (not the generated LayoutProps global) so `tsc --noEmit`
 // passes on a fresh checkout before `next typegen`/`next build` runs.
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"

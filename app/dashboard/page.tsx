@@ -20,7 +20,7 @@ import SubjectIcon from "../components/SubjectIcon";
 import StudyCalendar from "../components/StudyCalendar";
 import { getSession } from "../lib/auth";
 import { computePriorities, getUserMarks } from "../lib/marks";
-import { buildSchedule } from "../lib/schedule";
+import { planSchedule } from "../lib/schedule";
 import { completedChapters, getUserProgressMap, studyStreakFor } from "../lib/progress";
 import { getStudyFocus } from "../lib/study-focus";
 import { EXAM_LABEL } from "../lib/site";
@@ -50,12 +50,27 @@ export default async function DashboardPage() {
   // Locked-in trio focuses the dashboard alone — schedule, focus card and
   // subject strip. Empty means undecided: show the full stream.
   const { stream, trio, dropped, streamSubjects, visible: visibleSubjects } = focus;
-  const schedule = buildSchedule(
-    visibleSubjects.map((s) => {
-      const p = computePriorities(savedMarks).find((x) => x.subjectSlug === s.slug);
+  const priorities = computePriorities(savedMarks);
+  const schedule = planSchedule({
+    subjects: visibleSubjects.map((s) => {
+      const p = priorities.find((x) => x.subjectSlug === s.slug);
       return { slug: s.slug, name: s.name, level: p ? p.level : null };
     }),
-  );
+    // Unfinished chapters only — completing one automatically reshapes
+    // every future day on the next load (rollover by recompute).
+    backlogs: Object.fromEntries(
+      visibleSubjects.map((s) => [
+        s.slug,
+        s.chapters
+          .filter((c) => (progressMap[`${s.slug}:${c.slug}`] ?? 0) < 100)
+          .map((c) => ({ slug: c.slug, title: c.title })),
+      ]),
+    ),
+  });
+  // Today's focus IS today's plan — calendar and goals finally agree.
+  const todayPlan = schedule.days.find((d) => d.isToday);
+  const focusChapters = (todayPlan?.chapters ?? []).slice(0, 3);
+  const focusOverflow = (todayPlan?.chapters.length ?? 0) - focusChapters.length;
   const fresh = recentVideos(6);
   const subjectDone = (slug: string) => {
     const s = visibleSubjects.find((x) => x.slug === slug);
@@ -65,22 +80,6 @@ export default async function DashboardPage() {
     ).length;
     return { done, total: s.chapters.length };
   };
-  // First unfinished chapter in stream order — the suggested next step.
-  const nextUp = (() => {
-    for (const s of visibleSubjects) {
-      for (const c of s.chapters) {
-        if ((progressMap[`${s.slug}:${c.slug}`] ?? 0) < 100) {
-          return {
-            subjectSlug: s.slug,
-            subjectName: s.name,
-            chapterSlug: c.slug,
-            title: c.title,
-          };
-        }
-      }
-    }
-    return null;
-  })();
 
   return (
     <div id="top" className="relative min-h-screen overflow-clip">
@@ -122,6 +121,19 @@ export default async function DashboardPage() {
             <StudyCalendar schedule={schedule} />
           </Reveal>
 
+          {schedule.behindBy > 0 && (
+            <Reveal>
+              <p
+                role="status"
+                className="mt-4 rounded-2xl border border-amber-500/25 bg-amber-500/10 px-5 py-3.5 text-sm text-amber-800 dark:text-amber-300"
+              >
+                Behind by {schedule.behindBy}{" "}
+                {schedule.behindBy === 1 ? "chapter" : "chapters"} at a steady pace —
+                finish {schedule.dailyGoal + 1} a day to catch up.
+              </p>
+            </Reveal>
+          )}
+
           <div className="mt-4 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
             <Reveal className="h-full">
               <section
@@ -162,31 +174,61 @@ export default async function DashboardPage() {
                 className="flex h-full flex-col rounded-2xl bg-[#111] p-6 text-white ring-1 ring-black/5 sm:p-7 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
               >
                 <p className="text-xs font-semibold uppercase tracking-widest text-white/60">
-                  Today&apos;s focus
+                  Today&apos;s focus · {todayPlan?.goal ?? 0}{" "}
+                  {(todayPlan?.goal ?? 0) === 1 ? "chapter" : "chapters"}
                 </p>
                 <h2 id="focus-heading" className="mt-3 text-2xl font-bold tracking-tight">
-                  {nextUp?.title ?? "Everything is complete"}
+                  {focusChapters[0]?.title ?? "Everything is complete"}
                 </h2>
                 <p className="mt-1 text-sm text-white/60">
-                  {nextUp
-                    ? `${nextUp.subjectName} · up next`
+                  {focusChapters[0]
+                    ? `${focusChapters[0].subjectName} · up next`
                     : "Every chapter in your stream is done"}
                 </p>
+                {focusChapters.length > 0 && (
+                  <ul className="mt-5 space-y-2">
+                    {focusChapters.map((c) => (
+                      <li key={`${c.subjectSlug}:${c.chapterSlug}`}>
+                        <Link
+                          href={`/subjects/${c.subjectSlug}/${c.chapterSlug}`}
+                          className="group flex items-center gap-2.5 rounded-xl bg-white/[0.06] px-4 py-2.5 text-sm transition hover:bg-white/10"
+                        >
+                          <span className="min-w-0 flex-1 truncate font-medium">
+                            {c.title}
+                          </span>
+                          <span className="shrink-0 text-xs text-white/50">
+                            {c.subjectName}
+                          </span>
+                          <ArrowRight
+                            size={14}
+                            aria-hidden
+                            className="shrink-0 text-white/40 transition-transform group-hover:translate-x-0.5"
+                          />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {focusOverflow > 0 && (
+                  <p className="mt-3 text-xs text-white/50">
+                    +{focusOverflow} more on the calendar below.
+                  </p>
+                )}
                 <p className="mt-5 text-sm leading-relaxed text-white/75">
-                  {nextUp
-                    ? "Open it, study it, and mark it complete when finished."
+                  {focusChapters[0]
+                    ? "Open one, study it, and mark it complete when finished."
                     : "Sit back — or revisit any chapter for revision."}
                 </p>
                 <Link
                   href={
-                    nextUp
-                      ? `/subjects/${nextUp.subjectSlug}/${nextUp.chapterSlug}`
+                    focusChapters[0]
+                      ? `/subjects/${focusChapters[0].subjectSlug}/${focusChapters[0].chapterSlug}`
                       : "/subjects"
                   }
                   className="group mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-emerald-500 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-400 dark:bg-indigo-500 dark:hover:bg-indigo-400"
                 >
                   <Play size={15} aria-hidden />
-                  {nextUp ? "Open chapter" : "Browse subjects"}
+                  {focusChapters[0] ? "Open chapter" : "Browse subjects"}
                   <ArrowRight
                     size={15}
                     aria-hidden

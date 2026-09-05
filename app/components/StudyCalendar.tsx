@@ -32,6 +32,8 @@ export default function StudyCalendar({ schedule }: { schedule: Schedule }) {
           </h2>
           <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
             {schedule.rangeLabel} · weakest subjects first
+            {schedule.remaining > 0 && ` · ${schedule.dailyGoal} a day, Fri & Sun peak`}
+            {schedule.bufferDays > 0 && ` · ${schedule.bufferDays}-day revision buffer`}
           </p>
         </div>
         <ul
@@ -74,6 +76,9 @@ export default function StudyCalendar({ schedule }: { schedule: Schedule }) {
             {d}
           </p>
         ))}
+        {Array.from({ length: schedule.leadBlanks }).map((_, i) => (
+          <span key={`pad-${i}`} aria-hidden />
+        ))}
         {schedule.days.map((day) =>
           day.isPast ? (
             <div
@@ -88,12 +93,27 @@ export default function StudyCalendar({ schedule }: { schedule: Schedule }) {
                 aria-hidden
               />
             </div>
+          ) : day.buffer || day.rest ? (
+            <div
+              key={day.key}
+              role="gridcell"
+              tabIndex={0}
+              aria-label={`${day.dayNum}: ${day.buffer ? "revision buffer" : "rest day"}`}
+              className="flex min-h-10 cursor-default flex-col items-center justify-center gap-0.5 rounded-lg border border-dashed border-slate-300 p-0.5 sm:min-h-12 dark:border-neutral-700"
+            >
+              <span className="text-xs tabular-nums text-slate-400 dark:text-neutral-500">
+                {day.dayNum}
+              </span>
+              <span className="px-1 text-center text-[9px] font-semibold uppercase tracking-wide text-slate-400 dark:text-neutral-500">
+                {day.buffer ? "Revise" : "Rest"}
+              </span>
+            </div>
           ) : (
             <div
               key={day.key}
               role="gridcell"
               tabIndex={0}
-              aria-label={`${day.dayNum}: ${day.subjects.map((s) => s.name).join(", ") || "rest"}`}
+              aria-label={`${day.dayNum}: ${day.chapters.map((c) => c.title).join(", ") || "rest"}`}
               className={`group relative flex min-h-10 cursor-default flex-col items-center justify-center gap-0.5 rounded-lg p-0.5 ring-1 ring-slate-200/70 sm:min-h-12 dark:ring-neutral-800 ${
                 day.tone ? TONE_CELL[day.tone] : ""
               } ${
@@ -113,21 +133,32 @@ export default function StudyCalendar({ schedule }: { schedule: Schedule }) {
                   aria-hidden
                 />
               )}
-              <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-max max-w-44 -translate-x-1/2 rounded-xl border border-slate-200 bg-white p-3 text-left shadow-xl group-hover:block group-focus-within:block dark:border-neutral-700 dark:bg-neutral-900">
+              {day.goal > 0 && (
+                <span className="text-[9px] font-semibold tabular-nums text-slate-400 dark:text-neutral-500">
+                  ×{day.goal}
+                </span>
+              )}
+              <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-max max-w-52 -translate-x-1/2 rounded-xl border border-slate-200 bg-white p-3 text-left shadow-xl group-hover:block group-focus-within:block dark:border-neutral-700 dark:bg-neutral-900">
                 <p className="text-xs font-bold">
                   Day {day.dayNum}
                   {day.isToday && " · Today"}
+                  {day.goal > 0 && ` · ${day.goal} to go`}
                 </p>
-                {day.subjects.length > 0 ? (
+                {day.chapters.length > 0 ? (
                   <ul className="mt-1.5 space-y-1">
-                    {day.subjects.map((s) => (
+                    {day.chapters.slice(0, 4).map((c) => (
                       <li
-                        key={s.slug}
-                        className="whitespace-nowrap text-xs text-slate-600 dark:text-neutral-300"
+                        key={`${c.subjectSlug}:${c.chapterSlug}`}
+                        className="max-w-44 truncate text-xs text-slate-600 dark:text-neutral-300"
                       >
-                        {s.name}
+                        {c.title}
                       </li>
                     ))}
+                    {day.chapters.length > 4 && (
+                      <li className="text-xs text-slate-400 dark:text-neutral-500">
+                        +{day.chapters.length - 4} more
+                      </li>
+                    )}
                   </ul>
                 ) : (
                   <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
