@@ -5,6 +5,7 @@ import {
   setSessionCookie,
   verifyPassword,
 } from "../../../lib/auth";
+import { apiError, rejectIfCrossSite } from "../../../lib/http";
 import {
   clientIp,
   isRateLimitEnabled,
@@ -18,6 +19,8 @@ export const runtime = "nodejs";
 const LOGIN_LIMIT = { max: 10, windowMs: 10 * 60 * 1000 };
 
 export async function POST(req: Request) {
+  const crossSite = rejectIfCrossSite(req);
+  if (crossSite) return crossSite;
   if (isRateLimitEnabled()) {
     const limit = rateLimit(
       `login:${clientIp(req)}`,
@@ -25,13 +28,9 @@ export async function POST(req: Request) {
       LOGIN_LIMIT.windowMs,
     );
     if (!limit.ok) {
-      return NextResponse.json(
-        { error: "Too many attempts. Please try again later." },
-        {
-          status: 429,
-          headers: { "Retry-After": String(limit.retryAfterSec) },
-        },
-      );
+      return apiError("Too many attempts. Please try again later.", 429, "RATE_LIMITED", {
+        headers: { "Retry-After": String(limit.retryAfterSec) },
+      });
     }
   }
 
@@ -39,17 +38,15 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json(
-      { error: "Invalid request body." },
-      { status: 400 },
-    );
+    return apiError("Invalid request body.", 400, "BAD_REQUEST");
   }
 
   const parsed = loginSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: parsed.error.issues[0]?.message ?? "Invalid details." },
-      { status: 400 },
+    return apiError(
+      parsed.error.issues[0]?.message ?? "Invalid details.",
+      400,
+      "BAD_REQUEST",
     );
   }
 
@@ -58,10 +55,7 @@ export async function POST(req: Request) {
 
   // Generic message on purpose — don't reveal whether the email exists.
   if (!user || !(await verifyPassword(password, user.passwordHash))) {
-    return NextResponse.json(
-      { error: "Invalid email or password." },
-      { status: 401 },
-    );
+    return apiError("Invalid email or password.", 401, "INVALID_CREDENTIALS");
   }
 
   const publicUser = toPublicUser(user);
