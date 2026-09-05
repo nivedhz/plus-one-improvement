@@ -380,19 +380,82 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
     ],
   },
   "computer-science": {
-    "introduction-to-computers": [
-      v("T0FmGeY-iFQ", "Data Representation and Boolean Algebra — Part 1", "Xylem"),
-      v("1i3rJNRxQpI", "Data Representation and Boolean Algebra — One Shot", "Eduport"),
+    "discipline-of-computing": [
+      v("HXQ9vzuiABQ", "Plus One Computer Science | Chapter 1 | Discipline of Computing | Full Chapter Revision", "Exam Winner"),
+      v("O_Z6xGGMRDI", "Plus One Computer Science | Chapter 1 | Discipline of Computing", "Eduport"),
+      v("Mta5V7xrhVM", "Plus One Computer Science: Chapter 1 | The Discipiline of Computing", "Xylem"),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 2042),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 180),
     ],
-    "python-basics": [
-      v("TrasrXuadME", "Getting Started with Python", "Xylem"),
+    "data-representation-and-boolean-algebra": [
+      v("5z2FIyzdmAU", "Plus One Computer Science | Chapter 2 Data Representation and Boolean Algebra | Full Chapter Revision", "Exam Winner"),
+      v("BbEVuPkzLCU", "Plus One Computer Science | Chapter 2 Data Representation and Boolean Algebra", "Eduport"),
+      v("T0FmGeY-iFQ", "Plus One Computer Science | Chapter 2 - Data Representation And Boolean Algebra - Part 1", "Xylem"),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 2743),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 2209),
     ],
-    "strings-and-lists": [
-      v("Leg79Sfg3bI", "Arrays and String Handling in Python", "Xylem"),
+    "components-of-computer-system": [
+      v("P3bXZEQrkl8", "Plus One Computer Science | Chapter 3 Components of Computer System | Full Chapter Revision", "Exam Winner"),
+      v("1OLzrLhkbcQ", "Plus One Onam Exam Computer Science | Chapter 3 | Components of the Computer System - One Shot", "Eduport"),
+      v("_mZSd_igivU", "Plus One Computer Science | Data Representation And Boolean Algebra, Components Of Computer System", "Xylem", 4557),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 4504),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 9164),
     ],
-    "functions-in-python": [
-      v("tF2uJ5CqDRo", "Functions — One Shot Revision", "Xylem"),
-      v("CpqaDT-92RI", "Functions — Full Chapter", "Exam Winner"),
+    "principles-of-programming-and-problem-solving": [
+      v("E-0nsPFFxEo", "Plus One Computer Science | Chapter 4, 5, 6", "Exam Winner", 275),
+      v("8xbxyh1i0BM", "Plus One CS | Principle of Programming & Problem Solving in 15 minutes", "Eduport"),
+      v("3chId5iqtSQ", "Plus One Computer Science - Principles of Programming and Problem Solving", "Xylem"),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 5684),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 11654),
+    ],
+    "introduction-to-cpp-programming": [
+      v("1YzXpTOmvJM", "Plus One CS Introduction to C++ Programming Chapter 5 Christmas Exam 2025", "Eduport"),
+      v("Ebe2NSVax0w", "Plus One Computer Science Public Exam | Chapters: 5, 6, 7, 8", "Exam Winner", 235),
+      v("bnIab8lQw7k", "Plus One - Computer Science - Introduction to C++ Programming", "Xylem"),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 6942),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 19648),
+    ],
+    "data-types-and-operators": [
+      v("hsUF2bRG258", "Plus One Computer Science | Data Types and Operations | Chapter 6 | Full Chapter Revision", "Exam Winner"),
+      v("UjeYssftPts", "Plus One Computer Science | Data Types and Operators | Chapter 6", "Eduport"),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 7463),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 20565),
+    ],
+    "control-statements": [
+      v("lwADOfsFQAU", "Plus One Computer Science | Control statement | Chapter 7 | Full Chapter Revision", "Exam Winner"),
+      v("fnKzVXlWQho", "Plus One Computer Science | Control Statements - Full Chapter Revision", "Xylem"),
+      v("3-uhwXrJ7ok", "Plus One CS | Control Statements in 14 minutes", "Eduport"),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 8784),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 23993),
+    ],
+    arrays: [
+      v("LmXQBBNHNlo", "Plus One Computer Science | Arrays | Chapter 8 | Full Chapter revision", "Exam Winner"),
+      v("-1N5LFWXP28", "Plus One Christmas Exam Computer Science | String Handling And I/O Functions, Arrays", "Xylem", 62),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 9074),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 26820),
+    ],
+    "string-handling-and-io-functions": [
+      v("ruBOK204J9w", "Plus One Computer Science | Chapters: 9, 10, 11, 12 | Full Chapters", "Exam Winner", 39),
+      v("Qcpc_Q_VklM", "Plus One Christmas Exam - Computer Science - Day 7", "Xylem", 2819),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 9792),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 28422),
+    ],
+    functions: [
+      v("tF2uJ5CqDRo", "Plus One Computer Science | Functions - One Shot Revision", "Xylem"),
+      v("ruBOK204J9w", "Plus One Computer Science | Chapters: 9, 10, 11, 12 | Full Chapters", "Exam Winner", 339),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 10060),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 28849),
+    ],
+    "computer-networks": [
+      v("ruBOK204J9w", "Plus One Computer Science | Chapters: 9, 10, 11, 12 | Full Chapters", "Exam Winner", 966),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 410),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 30565),
+    ],
+    "internet-and-mobile-computing": [
+      v("tL5NUdr459M", "Plus One Computer Science | 12. Internet and Mobile Computing", "Eduport"),
+      v("qHrq1oBOtmg", "+1 Computer Science | Internet & Mobile Computing | Full Chapter", "Exam Winner"),
+      v("GyTe9pO3YYk", "Plus One CS Marathon | One Shot", "Eduport", 10692),
+      v("AU08LNmH3hs", "Plus One Model Exam Computer Science | Full Chapters In One Live - Mega Marathon", "Xylem", 31277),
     ],
   },
   zoology: {
