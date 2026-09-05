@@ -1,6 +1,14 @@
 export const EXAM_DATE_ISO = "2026-10-12T09:30:00+05:30";
 export const EXAM_LABEL = "12 October 2026 · 9:30 AM IST";
 
+// Human contact only (mailto links). No sending infrastructure exists —
+// the app never emails anyone. Replacing this address updates every
+// contact and suggestion link at once.
+export const CONTACT_EMAIL = "nivedher12@gmail.com";
+
+export function mailto(subject: string, body: string): string {
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
 export type Quote = { text: string; author: string };
 
 export const QUOTES: Quote[] = [

@@ -17,7 +17,7 @@ import CountdownTimer from "./components/CountdownTimer";
 import Navbar from "./components/Navbar";
 import QuoteRotator from "./components/QuoteRotator";
 import { getSession } from "./lib/auth";
-import { EXAM_LABEL, PARTNERS } from "./lib/site";
+import { EXAM_LABEL, PARTNERS, mailto } from "./lib/site";
 
 const FEATURES = [
   {
@@ -339,6 +339,12 @@ export default async function Home() {
               </a>
               <a href="/terms" className="hover:underline">
                 Terms
+              </a>
+              <a
+                href={mailto("improve. suggestion", "Your suggestion:")}
+                className="hover:underline"
+              >
+                Suggestions
               </a>
             </p>
           </div>

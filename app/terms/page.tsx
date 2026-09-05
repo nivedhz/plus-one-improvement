@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
+import { CONTACT_EMAIL } from "../lib/site";
 
 export const metadata: Metadata = {
   title: "Terms of use",
@@ -59,7 +60,10 @@ export default function TermsPage() {
             Terms of use
           </h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-neutral-400">
-            Last updated September 2026
+            Last updated September 2026 · Contact:{" "}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="hover:underline">
+              {CONTACT_EMAIL}
+            </a>
           </p>
           <div className="mt-8 space-y-7">
             {SECTIONS.map((s) => (

@@ -10,7 +10,7 @@ import VideoFacade from "../../../components/VideoFacade";
 import { getSession } from "../../../lib/auth";
 import { chapterNotes } from "../../../lib/notes";
 import { getUserProgressMap, isComplete } from "../../../lib/progress";
-import { PARTNERS } from "../../../lib/site";
+import { PARTNERS, mailto } from "../../../lib/site";
 import { getChapter, getSubject } from "../../../lib/subjects";
 import { chapterVideos } from "../../../lib/videos";
 
@@ -179,6 +179,18 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
                     </Reveal>
                   ))}
                 </div>
+                <p className="mt-3 text-xs text-slate-500 dark:text-neutral-400">
+                  Know a video that belongs here?{" "}
+                  <a
+                    href={mailto(
+                      `Video suggestion: ${subject.name} – ${chapter.title}`,
+                      `Video title:\nYouTube link:\nWhy it helps:`,
+                    )}
+                    className="font-semibold text-emerald-700 hover:underline dark:text-indigo-400"
+                  >
+                    Suggest it
+                  </a>
+                </p>
               </section>
             </Reveal>
           )}

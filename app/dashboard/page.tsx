@@ -23,7 +23,7 @@ import { computePriorities, getUserMarks } from "../lib/marks";
 import { planSchedule } from "../lib/schedule";
 import { completedChapters, getUserProgressMap, studyStreakFor } from "../lib/progress";
 import { getStudyFocus } from "../lib/study-focus";
-import { EXAM_LABEL } from "../lib/site";
+import { EXAM_LABEL, mailto } from "../lib/site";
 import { STREAM_LABELS } from "../lib/subjects";
 import { MOTIVATION_VIDEOS, recentVideos } from "../lib/videos";
 import VideoFacade from "../components/VideoFacade";
@@ -474,7 +474,14 @@ export default async function DashboardPage() {
               ·{" "}
               <Link href="/terms" className="hover:underline">
                 Terms
-              </Link>
+              </Link>{" "}
+              ·{" "}
+              <a
+                href={mailto("improve. suggestion", "Your suggestion:")}
+                className="hover:underline"
+              >
+                Suggestions
+              </a>
             </p>
           </footer>
         </main>
