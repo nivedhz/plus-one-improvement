@@ -455,7 +455,7 @@ export default async function DashboardPage() {
                   Improvement-season motivation and strategy. Press play when the fire
                   dips.
                 </p>
-                <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-3">
                   {MOTIVATION_VIDEOS.map((video) => (
                     <VideoFacade key={video.youtubeId} video={video} />
                   ))}

@@ -168,9 +168,13 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
                   Hand-picked video lessons — the creators keep the views, you keep the
                   context.
                 </p>
-                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-3">
                   {videos.map((video, vi) => (
-                    <Reveal key={video.youtubeId} delay={Math.min(vi * 0.06, 0.24)}>
+                    <Reveal
+                      key={video.youtubeId}
+                      delay={Math.min(vi * 0.06, 0.24)}
+                      className="min-w-0"
+                    >
                       <VideoFacade video={video} />
                     </Reveal>
                   ))}

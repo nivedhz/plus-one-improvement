@@ -67,8 +67,8 @@ export default function VideoFacade({ video }: { video: ChapterVideo }) {
               className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
             />
             <span aria-hidden className="absolute inset-0 grid place-items-center">
-              <span className="grid h-14 w-14 place-items-center rounded-full bg-white/95 text-slate-900 shadow-xl transition group-hover:scale-105">
-                <Play size={22} className="ml-0.5" fill="currentColor" />
+              <span className="grid h-10 w-10 place-items-center rounded-full bg-white/95 text-slate-900 shadow-xl transition group-hover:scale-105 sm:h-14 sm:w-14">
+                <Play size={18} className="ml-0.5 sm:size-[22px]" fill="currentColor" />
               </span>
             </span>
             {video.recent && (
@@ -79,9 +79,9 @@ export default function VideoFacade({ video }: { video: ChapterVideo }) {
           </motion.button>
         )}
       </AnimatePresence>
-      <div className="flex items-start justify-between gap-3 p-4">
+      <div className="flex items-start justify-between gap-2 p-3 sm:gap-3 sm:p-4">
         <div className="min-w-0">
-          <h3 className="truncate text-sm font-semibold text-black dark:text-white">
+          <h3 className="truncate text-xs font-semibold text-black sm:text-sm dark:text-white">
             {video.title}
           </h3>
           <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
