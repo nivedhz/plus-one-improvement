@@ -54,10 +54,7 @@ export default function VideoFacade({ video }: { video: ChapterVideo }) {
             aria-hidden
             className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
           />
-          <span
-            aria-hidden
-            className="absolute inset-0 grid place-items-center"
-          >
+          <span aria-hidden className="absolute inset-0 grid place-items-center">
             <span className="grid h-14 w-14 place-items-center rounded-full bg-white/95 text-slate-900 shadow-xl transition group-hover:scale-105">
               <Play size={22} className="ml-0.5" fill="currentColor" />
             </span>
@@ -71,7 +68,9 @@ export default function VideoFacade({ video }: { video: ChapterVideo }) {
       )}
       <div className="flex items-start justify-between gap-3 p-4">
         <div className="min-w-0">
-          <h3 className="truncate text-sm font-semibold">{video.title}</h3>
+          <h3 className="truncate text-sm font-semibold text-black dark:text-white">
+            {video.title}
+          </h3>
           <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
             YouTube
             {video.startAt ? ` · Starts at ${formatStart(video.startAt)}` : ""}

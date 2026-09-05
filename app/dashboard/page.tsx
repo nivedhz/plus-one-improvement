@@ -27,7 +27,8 @@ import {
 import { EXAM_LABEL } from "../lib/site";
 import { STREAM_LABELS, subjectsForStream } from "../lib/subjects";
 import { getUserStream } from "../lib/users";
-import { recentVideos } from "../lib/videos";
+import { MOTIVATION_VIDEOS, recentVideos } from "../lib/videos";
+import VideoFacade from "../components/VideoFacade";
 import Image from "next/image";
 
 export const metadata: Metadata = {
@@ -350,6 +351,38 @@ export default async function DashboardPage() {
               </div>
             </section>
           )}
+
+          <section
+            aria-labelledby="fire-heading"
+            className="relative mt-10 overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 via-orange-500 to-amber-400 p-6 text-white shadow-xl shadow-orange-500/20 sm:p-8 dark:from-[#2a0f0a] dark:via-[#3a1508] dark:to-[#2a1a05] dark:shadow-none dark:ring-1 dark:ring-orange-500/20"
+          >
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/20 blur-3xl dark:bg-orange-500/10"
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-yellow-300/30 blur-3xl dark:bg-red-500/10"
+            />
+            <div className="relative">
+              <h2
+                id="fire-heading"
+                className="inline-flex items-center gap-2 text-lg font-bold tracking-tight"
+              >
+                <Flame size={19} aria-hidden />
+                Fuel for the comeback
+              </h2>
+              <p className="mt-1 max-w-xl text-sm text-white/80 dark:text-orange-100/60">
+                Improvement-season motivation and strategy. Press play when
+                the fire dips.
+              </p>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {MOTIVATION_VIDEOS.map((video) => (
+                  <VideoFacade key={video.youtubeId} video={video} />
+                ))}
+              </div>
+            </div>
+          </section>
 
           <footer className="mt-12 border-t border-slate-200/70 py-6 text-xs text-slate-500 dark:border-neutral-800/70 dark:text-neutral-400">
             <p>
