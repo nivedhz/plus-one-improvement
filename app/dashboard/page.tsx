@@ -32,7 +32,7 @@ import VideoFacade from "../components/VideoFacade";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Dashboard | improve.",
+  title: "Dashboard",
   description: "Your Plus One improvement study dashboard.",
 };
 

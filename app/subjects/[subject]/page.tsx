@@ -18,7 +18,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const subject = getSubject((await params).subject);
   return {
-    title: subject ? `${subject.name} | improve.` : "Subject | improve.",
+    title: subject ? subject.name : "Subject",
     description: subject?.tagline,
   };
 }

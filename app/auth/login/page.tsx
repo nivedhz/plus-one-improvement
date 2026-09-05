@@ -6,7 +6,7 @@ import AuthForm from "../../components/AuthForm";
 import { getSession } from "../../lib/auth";
 
 export const metadata: Metadata = {
-  title: "Log in | improve.",
+  title: "Log in",
   description: "Log in to your improve. study companion account.",
 };
 

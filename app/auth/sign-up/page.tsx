@@ -6,7 +6,7 @@ import AuthForm from "../../components/AuthForm";
 import { getSession } from "../../lib/auth";
 
 export const metadata: Metadata = {
-  title: "Create account | improve.",
+  title: "Create account",
   description: "Create your free improve. account and start October prep.",
 };
 
