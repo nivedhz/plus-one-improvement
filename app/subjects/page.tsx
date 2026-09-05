@@ -13,7 +13,7 @@ import { subjectVideoCount } from "../lib/videos";
 import { getUserStream } from "../lib/users";
 
 export const metadata: Metadata = {
-  title: "Subjects | improve.",
+  title: "Subjects",
   description: "Every science-batch subject, chapter by chapter.",
 };
 

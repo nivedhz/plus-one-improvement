@@ -31,7 +31,7 @@ export async function generateMetadata({
   const subject = getSubject(subjectSlug);
   const chapter = subject && getChapter(subject, chapterSlug);
   return {
-    title: chapter ? `${chapter.title} · ${subject?.name} | improve.` : "Chapter | improve.",
+    title: chapter ? `${chapter.title} · ${subject?.name}` : "Chapter",
   };
 }
 

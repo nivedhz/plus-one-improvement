@@ -9,7 +9,7 @@ import { getUserStream } from "../lib/users";
 import Calculator from "./Calculator";
 
 export const metadata: Metadata = {
-  title: "Marks calculator | improve.",
+  title: "Marks calculator",
   description:
     "Plan subject priorities from your last Plus One marks. Private to your account.",
 };
