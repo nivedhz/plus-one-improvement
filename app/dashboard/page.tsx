@@ -465,24 +465,26 @@ export default async function DashboardPage() {
           </Reveal>
 
           <footer className="mt-12 border-t border-slate-200/70 py-6 text-xs text-slate-500 dark:border-neutral-800/70 dark:text-neutral-400">
-            <p>
-              improve. — your study companion for Kerala Plus One improvement exams. All
-              learning resources belong to their original creators.{" "}
-              <Link href="/privacy" className="hover:underline">
-                Privacy
-              </Link>{" "}
-              ·{" "}
-              <Link href="/terms" className="hover:underline">
-                Terms
-              </Link>{" "}
-              ·{" "}
-              <a
-                href={mailto("improve. suggestion", "Your suggestion:")}
-                className="hover:underline"
-              >
-                Suggestions
-              </a>
-            </p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <p>
+                improve. — your study companion for Kerala Plus One improvement exams. All
+                learning resources belong to their original creators.
+              </p>
+              <p className="flex flex-wrap gap-x-4 gap-y-1">
+                <Link href="/privacy" className="hover:underline">
+                  Privacy
+                </Link>
+                <Link href="/terms" className="hover:underline">
+                  Terms
+                </Link>
+                <a
+                  href={mailto("improve. suggestion", "Your suggestion:")}
+                  className="hover:underline"
+                >
+                  Suggestions
+                </a>
+              </p>
+            </div>
           </footer>
         </main>
       </div>
