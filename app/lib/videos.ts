@@ -294,8 +294,89 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
     ],
   },
   malayalam: {
-    vayanasala: [
-      v("s0amSyZWHGw", "Malayalam — Mega Marathon", "Xylem"),
+    sandharshanam: [
+      v("ta7iFKD6Ex4", "Plus One മലയാളം - സന്ദർശനം", "Xylem"),
+      v("VxW1ljGSV5o", "Plus One മലയാളം | Unit 1 - Important Questions", "Xylem"),
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 155),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 10727),
+    ],
+    "ormayude-njarambu": [
+      v("VxW1ljGSV5o", "Plus One മലയാളം | Unit 1 - Important Questions", "Xylem"),
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 911),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 10858),
+    ],
+    "verukal-nashtappeduthunnavar": [
+      v("VxW1ljGSV5o", "Plus One മലയാളം | Unit 1 - Important Questions", "Xylem"),
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 1490),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 11107),
+    ],
+    malsyam: [
+      v("Y8QdnjPni30", "Plus One Malayalam | മത്സ്യം", "Xylem"),
+      v("VxW1ljGSV5o", "Plus One മലയാളം | Unit 1 - Important Questions", "Xylem"),
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 2134),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 11307),
+    ],
+    kayalarikathu: [
+      v("uRxu6F4D6Vo", "Plus One മലയാളം - കായലരികത്ത്", "Xylem"),
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 2624),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 8299),
+    ],
+    "sinimayum-samoohavum": [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 2881),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 9017),
+    ],
+    "kalavupoya-cycle": [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 3193),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 9835),
+    ],
+    kaipaadu: [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 3556),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 10205),
+    ],
+    kelkkunnundo: [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 3770),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 10497),
+    ],
+    "kavyakala-nireekshanangal": [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 3939),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 5070),
+    ],
+    oonjaalil: [
+      v("dxaYJzDWXkQ", "Plus One Malayalam | ഊഞ്ഞാലിൽ - പരീക്ഷാ ചോദ്യങ്ങൾ", "Xylem"),
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 4213),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 6024),
+    ],
+    "anargha-nimisham": [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 4565),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 6537),
+    ],
+    "lathiyum-vediyundayum": [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 4763),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 7268),
+    ],
+    peelikannukal: [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 5076),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 685),
+    ],
+    anukamba: [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 5351),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 1369),
+    ],
+    mohiyudheenmaala: [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 5598),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 2030),
+    ],
+    vaasanaavikruthi: [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 5715),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 2528),
+    ],
+    sankramanam: [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 5964),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 3431),
+    ],
+    shasthrakriya: [
+      v("zTJLLLRSMR0", "Plus One Malayalam 1 Public Exam | Marathon", "Exam Winner", 6340),
+      v("s0amSyZWHGw", "Plus One Public Exam 2026 | Malayalam - Mega Marathon", "Xylem", 4536),
     ],
   },
   "computer-science": {
