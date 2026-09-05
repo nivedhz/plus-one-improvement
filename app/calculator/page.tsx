@@ -5,9 +5,11 @@ import { Reveal } from "../components/animate";
 import Navbar from "../components/Navbar";
 import { redirect } from "next/navigation";
 import { getSession } from "../lib/auth";
+import { getImprovementSubjects } from "../lib/users";
 import { STREAM_LABELS, subjectsForStream } from "../lib/subjects";
 import { getUserStream } from "../lib/users";
 import Calculator from "./Calculator";
+import ImprovementPicker from "./ImprovementPicker";
 
 export const metadata: Metadata = {
   title: "Marks calculator",
@@ -22,6 +24,7 @@ export default async function CalculatorPage() {
   if (!session) redirect("/auth/login");
   const stream = await getUserStream(session.id);
   const subjects = subjectsForStream(stream);
+  const initialTrio = await getImprovementSubjects(session.id, stream);
   return (
     <div className="relative min-h-screen overflow-clip">
       <div className="relative">
@@ -51,13 +54,20 @@ export default async function CalculatorPage() {
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-neutral-300">
               Enter your last Plus One marks. The server ranks each subject on its own
-              need — lower marks, higher priority. Only you can see this.
+              need — lower marks, higher priority. Then lock in the at most 3 subjects
+              you&apos;ll actually improve. Only you can see this.
             </p>
           </Reveal>
 
           <Reveal delay={0.08}>
             <div className="mt-8">
               <Calculator subjects={subjects} />
+            </div>
+          </Reveal>
+
+          <Reveal>
+            <div className="mt-4">
+              <ImprovementPicker subjects={subjects} initialTrio={initialTrio} />
             </div>
           </Reveal>
         </main>

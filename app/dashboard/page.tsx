@@ -21,6 +21,7 @@ import { getSession } from "../lib/auth";
 import { computePriorities, getUserMarks } from "../lib/marks";
 import { buildSchedule } from "../lib/schedule";
 import { completedChapters, getUserProgressMap, studyStreakFor } from "../lib/progress";
+import { getImprovementSubjects } from "../lib/users";
 import { EXAM_LABEL } from "../lib/site";
 import { STREAM_LABELS, subjectsForStream } from "../lib/subjects";
 import { getUserStream } from "../lib/users";
@@ -46,13 +47,22 @@ export default async function DashboardPage() {
     getUserStream(session.id),
     getUserMarks(session.id),
   ]);
+  // Improvement trio: when the student has locked in their (at most 3)
+  // subjects, the dashboard focuses on those alone — schedule, focus card
+  // and subject strip. Empty means undecided: show the full stream.
+  const trio = await getImprovementSubjects(session.id, stream);
+  const streamSubjects = subjectsForStream(stream);
+  const visibleSubjects =
+    trio.length > 0
+      ? streamSubjects.filter((s) => trio.includes(s.slug))
+      : streamSubjects;
+  const improvingNames = visibleSubjects.map((s) => s.name);
   const schedule = buildSchedule(
-    subjectsForStream(stream).map((s) => {
+    visibleSubjects.map((s) => {
       const p = computePriorities(savedMarks).find((x) => x.subjectSlug === s.slug);
       return { slug: s.slug, name: s.name, level: p ? p.level : null };
     }),
   );
-  const visibleSubjects = subjectsForStream(stream);
   const fresh = recentVideos(6);
   const subjectDone = (slug: string) => {
     const s = visibleSubjects.find((x) => x.slug === slug);
@@ -201,6 +211,27 @@ export default async function DashboardPage() {
                   <ArrowRight size={15} aria-hidden />
                 </Link>
               </div>
+              {trio.length > 0 ? (
+                <p className="mt-2 text-xs text-slate-500 dark:text-neutral-400">
+                  Improving {improvingNames.join(" · ")} —{" "}
+                  <Link
+                    href="/calculator"
+                    className="font-semibold text-emerald-700 hover:underline dark:text-indigo-400"
+                  >
+                    Change
+                  </Link>
+                </p>
+              ) : (
+                <p className="mt-2 text-xs text-slate-500 dark:text-neutral-400">
+                  You can improve at most 3 subjects.{" "}
+                  <Link
+                    href="/calculator"
+                    className="font-semibold text-emerald-700 hover:underline dark:text-indigo-400"
+                  >
+                    Pick your 3
+                  </Link>
+                </p>
+              )}
               <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {visibleSubjects.map((s, i) => {
                   const { done, total } = subjectDone(s.slug);

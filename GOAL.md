@@ -23,6 +23,7 @@ Shipped and merged to `main`:
 - Curated video lessons per chapter (click-to-play privacy-enhanced embeds, deep-link timestamps), linked chapter notes, and year-grouped previous-year papers with answers.
 - Real binary chapter progress (`CompleteToggle`), per-user streaks, and recent completions — no mock data anywhere in the UI.
 - Priority planner (`/calculator`, login required): last-exam marks in, per-subject study priorities out. Marks stay private to the account.
+- Improvement trio: the exam allows at most 3 subjects, so the planner recommends the 3 weakest and the student locks in their choice. Dashboard, schedule, focus card, and subjects list show only those (undecided students see the full stream).
 - JWT sessions in an `httpOnly` cookie, logout with server-side revocation, production-only rate limits.
 - Light/dark themes with a persisted switcher; logout confirmation modal.
 

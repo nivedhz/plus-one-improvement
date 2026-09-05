@@ -88,7 +88,8 @@ can generate without secrets.
 - Auth: `POST /api/auth/sign-up|login|logout`, `GET /api/auth/me`
 - Data: `GET|PUT /api/marks` (last-exam marks + computed priorities),
   `GET|PUT /api/progress` (`{ completed: boolean }`),
-  `GET|PUT /api/profile` (science stream)
+  `GET|PUT /api/profile` (science stream),
+  `GET|PUT /api/improvement` (at most 3 improvement subjects)
 - Errors: `{ error, code }` envelope (`UNAUTHORIZED`, `BAD_REQUEST`,
   `RATE_LIMITED`, `UNKNOWN_CHAPTER`, …)
 

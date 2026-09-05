@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar";
 import StreamSwitcher from "../components/StreamSwitcher";
 import SubjectIcon from "../components/SubjectIcon";
 import { getSession } from "../lib/auth";
+import { getImprovementSubjects } from "../lib/users";
 import { getUserProgressMap } from "../lib/progress";
 import { subjectNoteCount } from "../lib/notes";
 import { subjectsForStream } from "../lib/subjects";
@@ -25,7 +26,12 @@ export default async function SubjectsPage() {
     getUserProgressMap(session.id),
     getUserStream(session.id),
   ]);
-  const visible = subjectsForStream(stream);
+  const streamSubjects = subjectsForStream(stream);
+  const trio = await getImprovementSubjects(session.id, stream);
+  const visible =
+    trio.length > 0
+      ? streamSubjects.filter((s) => trio.includes(s.slug))
+      : streamSubjects;
 
   return (
     <div className="relative min-h-screen overflow-clip">
@@ -63,8 +69,19 @@ export default async function SubjectsPage() {
           </Reveal>
 
           <h2 className="mt-10 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-neutral-400">
-            Subjects
+            {trio.length > 0 ? "Improving" : "Subjects"}
           </h2>
+          {trio.length > 0 && (
+            <p className="mt-2 text-xs text-slate-500 dark:text-neutral-400">
+              Showing only your improvement subjects.{" "}
+              <Link
+                href="/calculator"
+                className="font-semibold text-emerald-700 hover:underline dark:text-indigo-400"
+              >
+                Change
+              </Link>
+            </p>
+          )}
 
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {visible.map((s, i) => {
