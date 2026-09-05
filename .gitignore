@@ -36,6 +36,9 @@ yarn-error.log*
 # local dev auth store (contains password hashes — never commit)
 data/users.json
 
+# generated Prisma client
+prisma/generated/
+
 # vercel
 .vercel
 
