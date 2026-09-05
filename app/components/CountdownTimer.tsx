@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { EXAM_DATE_ISO } from "../lib/site";
 
@@ -71,12 +72,21 @@ export default function CountdownTimer() {
           key={u.label}
           className="rounded-2xl bg-white px-2 py-4 text-center shadow-sm ring-1 ring-slate-200 dark:bg-neutral-900 dark:ring-neutral-800"
         >
-          <p className="text-2xl font-bold tabular-nums sm:text-3xl">
-            {u.value}
+          <p className="relative overflow-hidden text-2xl font-bold tabular-nums sm:text-3xl">
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.span
+                key={u.value}
+                initial={{ y: 12, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -12, opacity: 0 }}
+                transition={{ duration: 0.28, ease: "easeOut" }}
+                className="block"
+              >
+                {u.value}
+              </motion.span>
+            </AnimatePresence>
           </p>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            {u.label}
-          </p>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{u.label}</p>
         </div>
       ))}
     </div>
