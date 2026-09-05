@@ -5,13 +5,13 @@ import {
   Bot,
   CheckCircle2,
   ExternalLink,
-  FileText,
   Play,
 } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Navbar from "../../../components/Navbar";
 import CompleteToggle from "../../../components/CompleteToggle";
+import ResourceCard from "../../../components/ResourceCard";
 import VideoFacade from "../../../components/VideoFacade";
 import { getSession } from "../../../lib/auth";
 import { chapterNotes } from "../../../lib/notes";
@@ -35,11 +35,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ChapterPage({
-  params,
-}: {
-  params: Promise<Params>;
-}) {
+export default async function ChapterPage({ params }: { params: Promise<Params> }) {
   const session = await getSession();
   if (!session) redirect("/auth/login");
 
@@ -121,7 +117,10 @@ export default async function ChapterPage({
               </h2>
               <ul className="mt-4 space-y-3">
                 {chapter.keyPoints.map((k) => (
-                  <li key={k} className="flex items-start gap-2.5 text-sm leading-relaxed">
+                  <li
+                    key={k}
+                    className="flex items-start gap-2.5 text-sm leading-relaxed"
+                  >
                     <CheckCircle2
                       size={17}
                       aria-hidden
@@ -145,8 +144,8 @@ export default async function ChapterPage({
                   Stuck on this chapter?
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-white/65">
-                  The chapter tutor will answer only from {chapter.title} —
-                  definitions, examples and quiz questions on demand.
+                  The chapter tutor will answer only from {chapter.title} — definitions,
+                  examples and quiz questions on demand.
                 </p>
                 <span className="mt-5 inline-flex w-fit cursor-not-allowed rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-white/50">
                   Tutor coming soon
@@ -194,8 +193,8 @@ export default async function ChapterPage({
                 Video lessons
               </h2>
               <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
-                Hand-picked video lessons — the creators keep the views, you
-                keep the context.
+                Hand-picked video lessons — the creators keep the views, you keep the
+                context.
               </p>
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 {videos.map((video) => (
@@ -211,36 +210,17 @@ export default async function ChapterPage({
                 Chapter notes
               </h2>
               <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
-                Linked reading from the original publishers — nothing copied,
-                everything attributed.
+                Linked reading from the original publishers — nothing copied, everything
+                attributed.
               </p>
-              <ul className="mt-4 space-y-2.5">
+              <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
                 {notes.map((note) => (
                   <li key={note.url}>
-                    <a
-                      href={note.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center gap-3.5 rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
-                    >
-                      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
-                        <FileText size={18} aria-hidden />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-semibold">
-                          {note.title}
-                        </span>
-                        <span className="mt-0.5 block text-xs text-slate-500 dark:text-neutral-400">
-                          {note.source}
-                          {note.scope === "subject" ? " · covers full subject" : ""}
-                        </span>
-                      </span>
-                      <ExternalLink
-                        size={16}
-                        aria-hidden
-                        className="shrink-0 text-slate-300 transition group-hover:text-slate-500 dark:group-hover:text-neutral-300"
-                      />
-                    </a>
+                    <ResourceCard
+                      title={note.title}
+                      url={note.url}
+                      detail={`${note.source}${note.scope === "subject" ? " · covers full subject" : ""}`}
+                    />
                   </li>
                 ))}
               </ul>
@@ -268,19 +248,24 @@ export default async function ChapterPage({
             </div>
           </section>
 
-          <nav
-            aria-label="Chapter navigation"
-            className="mt-8 grid gap-3 sm:grid-cols-2"
-          >
+          <nav aria-label="Chapter navigation" className="mt-8 grid gap-3 sm:grid-cols-2">
             {prev ? (
               <Link
                 href={`/subjects/${subject.slug}/${prev.slug}`}
                 className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
               >
-                <ArrowLeft size={17} aria-hidden className="shrink-0 text-slate-400 transition group-hover:-translate-x-0.5" />
+                <ArrowLeft
+                  size={17}
+                  aria-hidden
+                  className="shrink-0 text-slate-400 transition group-hover:-translate-x-0.5"
+                />
                 <span className="min-w-0">
-                  <span className="block text-xs text-slate-500 dark:text-neutral-400">Previous</span>
-                  <span className="block truncate text-sm font-semibold">{prev.title}</span>
+                  <span className="block text-xs text-slate-500 dark:text-neutral-400">
+                    Previous
+                  </span>
+                  <span className="block truncate text-sm font-semibold">
+                    {prev.title}
+                  </span>
                 </span>
               </Link>
             ) : (
@@ -292,10 +277,18 @@ export default async function ChapterPage({
                 className="group flex items-center justify-end gap-3 rounded-2xl border border-slate-200/80 bg-white/80 p-4 text-right backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
               >
                 <span className="min-w-0">
-                  <span className="block text-xs text-slate-500 dark:text-neutral-400">Next</span>
-                  <span className="block truncate text-sm font-semibold">{next.title}</span>
+                  <span className="block text-xs text-slate-500 dark:text-neutral-400">
+                    Next
+                  </span>
+                  <span className="block truncate text-sm font-semibold">
+                    {next.title}
+                  </span>
                 </span>
-                <ArrowRight size={17} aria-hidden className="shrink-0 text-slate-400 transition group-hover:translate-x-0.5" />
+                <ArrowRight
+                  size={17}
+                  aria-hidden
+                  className="shrink-0 text-slate-400 transition group-hover:translate-x-0.5"
+                />
               </Link>
             )}
           </nav>

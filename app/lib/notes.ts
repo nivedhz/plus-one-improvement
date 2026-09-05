@@ -148,30 +148,103 @@ export const CHAPTER_NOTES: Record<string, Record<string, ChapterNote[]>> = {
   },
 };
 
-// Subject-level fallbacks for chapters with no dedicated page.
+// Whole-subject study guides, hand-picked from HSSLive's Plus One study
+// materials index (https://www.hsslive.in/p/higher-secondary-plus-oneclass-11-study.html).
+// Every URL below was verified live (HTTP 200) before being added.
+// These render as their own section on subject pages, and double as the
+// fallback for chapters with no dedicated page.
+const H = "https://www.hsslive.in";
+
+function subjectNote(path: string, title: string): ChapterNote {
+  return { title, url: `${H}/${path}`, source: "HSSLive", scope: "subject" };
+}
+
 const SUBJECT_NOTES: Record<string, ChapterNote[]> = {
+  physics: [
+    subjectNote("2021/11/hss-ncert-physics-notes.html", "Class notes by Seema Elizabeth"),
+    subjectNote("2023/03/plusone-physics-144-points.html", "144-point quick revision"),
+    subjectNote("2026/03/physics-solved-pyq.html", "Solved PYQ, chapter-wise (APT)"),
+    subjectNote("2020/05/hss-plusone-physics-qb.html", "Chapter-wise question bank"),
+  ],
+  chemistry: [
+    subjectNote(
+      "2023/10/plusone-chemistry-notes-by-ak.html",
+      "Class notes by Anil Kumar",
+    ),
+    subjectNote("2023/03/plusone-chemistry-157-qns-ans.html", "178 most important Q&A"),
+    subjectNote(
+      "2024/02/plus-one-chemistry-quick-revision.html",
+      "Quick revision + chapter weightage",
+    ),
+    subjectNote(
+      "2015/01/plus-one-chemistry-question-bank.html",
+      "Solved previous questions, chapter-wise",
+    ),
+  ],
+  mathematics: [
+    subjectNote("2024/10/maths-notes.html", "Class notes by Remesh Chennessery"),
+    subjectNote("2025/03/maths-exam-points.html", "Exam points by MAM"),
+    subjectNote(
+      "2016/01/plus-oneplus-two-mathematics-previous.html",
+      "Previous questions, chapter-wise",
+    ),
+  ],
+  english: [
+    subjectNote("2026/08/plusone-english-notes.html", "Class notes (new scheme)"),
+    subjectNote("2023/03/hse-english-poetic-devices.html", "Poetic devices guide"),
+    subjectNote("2025/02/english-exam-guide.html", "Complete exam study guide"),
+  ],
+  malayalam: [
+    subjectNote("2026/08/malayalam-notes.html", "Class notes by Jakulin (revised 2026)"),
+    subjectNote(
+      "2026/07/plusone-malayalam-revised.html",
+      "Class notes by Sapna (revised 2026)",
+    ),
+  ],
   "computer-science": [
-    {
-      title: "Chapter-wise study notes & revision videos",
-      url: "https://hssreporter.blogspot.com/2021/05/plus-one-computer-science-chapter-wise.html",
-      source: "HSSReporter",
-      scope: "subject",
-    },
+    subjectNote(
+      "2026/07/plusone-computer-science-notes.html",
+      "Class notes + question bank (new scheme)",
+    ),
+    subjectNote("2026/06/python-installation.html", "Python installation guide"),
+    subjectNote("2025/02/xi-cs-capsule-note.html", "Capsule notes"),
+  ],
+  zoology: [
+    subjectNote("2024/09/plusone-zoology-notes.html", "Class notes by Navas Cheemadan"),
+    subjectNote(
+      "2023/02/hse-biology-question-bank.html",
+      "Question bank, chapter-wise (Minhad)",
+    ),
+    subjectNote("2021/11/plusone-zoology-question-bank.html", "Previous questions bank"),
+  ],
+  botany: [
+    subjectNote("2022/12/hss-botany-notes-by-nandini.html", "Class notes by Nandini"),
+    subjectNote(
+      "2015/09/plus-one-botany-question-bank.html",
+      "Question bank, chapter-wise",
+    ),
+    subjectNote("2025/11/botany-picture-album.html", "Picture album (diagrams)"),
   ],
 };
 
 export function chapterNotes(subject: string, chapter: string): ChapterNote[] {
-  return (
-    CHAPTER_NOTES[subject]?.[chapter] ?? SUBJECT_NOTES[subject] ?? []
-  );
+  return CHAPTER_NOTES[subject]?.[chapter] ?? SUBJECT_NOTES[subject] ?? [];
 }
 
-// Real totals derived from the same lookup the pages render — safe to display.
+// Whole-subject guides for the subject page section.
+export function subjectNotes(subjectSlug: string): ChapterNote[] {
+  return SUBJECT_NOTES[subjectSlug] ?? [];
+}
+
+// Real totals derived from the same maps the pages render — safe to display.
+// Subject guides count once (not once per chapter, which the chapter-level
+// fallback would otherwise imply).
 export function subjectNoteCount(subjectSlug: string): number {
   const subject = getSubject(subjectSlug);
   if (!subject) return 0;
-  return subject.chapters.reduce(
-    (sum, c) => sum + chapterNotes(subjectSlug, c.slug).length,
+  const chapterSpecific = subject.chapters.reduce(
+    (sum, c) => sum + (CHAPTER_NOTES[subjectSlug]?.[c.slug]?.length ?? 0),
     0,
   );
+  return chapterSpecific + subjectNotes(subjectSlug).length;
 }
