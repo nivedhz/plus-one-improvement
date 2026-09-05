@@ -54,7 +54,13 @@ export const viewport: Viewport = {
 
 const themeInitScript = `(function(){try{var t=localStorage.getItem("improve-theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark")}else{document.documentElement.classList.remove("dark")}}catch(e){}})();`;
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+// Explicit props (not the generated LayoutProps global) so `tsc --noEmit`
+// passes on a fresh checkout before `next typegen`/`next build` runs.
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"
