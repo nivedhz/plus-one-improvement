@@ -19,7 +19,9 @@ model User {
   // Science stream: "cs" (Computer Science) or "biology" (Botany + Zoology).
   stream       String   @default("biology")
   createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
 
+  @@index([createdAt])
   @@map("users")
 
   progress ChapterProgress[]
@@ -37,6 +39,8 @@ model ChapterProgress {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, subject, chapter])
+  @@index([userId])
+  @@index([updatedAt])
   @@map("chapter_progress")
 }
 
@@ -52,5 +56,6 @@ model PreviousMark {
   updatedAt DateTime @updatedAt
 
   @@unique([userId, subject])
+  @@index([userId])
   @@map("previous_marks")
 }
