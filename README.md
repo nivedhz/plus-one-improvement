@@ -50,6 +50,9 @@ tracking, marks-based priorities, and an exam countdown.
 ```bash
 npm install
 cp .env.example .env   # fill in DATABASE_URL + AUTH_SECRET (32+ chars)
+# Optional (password-reset email): RESEND_API_KEY + RESET_FROM_EMAIL.
+# Without them, reset links are logged server-side (dev) instead of emailed.
+# Resend free tier ($0, 3k/mo) covers this flow.
 npx prisma db push
 npm run db:seed        # validates the subject catalog
 npm run dev            # http://localhost:3000
@@ -77,6 +80,7 @@ can generate without secrets.
 | ---------------------------------- | ------------- |
 | `/`                                | visitors only |
 | `/auth/login`, `/auth/sign-up`     | visitors only |
+| `/auth/forgot-password`, `/auth/reset-password` | visitors only |
 | `/dashboard`                       | login         |
 | `/subjects`, `/subjects/[subject]` | login         |
 | `/subjects/[subject]/[chapter]`    | login         |
@@ -85,7 +89,9 @@ can generate without secrets.
 ## API
 
 - `GET /api/health` — liveness + DB readiness
-- Auth: `POST /api/auth/sign-up|login|logout`, `GET /api/auth/me`
+- Auth: `POST /api/auth/sign-up|login|logout`, `GET /api/auth/me`,
+  `POST /api/auth/forgot-password` (always 200, enumeration-safe),
+  `POST /api/auth/reset-password` (single-use 60-min token, rotates sessions)
 - Data: `GET|PUT /api/marks` (last-exam marks + computed priorities),
   `GET|PUT /api/progress` (`{ completed: boolean }`),
   `GET|PUT /api/profile` (science stream)

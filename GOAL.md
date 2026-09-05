@@ -86,7 +86,7 @@ Every external resource should retain its original URL, creator/source name, res
 7. Study planner with revision and mock-test days — schedule display exists; needs interactivity.
 8. Chapter-specific AI tutor using verified chapter content as retrieval context — needs a free-provider decision plus cost/limit strategy first.
 9. Malayalam/English explanations and low-bandwidth/PWA support.
-10. Account essentials before public launch: email verification, password reset.
+10. Account essentials before public launch: ~~password reset~~ (done — single-use 60-min emailed links, session rotation), email verification still open.
 
 ## AI tutor principles
 
