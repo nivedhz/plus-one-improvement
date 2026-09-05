@@ -19,7 +19,7 @@ Shipped and merged to `main`:
 - Marketing homepage (`/`, visitors only) with hero, exam countdown, quotes, and CTAs.
 - Auth pages (`/auth/login`, `/auth/sign-up`) with mutual redirects for signed-in users.
 - Member dashboard (`/dashboard`, login required) with study-schedule calendar, countdown + streak, today's focus, subject strip, continue learning, and tutor teaser.
-- 8-subject catalog (Physics, Chemistry, Mathematics, English, Malayalam, Computer Science, Zoology, Botany) with a CS/Biology stream split, chapter pages, key points, and real video/note counts.
+- 8-subject catalog (Physics, Chemistry, Mathematics, English, Malayalam, Computer Science, Zoology, Botany) with a CS/Biology stream split, chapter pages, and real video/note counts.
 - Curated video lessons per chapter (click-to-play privacy-enhanced embeds, deep-link timestamps), linked chapter notes, and year-grouped previous-year papers with answers.
 - Real binary chapter progress (`CompleteToggle`), per-user streaks, and recent completions — no mock data anywhere in the UI.
 - Priority planner (`/calculator`, login required): last-exam marks in, per-subject study priorities out. Marks stay private to the account.
@@ -80,7 +80,7 @@ Every external resource should retain its original URL, creator/source name, res
 
 1. ~~Official syllabus and chapter catalog~~ — done with real chapter lists (Physics 14, Chemistry 9, Maths 14, English 19, Malayalam 19, CS 12, Zoology 12, Botany 10).
 2. ~~Resources as metadata plus original links~~ — done per chapter: videos, notes, and papers.
-3. Chapter notes, key points, formulas, diagrams — key points exist per chapter; formulas/diagrams still open.
+3. Chapter notes, formulas, diagrams — mock key points removed (no trusted source); formulas/diagrams still open.
 4. ~~Marks calculator~~ — done as the privacy-first priority planner (per-subject ranks, no grouped totals).
 5. ~~Progress persistence~~ — done and binary (done/not done everywhere).
 6. Quizzes and chapter performance breakdowns — **natural next slice** (progress + priorities already feed it).
