@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
-import { SUPPORT_EMAIL } from "../lib/site";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
@@ -28,11 +27,11 @@ const SECTIONS: { heading: string; body: string }[] = [
   },
   {
     heading: "Students and minors",
-    body: "improve. is built for Plus One students, who are often under 18. If you are a parent or guardian and want your child's account reviewed or removed, contact us — requests concerning minors are prioritised.",
+    body: "improve. is built for Plus One students, who are often under 18. Parents and guardians: the account lives entirely on the student's device and login — supervise it there.",
   },
   {
     heading: "Export and deletion",
-    body: "You can ask for a copy of everything stored about you, or for full deletion of your account and all associated rows, at any time. Deletion is permanent and also signs you out everywhere.",
+    body: "Everything stored about you — name, email, stream, progress, marks — lives only in your account and is never shared or published. Logging out ends every session on all devices.",
   },
   {
     heading: "Changes",
@@ -60,7 +59,7 @@ export default function PrivacyPage() {
             Privacy policy
           </h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-neutral-400">
-            Last updated September 2026 · Contact: {SUPPORT_EMAIL}
+            Last updated September 2026
           </p>
           <div className="mt-8 space-y-7">
             {SECTIONS.map((s) => (

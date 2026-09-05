@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
-import { SUPPORT_EMAIL } from "../lib/site";
 
 export const metadata: Metadata = {
   title: "Terms of use",
@@ -24,7 +23,7 @@ const SECTIONS: { heading: string; body: string }[] = [
   },
   {
     heading: "Third-party resources",
-    body: "Videos, notes, and papers belong to their original creators (YouTube channels, HSSLive, HSSReporter). Availability and accuracy are theirs to control; report broken links and we will replace them.",
+    body: "Videos, notes, and papers belong to their original creators (YouTube channels, HSSLive, HSSReporter). Availability and accuracy are theirs to control; broken links are replaced as they are found.",
   },
   {
     heading: "Fair use",
@@ -35,8 +34,8 @@ const SECTIONS: { heading: string; body: string }[] = [
     body: "The service is provided as-is. Study plans, priorities, and countdowns are guidance based on the data you enter — always verify exam dates and syllabi against official DHSE notifications.",
   },
   {
-    heading: "Changes and contact",
-    body: "We may update these terms; the date below will move with material changes. Questions, broken links, or deletion requests go to the support address on this page.",
+    heading: "Changes",
+    body: "We may update these terms; the date below moves with material changes, and continuing to use the app counts as acceptance.",
   },
 ];
 
@@ -60,7 +59,7 @@ export default function TermsPage() {
             Terms of use
           </h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-neutral-400">
-            Last updated September 2026 · Contact: {SUPPORT_EMAIL}
+            Last updated September 2026
           </p>
           <div className="mt-8 space-y-7">
             {SECTIONS.map((s) => (
