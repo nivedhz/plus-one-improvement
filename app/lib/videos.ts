@@ -3,6 +3,7 @@
 // channels (Xylem, Eduport, Exam Winner). Chapters without an entry fall back
 // to the generic partner links on the chapter page. To add a video, paste its
 // YouTube ID below — never add a video you haven't title-checked.
+import { getChapter, getSubject } from "./subjects";
 
 export type VideoChannel = "Xylem" | "Xylem Plus Two" | "Eduport" | "Exam Winner";
 
@@ -12,6 +13,8 @@ export type ChapterVideo = {
   channel: VideoChannel;
   // Optional start time in seconds — the player and watch link jump to it.
   startAt?: number;
+  // Marks freshly added videos with a "New" badge in the UI.
+  recent?: boolean;
 };
 
 function v(
@@ -19,8 +22,15 @@ function v(
   title: string,
   channel: VideoChannel,
   startAt?: number,
+  recent?: boolean,
 ): ChapterVideo {
-  return { youtubeId, title, channel, ...(startAt ? { startAt } : {}) };
+  return {
+    youtubeId,
+    title,
+    channel,
+    ...(startAt ? { startAt } : {}),
+    ...(recent ? { recent } : {}),
+  };
 }
 
 export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
@@ -44,6 +54,7 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
       v("zI8ojhqKOgU", "Plus One Physics | Laws Of Motion - Full Chapter Revision", "Xylem"),
       v("Y-VCuhLD1GI", "+1 Physics Onam Exam | Chapter 4 | Laws of Motion | Oneshot", "Exam Winner"),
       v("RN79DWlYBpA", "Plus One Onam Exam Physics | Chapter 4 | Laws of Motion - One Shot", "Eduport"),
+      v("wmXVVsMhO9I", "Plus One Improvement Physics | Laws Of Motion", "Xylem Plus Two", undefined, true),
     ],
     "work-energy-and-power": [
       v("zU_9bdn6gnM", "Plus One Physics | Work, Energy and Power | Full Chapter Revision", "Xylem"),
@@ -56,7 +67,7 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
       v("9qEImDal_qU", "Plus One Physics | System Of Particles And Rotational Motion | Oneshot", "Exam Winner"),
     ],
     gravitation: [
-      v("K4A9j1ic7wo", "Plus One Improvement Physics | Gravitation Full Set", "Xylem Plus Two"),
+      v("K4A9j1ic7wo", "Plus One Improvement Physics | Gravitation Full Set", "Xylem Plus Two", undefined, true),
       v("5wO0Sy1YeNg", "Plus One Physics | Gravitation | Full Chapter", "Exam Winner"),
       v("c6z_nbH8-M0", "Plus One Physics | Gravitation Complete Summary", "Eduport"),
     ],
@@ -66,7 +77,7 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
       v("sphT06v41Wg", "Plus One Physics | Mechanical Properties Of Solids | Full Chapter", "Exam Winner"),
     ],
     "mechanical-properties-of-fluids": [
-      v("eh2IYk21SP0", "Plus One Physics | Mechanical Properties Of Fluids Set", "Xylem Plus Two"),
+      v("eh2IYk21SP0", "Plus One Physics | Mechanical Properties Of Fluids Set", "Xylem Plus Two", undefined, true),
       v("JlVUyUiO05E", "Plus One Physics | Mechanical Properties of Fluids | Oneshot", "Exam Winner"),
       v("-tzpSsSTLvQ", "Plus One Physics | Mechanical Properties of Fluids | Sure Questions", "Eduport"),
     ],
@@ -101,11 +112,13 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
       v("yI8CkASrpXY", "Plus One Chemistry | Chapter 1 Some Basic Concepts Of Chemistry Summary", "Eduport"),
       v("QNiZafNKdtk", "Plus One Chemistry | Chapter 1 - Some Basic Concepts of Chemistry | Full Chapter", "Exam Winner"),
       v("EoEJKMpEKd0", "Plus One Chemistry | Chapter 1 Some Basic Concepts Of Chemistry - Full Chapter Revision", "Xylem"),
+      v("LFnMg64MIIw", "Plus One Improvement Exam Chemistry | Basic Concepts Of Chemistry - Concept Revision", "Xylem Plus Two", undefined, true),
     ],
     "structure-of-atom": [
       v("qTwxtlwK5U0", "Plus One Chemistry | Chapter 2 - Structure Of Atom | Full Chapter Oneshot", "Exam Winner"),
       v("Ji_a1YfttNI", "Plus One Improvement Exam - Chemistry - Structure of Atom", "Xylem Plus Two"),
       v("O0ouJtHZ79A", "Plus One Chemistry | Structure of Atom Summary", "Eduport"),
+      v("GG7zvJpabfY", "Plus One Improvement Exam Chemistry | Structure Of Atom", "Xylem Plus Two", undefined, true),
     ],
     "classification-of-elements": [
       v("rYd5NqDr9w4", "Plus One Chemistry | Classification Of Elements And Periodicity In Properties | Oneshot", "Exam Winner"),
@@ -173,6 +186,7 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
       v("-2k_e9ql9pg", "Plus One Maths | Permutations And Combinations | Full Chapter", "Exam Winner"),
       v("zpiqvf0Yvck", "Permutations and Combinations in 40 Minutes | Plus One Maths Chapter 6", "Eduport"),
       v("bFYNHsJh0fY", "Plus One Maths | Permutation And Combination - Full Chapter Revision", "Xylem", 6348),
+      v("ksTIKpbK9Kw", "Plus One Improvement Maths | Permutations And Combinations", "Xylem Plus Two", undefined, true),
     ],
     "binomial-theorem": [
       v("8CeFWL5DMt0", "Plus One Maths | Binomial Theorem | Full Chapter", "Exam Winner"),
@@ -188,9 +202,10 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
       v("O2eu0dW9YPc", "Plus One Maths | Straight Lines | Full Chapter", "Exam Winner"),
       v("TTUL82cR81A", "Plus One Maths | Straight Lines Summary", "Eduport"),
       v("JDEGBeFKS2E", "Plus One Maths | Straight Lines - Full Chapter Revision", "Xylem"),
+      v("C7sibtoTOyE", "Plus One Improvement Maths | Straightlines in 14 Minutes", "Xylem Plus Two", undefined, true),
     ],
     "conic-sections": [
-      v("NFryKwj_2KA", "Plus One Improvement Maths | Conic Section In 50 Minutes", "Xylem Plus Two"),
+      v("NFryKwj_2KA", "Plus One Improvement Maths | Conic Section In 50 Minutes", "Xylem Plus Two", undefined, true),
       v("a7fHnQtnKJQ", "Plus One Maths | Conic Sections | Full Chapter", "Exam Winner"),
       v("MDeEvvnvPZU", "Plus One Maths | Conic Section | In 40 Minutes", "Eduport"),
     ],
@@ -585,6 +600,39 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
 
 export function chapterVideos(subject: string, chapter: string): ChapterVideo[] {
   return CHAPTER_VIDEOS[subject]?.[chapter] ?? [];
+}
+
+export type RecentVideo = {
+  subjectSlug: string;
+  subjectName: string;
+  chapterSlug: string;
+  chapterTitle: string;
+  video: ChapterVideo;
+};
+
+// Recently added videos across all subjects, oldest mapping first.
+export function recentVideos(limit = 6): RecentVideo[] {
+  const out: RecentVideo[] = [];
+  for (const [subjectSlug, chapters] of Object.entries(CHAPTER_VIDEOS)) {
+    const subject = getSubject(subjectSlug);
+    if (!subject) continue;
+    for (const [chapterSlug, list] of Object.entries(chapters)) {
+      const chapter = getChapter(subject, chapterSlug);
+      if (!chapter) continue;
+      for (const video of list) {
+        if (video.recent) {
+          out.push({
+            subjectSlug,
+            subjectName: subject.name,
+            chapterSlug,
+            chapterTitle: chapter.title,
+            video,
+          });
+        }
+      }
+    }
+  }
+  return out.slice(0, limit);
 }
 
 // Real counts derived from the curated mapping — safe to display.

@@ -60,6 +60,28 @@ body {
     radial-gradient(30rem 16rem at 85% 2%, rgb(245 197 120 / 0.06), transparent 60%);
 }
 
+/* Thin, quiet scrollbar for horizontal strips (e.g. Fresh videos). */
+.scroll-slim {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(148 163 184 / 0.5) transparent;
+}
+.scroll-slim::-webkit-scrollbar {
+  height: 6px;
+}
+.scroll-slim::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-slim::-webkit-scrollbar-thumb {
+  background: rgb(148 163 184 / 0.4);
+  border-radius: 999px;
+}
+.dark .scroll-slim {
+  scrollbar-color: rgb(82 82 82 / 0.8) transparent;
+}
+.dark .scroll-slim::-webkit-scrollbar-thumb {
+  background: rgb(82 82 82 / 0.6);
+}
+
 /* Minimal dot texture replacing the grid */
 .backdrop-dots {
   background-image: radial-gradient(rgb(15 23 42 / 0.09) 1px, transparent 1.5px);

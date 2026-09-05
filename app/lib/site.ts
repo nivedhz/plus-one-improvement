@@ -5,20 +5,20 @@ export type Quote = { text: string; author: string };
 
 export const QUOTES: Quote[] = [
   {
-    text: "Improvement means one thing: you get a second chance. Use it well.",
-    author: "For every student who came back stronger",
+    text: "Comebacks are built one chapter at a time. Start today's.",
+    author: "Your comeback begins now",
   },
   {
-    text: "You don't need 10 hours a day. You need 2 focused hours, daily.",
-    author: "Small steps beat last-minute rush",
+    text: "Last year's marks wrote the first draft. October is your rewrite.",
+    author: "Second chances favor the prepared",
   },
   {
-    text: "Previous questions are the syllabus telling you what matters.",
-    author: "Study smart, not scattered",
+    text: "Nobody remembers the stumble — only the comeback. Make yours loud.",
+    author: "Write the ending yourself",
   },
   {
-    text: "A low mark last time is data, not destiny.",
-    author: "Fix the weak chapters first",
+    text: "You already know exactly where it hurts. That's where comebacks begin.",
+    author: "Turn weak chapters into weapons",
   },
 ];
 

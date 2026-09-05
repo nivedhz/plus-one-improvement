@@ -27,6 +27,8 @@ import {
 import { EXAM_LABEL } from "../lib/site";
 import { STREAM_LABELS, subjectsForStream } from "../lib/subjects";
 import { getUserStream } from "../lib/users";
+import { recentVideos } from "../lib/videos";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Dashboard | improve.",
@@ -53,6 +55,7 @@ export default async function DashboardPage() {
     }),
   );
   const visibleSubjects = subjectsForStream(stream);
+  const fresh = recentVideos(6);
   const subjectDone = (slug: string) => {
     const s = visibleSubjects.find((x) => x.slug === slug);
     if (!s || s.chapters.length === 0) return { done: 0, total: 0 };
@@ -306,6 +309,47 @@ export default async function DashboardPage() {
               </span>
             </section>
           </div>
+
+          {fresh.length > 0 && (
+            <section aria-labelledby="fresh-heading" className="mt-10">
+              <h2
+                id="fresh-heading"
+                className="inline-flex items-center gap-2 text-lg font-bold tracking-tight"
+              >
+                Fresh videos
+                <span className="rounded-full bg-emerald-600/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+                  New
+                </span>
+              </h2>
+              <div className="scroll-slim mt-4 flex gap-3 overflow-x-auto pb-2">
+                {fresh.map((item) => (
+                  <Link
+                    key={item.video.youtubeId}
+                    href={`/subjects/${item.subjectSlug}/${item.chapterSlug}`}
+                    className="group w-44 shrink-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70"
+                  >
+                    <span className="relative block aspect-video w-full">
+                      <Image
+                        src={`https://i.ytimg.com/vi/${item.video.youtubeId}/hqdefault.jpg`}
+                        alt=""
+                        fill
+                        sizes="176px"
+                        className="object-cover"
+                      />
+                    </span>
+                    <span className="block p-2.5">
+                      <span className="block truncate text-xs font-semibold">
+                        {item.video.title}
+                      </span>
+                      <span className="mt-0.5 block truncate text-[11px] text-slate-500 dark:text-neutral-400">
+                        {item.subjectName} · {item.chapterTitle}
+                      </span>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
 
           <footer className="mt-12 border-t border-slate-200/70 py-6 text-xs text-slate-500 dark:border-neutral-800/70 dark:text-neutral-400">
             <p>
