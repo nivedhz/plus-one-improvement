@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "../../lib/auth";
+import { apiError, rejectIfCrossSite, unauthorized } from "../../lib/http";
 import {
   getUserProgressMap,
   progressInputSchema,
@@ -11,7 +12,7 @@ export const runtime = "nodejs";
 export async function GET() {
   const session = await getSession();
   if (!session) {
-    return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+    return unauthorized();
   }
   return NextResponse.json({
     progress: await getUserProgressMap(session.id),
@@ -19,23 +20,26 @@ export async function GET() {
 }
 
 export async function PUT(req: Request) {
+  const crossSite = rejectIfCrossSite(req);
+  if (crossSite) return crossSite;
   const session = await getSession();
   if (!session) {
-    return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+    return unauthorized();
   }
 
   let body: unknown;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    return apiError("Invalid request body.", 400, "BAD_REQUEST");
   }
 
   const parsed = progressInputSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: parsed.error.issues[0]?.message ?? "Invalid details." },
-      { status: 400 },
+    return apiError(
+      parsed.error.issues[0]?.message ?? "Invalid details.",
+      400,
+      "BAD_REQUEST",
     );
   }
 
@@ -46,7 +50,7 @@ export async function PUT(req: Request) {
   } catch (err) {
     // Only the catalog guard maps to 400 — real failures must surface as 500.
     if (err instanceof Error && err.message === "Unknown subject or chapter.") {
-      return NextResponse.json({ error: err.message }, { status: 400 });
+      return apiError(err.message, 400, "UNKNOWN_CHAPTER");
     }
     throw err;
   }

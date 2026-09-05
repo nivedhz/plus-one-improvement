@@ -12,10 +12,18 @@ const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 const TOKEN_ISSUER = "improve";
 const TOKEN_AUDIENCE = "improve-web";
 
-const DEV_SECRET = "dev-only-secret-change-me-in-production";
-
 function getSecret(): Uint8Array {
-  const raw = process.env.AUTH_SECRET ?? DEV_SECRET;
+  // Validated centrally (32+ chars in prod, dev fallback locally).
+  // Dynamic import avoided to keep this module Edge-compatible.
+  const raw = process.env.AUTH_SECRET;
+  if (!raw) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("AUTH_SECRET must be set to a 32+ character string.");
+    }
+    return new TextEncoder().encode(
+      "dev-only-secret-change-me-in-production-0123456789",
+    );
+  }
   if (raw.length < 32) {
     throw new Error("AUTH_SECRET must be at least 32 characters long.");
   }
@@ -48,7 +56,8 @@ export type PublicUser = {
 };
 
 export async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, 10);
+  // Cost 12 is the modern bcrypt minimum for password storage.
+  return bcrypt.hash(password, 12);
 }
 
 export async function verifyPassword(

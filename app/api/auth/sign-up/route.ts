@@ -7,6 +7,7 @@ import {
 } from "../../../lib/auth";
 import { createUser, findUserByEmail, toPublicUser } from "../../../lib/users";
 import { hashPassword } from "../../../lib/auth";
+import { apiError, rejectIfCrossSite } from "../../../lib/http";
 import {
   clientIp,
   isRateLimitEnabled,
@@ -19,6 +20,8 @@ export const runtime = "nodejs";
 const SIGNUP_LIMIT = { max: 5, windowMs: 60 * 60 * 1000 };
 
 export async function POST(req: Request) {
+  const crossSite = rejectIfCrossSite(req);
+  if (crossSite) return crossSite;
   if (isRateLimitEnabled()) {
     const limit = rateLimit(
       `signup:${clientIp(req)}`,
@@ -26,13 +29,9 @@ export async function POST(req: Request) {
       SIGNUP_LIMIT.windowMs,
     );
     if (!limit.ok) {
-      return NextResponse.json(
-        { error: "Too many attempts. Please try again later." },
-        {
-          status: 429,
-          headers: { "Retry-After": String(limit.retryAfterSec) },
-        },
-      );
+      return apiError("Too many attempts. Please try again later.", 429, "RATE_LIMITED", {
+        headers: { "Retry-After": String(limit.retryAfterSec) },
+      });
     }
   }
 
@@ -40,26 +39,25 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json(
-      { error: "Invalid request body." },
-      { status: 400 },
-    );
+    return apiError("Invalid request body.", 400, "BAD_REQUEST");
   }
 
   const parsed = signUpSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: parsed.error.issues[0]?.message ?? "Invalid details." },
-      { status: 400 },
+    return apiError(
+      parsed.error.issues[0]?.message ?? "Invalid details.",
+      400,
+      "BAD_REQUEST",
     );
   }
 
   const { name, email, password } = parsed.data;
 
   if (await findUserByEmail(email)) {
-    return NextResponse.json(
-      { error: "An account with this email already exists." },
-      { status: 409 },
+    return apiError(
+      "An account with this email already exists.",
+      409,
+      "EMAIL_TAKEN",
     );
   }
 
@@ -77,9 +75,10 @@ export async function POST(req: Request) {
       err instanceof Prisma.PrismaClientKnownRequestError &&
       err.code === "P2002"
     ) {
-      return NextResponse.json(
-        { error: "An account with this email already exists." },
-        { status: 409 },
+      return apiError(
+        "An account with this email already exists.",
+        409,
+        "EMAIL_TAKEN",
       );
     }
     throw err;
