@@ -1,5 +1,6 @@
 import type { User } from "../../prisma/generated/client";
 import { db } from "./db";
+import { sanitizeTrio } from "./improvement";
 
 // User persistence backed by Postgres via Prisma.
 // Same function names as the old dev store, so API routes are unchanged
@@ -56,6 +57,37 @@ export async function createUser(input: {
       stream: input.stream ?? "biology",
     },
   });
+}
+
+export async function getImprovementSubjects(
+  userId: string,
+  stream: string,
+): Promise<string[]> {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { improvementSubjects: true },
+  });
+  return sanitizeTrio(user?.improvementSubjects ?? [], stream);
+}
+
+// Validates against the student's current stream, then replaces the list
+// wholesale (empty array clears the choice).
+export async function setImprovementSubjects(
+  userId: string,
+  stream: string,
+  slugs: string[],
+): Promise<string[]> {
+  // sanitizeTrio drops dupes, unknowns, out-of-stream slugs and caps at 3 —
+  // so any length mismatch means the input broke one of those rules.
+  const clean = sanitizeTrio(slugs, stream);
+  if (clean.length !== slugs.length) {
+    throw new Error("Choose up to 3 subjects from your own stream.");
+  }
+  await db.user.update({
+    where: { id: userId },
+    data: { improvementSubjects: clean },
+  });
+  return clean;
 }
 
 export function toPublicUser(user: User): {
