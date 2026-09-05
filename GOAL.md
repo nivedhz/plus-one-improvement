@@ -42,8 +42,8 @@ Still open (not yet built):
 - Backend is Route Handlers (`app/api/**/route.ts`); no separate server.
 - Postgres via Prisma 7. Models: `User` (uuid id, unique email, bcrypt hash, `tokenVersion`, `stream`), `ChapterProgress` (unique per user+subject+chapter), `PreviousMark` (unique per user+subject).
 - Auth: JWT (`HS256`, 7-day expiry, `iss: improve`, `aud: improve-web`) in the `improve_session` cookie (`httpOnly`, `SameSite=Lax`, `secure` in production). `AUTH_SECRET` must be 32+ chars or boot fails.
-- Route guards are page-level `getSession()` checks (middleware can't use Prisma on the Edge): `/` and `/auth/*` redirect sessions inward; `/dashboard` and `/subjects/**` redirect visitors to login.
-- Client data fetching uses axios (`app/lib/api.ts`, base URL from env) + TanStack Query `useMutation`. No native `fetch` in components.
+- Route guards are page-level `getSession()` checks plus Edge `proxy.ts` JWT redirects (signature only — DB checks stay in pages): `/` and `/auth/*` redirect sessions inward; `/dashboard`, `/subjects/**`, `/calculator` redirect visitors to login.
+- Client data fetching uses the native-`fetch` wrapper in `app/lib/api.ts` (relative `/api` base) + TanStack Query mutations. No axios anywhere.
 - Env keys (gitignored `.env`, documented in `.env.example`): `DATABASE_URL`, `AUTH_SECRET`, `NEXT_PUBLIC_APP_URL`.
 - Exam target: 12 October 2026, 9:30 AM IST (`EXAM_DATE_ISO` in `app/lib/site.ts`).
 
