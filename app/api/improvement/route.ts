@@ -3,11 +3,8 @@ import { z } from "zod";
 import { getSession } from "../../lib/auth";
 import { apiError, rejectIfCrossSite, unauthorized } from "../../lib/http";
 import { MAX_IMPROVEMENT_SUBJECTS } from "../../lib/improvement";
-import {
-  getImprovementSubjects,
-  getUserStream,
-  setImprovementSubjects,
-} from "../../lib/users";
+import { getStudyFocus } from "../../lib/study-focus";
+import { getUserStream, setImprovementSubjects } from "../../lib/users";
 
 export const runtime = "nodejs";
 
@@ -20,9 +17,10 @@ export async function GET() {
   if (!session) {
     return unauthorized();
   }
-  const stream = await getUserStream(session.id);
+  const focus = await getStudyFocus(session.id);
   return NextResponse.json({
-    subjects: await getImprovementSubjects(session.id, stream),
+    subjects: focus.trio,
+    dropped: focus.dropped,
   });
 }
 

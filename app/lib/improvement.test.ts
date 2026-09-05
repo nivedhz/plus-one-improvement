@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { MAX_IMPROVEMENT_SUBJECTS, recommendedTrio, sanitizeTrio } from "./improvement";
+import {
+  MAX_IMPROVEMENT_SUBJECTS,
+  orphanedSlugs,
+  recommendedTrio,
+  sanitizeTrio,
+} from "./improvement";
 
 describe("improvement trio", () => {
   it("caps at 3 subjects", () => {
@@ -35,5 +40,14 @@ describe("improvement trio", () => {
   it("recommends fewer when fewer are ranked", () => {
     expect(recommendedTrio([{ subjectSlug: "physics", rank: 1 }])).toEqual(["physics"]);
     expect(recommendedTrio([])).toEqual([]);
+  });
+
+  it("reports picks orphaned by a stream switch", () => {
+    expect(orphanedSlugs(["zoology", "botany", "physics"], "cs")).toEqual([
+      "zoology",
+      "botany",
+    ]);
+    expect(orphanedSlugs(["physics", "chemistry"], "cs")).toEqual([]);
+    expect(orphanedSlugs([], "biology")).toEqual([]);
   });
 });
