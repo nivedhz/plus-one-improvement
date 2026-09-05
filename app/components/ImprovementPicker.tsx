@@ -199,7 +199,7 @@ export default function ImprovementPicker({
               setError(null);
               setExpanded(false);
             }}
-            className="text-xs font-semibold text-slate-500 transition hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white"
+            className="inline-flex items-center rounded-full border border-slate-400 px-5 py-2 text-sm font-semibold text-slate-800 transition hover:border-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-500 dark:text-neutral-100 dark:hover:border-neutral-300 dark:hover:bg-neutral-800"
           >
             Done
           </button>
