@@ -215,29 +215,6 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
             </Reveal>
           )}
 
-          <Reveal>
-            <section
-              aria-labelledby="done-heading"
-              className="mt-8 rounded-2xl border border-slate-200/80 bg-white p-6 text-center sm:p-8 dark:border-neutral-800 dark:bg-neutral-900"
-            >
-              <h2 id="done-heading" className="text-lg font-bold tracking-tight">
-                {completed ? "Nice work — chapter done." : "Done with this chapter?"}
-              </h2>
-              <p className="mx-auto mt-2 max-w-md text-sm text-slate-600 dark:text-neutral-300">
-                {completed
-                  ? "This chapter counts toward your progress. Changed your mind? Mark it incomplete."
-                  : "Mark it complete and watch your subjects fill up."}
-              </p>
-              <div className="mt-5 flex justify-center">
-                <CompleteToggle
-                  subject={subject.slug}
-                  chapter={chapter.slug}
-                  completed={completed}
-                />
-              </div>
-            </section>
-          </Reveal>
-
           {notes.length > 0 && (
             <Reveal>
               <section aria-labelledby="notes-heading" className="mt-8">
@@ -262,6 +239,29 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
               </section>
             </Reveal>
           )}
+
+          <Reveal>
+            <section
+              aria-labelledby="done-heading"
+              className="mt-8 rounded-2xl border border-slate-200/80 bg-white p-6 text-center sm:p-8 dark:border-neutral-800 dark:bg-neutral-900"
+            >
+              <h2 id="done-heading" className="text-lg font-bold tracking-tight">
+                {completed ? "Nice work — chapter done." : "Done with this chapter?"}
+              </h2>
+              <p className="mx-auto mt-2 max-w-md text-sm text-slate-600 dark:text-neutral-300">
+                {completed
+                  ? "This chapter counts toward your progress. Changed your mind? Mark it incomplete."
+                  : "Mark it complete and watch your subjects fill up."}
+              </p>
+              <div className="mt-5 flex justify-center">
+                <CompleteToggle
+                  subject={subject.slug}
+                  chapter={chapter.slug}
+                  completed={completed}
+                />
+              </div>
+            </section>
+          </Reveal>
 
           <nav aria-label="Chapter navigation" className="mt-8 grid gap-3 sm:grid-cols-2">
             {prev ? (
