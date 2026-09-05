@@ -49,9 +49,6 @@ export default async function SubjectPage({
 
   return (
     <div className="relative min-h-screen overflow-clip">
-      <div aria-hidden className="backdrop-mesh absolute inset-0" />
-      <div aria-hidden className="backdrop-dots absolute inset-0" />
-
       <div className="relative">
         <Navbar />
 
@@ -105,7 +102,7 @@ export default async function SubjectPage({
             ].map((s) => (
               <span
                 key={s.text}
-                className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/70 px-3.5 py-1.5 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70"
+                className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900"
               >
                 <s.icon size={13} aria-hidden />
                 {s.text}
@@ -123,7 +120,7 @@ export default async function SubjectPage({
                   <Reveal delay={Math.min(i * 0.04, 0.4)}>
                     <Link
                       href={`/subjects/${subject.slug}/${c.slug}`}
-                      className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
+                      className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900"
                     >
                       <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-900/[0.05] text-sm font-bold tabular-nums dark:bg-white/[0.07]">
                         {String(i + 1).padStart(2, "0")}

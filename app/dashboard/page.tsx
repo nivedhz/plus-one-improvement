@@ -81,9 +81,6 @@ export default async function DashboardPage() {
 
   return (
     <div id="top" className="relative min-h-screen overflow-clip">
-      <div aria-hidden className="backdrop-mesh absolute inset-0" />
-      <div aria-hidden className="backdrop-dots absolute inset-0" />
-
       <div className="relative">
         <Navbar />
 
@@ -112,7 +109,7 @@ export default async function DashboardPage() {
             <Reveal className="h-full">
               <section
                 aria-labelledby="countdown-heading"
-                className="h-full rounded-3xl border border-slate-200/80 bg-white/80 p-6 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70"
+                className="h-full rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
               >
                 <div className="flex items-center justify-between gap-3">
                   <h2
@@ -145,7 +142,7 @@ export default async function DashboardPage() {
             <Reveal delay={0.08} className="h-full">
               <section
                 aria-labelledby="focus-heading"
-                className="flex h-full flex-col rounded-3xl bg-[#111] p-6 text-white ring-1 ring-black/5 sm:p-7 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
+                className="flex h-full flex-col rounded-2xl bg-[#111] p-6 text-white ring-1 ring-black/5 sm:p-7 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
               >
                 <p className="text-xs font-semibold uppercase tracking-widest text-white/60">
                   Today&apos;s focus
@@ -216,7 +213,7 @@ export default async function DashboardPage() {
                     >
                       <Link
                         href={`/subjects/${s.slug}`}
-                        className="group block h-full rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70"
+                        className="group block h-full rounded-2xl border border-slate-200/80 bg-white p-4 transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900"
                       >
                         <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
                           <SubjectIcon slug={s.slug} size={18} />
@@ -243,7 +240,7 @@ export default async function DashboardPage() {
           <Reveal>
             <Link
               href="/calculator"
-              className="group mt-10 flex items-center gap-4 rounded-3xl border border-slate-200/80 bg-white/80 p-5 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70"
+              className="group mt-10 flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900"
             >
               <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
                 <Calculator size={20} aria-hidden />
@@ -267,7 +264,7 @@ export default async function DashboardPage() {
               <section
                 id="continue"
                 aria-labelledby="continue-heading"
-                className="h-full scroll-mt-24 rounded-3xl border border-slate-200/80 bg-white/80 p-6 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70"
+                className="h-full scroll-mt-24 rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
               >
                 <h2 id="continue-heading" className="text-lg font-bold tracking-tight">
                   Recently completed
@@ -312,7 +309,7 @@ export default async function DashboardPage() {
             <Reveal delay={0.08} className="h-full">
               <section
                 aria-labelledby="tutor-heading"
-                className="flex h-full flex-col rounded-3xl border border-slate-200/80 bg-white/80 p-6 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70"
+                className="flex h-full flex-col rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
               >
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
                   <Bot size={19} aria-hidden />
@@ -348,7 +345,7 @@ export default async function DashboardPage() {
                     <Link
                       key={item.video.youtubeId}
                       href={`/subjects/${item.subjectSlug}/${item.chapterSlug}`}
-                      className="group w-44 shrink-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70"
+                      className="group w-44 shrink-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900"
                     >
                       <span className="relative block aspect-video w-full">
                         <Image
@@ -377,7 +374,7 @@ export default async function DashboardPage() {
           <Reveal>
             <section
               aria-labelledby="fire-heading"
-              className="relative mt-10 overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 via-orange-500 to-amber-400 p-6 text-white shadow-xl shadow-orange-500/20 sm:p-8 dark:from-[#2a0f0a] dark:via-[#3a1508] dark:to-[#2a1a05] dark:shadow-none dark:ring-1 dark:ring-orange-500/20"
+              className="relative mt-10 overflow-hidden rounded-2xl bg-gradient-to-br from-red-600 via-orange-500 to-amber-400 p-6 text-white shadow-xl shadow-orange-500/20 sm:p-8 dark:from-[#2a0f0a] dark:via-[#3a1508] dark:to-[#2a1a05] dark:shadow-none dark:ring-1 dark:ring-orange-500/20"
             >
               <div
                 aria-hidden

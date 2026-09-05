@@ -19,6 +19,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Pushing: push `main` first and keep it free of unreviewed feats, then push feature branches oldest-first.
 - PRs: one PR per branch against `main`, opened oldest-first (stacked). Merge in PR-number order — once an earlier PR merges, later diffs narrow automatically and nothing conflicts.
 - Always return the PR URLs when done.
+- Shipping (only when the user says commit/PR/merge): re-verify gates
+  (`lint`, `typecheck`, `test:run`, `build`, `diff --check`), then commit,
+  push the branch, and open the PR. Wait for CI green, merge in PR-number
+  order, delete the branch locally and remotely (`git branch -D`,
+  `git push origin --delete`, `git fetch --prune`), then `checkout main`
+  - `pull --ff-only` and re-verify (status clean, log shows the merge,
+    gates green). End state is always a fresh `main`.
 
 ## Local dev and verification
 

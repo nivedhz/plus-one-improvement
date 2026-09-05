@@ -18,7 +18,7 @@ export default function ResourceCard({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/80 p-3.5 backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
+      className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900"
     >
       <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
         <FileText size={17} aria-hidden />

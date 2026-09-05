@@ -49,7 +49,7 @@ Still open (not yet built):
 ## Decisions log
 
 - Dual-tone primary: fresh green (emerald) in light mode, indigo glow in dark mode. Red is reserved for destructive actions only.
-- Dark theme is blackish (`#111`), never blue; backdrops use a soft mesh plus faint dots — no grid lines.
+- Dark theme is blackish (`#111`), never blue; surfaces are solid with hairline borders — no mesh, dots, or glass translucency (navbar blur excepted, it's functional).
 - Lucide icons everywhere; no emojis in UI.
 - Default to light theme; persist theme choice in `localStorage` with OS-preference first-visit fallback.
 - Never ship dev/demo copy ("frontend demo", "homepage only") in production UI.

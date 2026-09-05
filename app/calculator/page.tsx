@@ -24,9 +24,6 @@ export default async function CalculatorPage() {
   const subjects = subjectsForStream(stream);
   return (
     <div className="relative min-h-screen overflow-clip">
-      <div aria-hidden className="backdrop-mesh absolute inset-0" />
-      <div aria-hidden className="backdrop-dots absolute inset-0" />
-
       <div className="relative">
         <Navbar />
 
