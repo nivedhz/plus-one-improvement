@@ -5,6 +5,7 @@ import {
   Bot,
   CheckCircle2,
   ExternalLink,
+  FileText,
   Play,
 } from "lucide-react";
 import Link from "next/link";
@@ -13,6 +14,7 @@ import Navbar from "../../../components/Navbar";
 import CompleteToggle from "../../../components/CompleteToggle";
 import VideoFacade from "../../../components/VideoFacade";
 import { getSession } from "../../../lib/auth";
+import { chapterNotes } from "../../../lib/notes";
 import { getUserProgressMap, isComplete } from "../../../lib/progress";
 import { PARTNERS } from "../../../lib/site";
 import { getChapter, getSubject } from "../../../lib/subjects";
@@ -49,6 +51,7 @@ export default async function ChapterPage({
   const progressMap = await getUserProgressMap(session.id);
   const completed = isComplete(progressMap[`${subject.slug}:${chapter.slug}`]);
   const videos = chapterVideos(subject.slug, chapter.slug);
+  const notes = chapterNotes(subject.slug, chapter.slug);
   const index = subject.chapters.findIndex((c) => c.slug === chapter.slug);
   const prev = subject.chapters[index - 1];
   const next = subject.chapters[index + 1];
@@ -196,6 +199,48 @@ export default async function ChapterPage({
                   <VideoFacade key={video.youtubeId} video={video} />
                 ))}
               </div>
+            </section>
+          )}
+
+          {notes.length > 0 && (
+            <section aria-labelledby="notes-heading" className="mt-8">
+              <h2 id="notes-heading" className="text-lg font-bold tracking-tight">
+                Chapter notes
+              </h2>
+              <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
+                Linked reading from the original publishers — nothing copied,
+                everything attributed.
+              </p>
+              <ul className="mt-4 space-y-2.5">
+                {notes.map((note) => (
+                  <li key={note.url}>
+                    <a
+                      href={note.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-3.5 rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
+                    >
+                      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+                        <FileText size={18} aria-hidden />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-semibold">
+                          {note.title}
+                        </span>
+                        <span className="mt-0.5 block text-xs text-slate-500 dark:text-neutral-400">
+                          {note.source}
+                          {note.scope === "subject" ? " · covers full subject" : ""}
+                        </span>
+                      </span>
+                      <ExternalLink
+                        size={16}
+                        aria-hidden
+                        className="shrink-0 text-slate-300 transition group-hover:text-slate-500 dark:group-hover:text-neutral-300"
+                      />
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </section>
           )}
 

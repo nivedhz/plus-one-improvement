@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { ArrowLeft, ArrowRight, Check, Layers, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, FileText, Layers, Play } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Navbar from "../../components/Navbar";
 import SubjectIcon from "../../components/SubjectIcon";
 import { getSession } from "../../lib/auth";
 import { getUserProgressMap } from "../../lib/progress";
+import { chapterNotes, subjectNoteCount } from "../../lib/notes";
 import { getSubject } from "../../lib/subjects";
 import { chapterVideos, subjectVideoCount } from "../../lib/videos";
 
@@ -82,6 +83,7 @@ export default async function SubjectPage({
             {[
               { icon: Layers, text: `${subject.chapters.length} chapters` },
               { icon: Play, text: `${subjectVideoCount(subject.slug)} video lessons` },
+              { icon: FileText, text: `${subjectNoteCount(subject.slug)} notes` },
             ].map((s) => (
               <span
                 key={s.text}
@@ -97,6 +99,8 @@ export default async function SubjectPage({
             {subject.chapters.map((c, i) => {
               const done =
                 (progressMap[`${subject.slug}:${c.slug}`] ?? 0) >= 100;
+              const vCount = chapterVideos(subject.slug, c.slug).length;
+              const nCount = chapterNotes(subject.slug, c.slug).length;
               return (
                 <li key={c.slug}>
                   <Link
@@ -111,7 +115,7 @@ export default async function SubjectPage({
                         {c.title}
                       </span>
                       <span className="mt-0.5 block text-xs text-slate-500 dark:text-neutral-400">
-                        {chapterVideos(subject.slug, c.slug).length} videos
+                        {vCount} {vCount === 1 ? "video" : "videos"} · {nCount} {nCount === 1 ? "note" : "notes"}
                       </span>
                     </span>
                     {done ? (
