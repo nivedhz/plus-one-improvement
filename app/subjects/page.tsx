@@ -7,12 +7,10 @@ import Navbar from "../components/Navbar";
 import StreamSwitcher from "../components/StreamSwitcher";
 import SubjectIcon from "../components/SubjectIcon";
 import { getSession } from "../lib/auth";
-import { getImprovementSubjects } from "../lib/users";
 import { getUserProgressMap } from "../lib/progress";
 import { subjectNoteCount } from "../lib/notes";
-import { subjectsForStream } from "../lib/subjects";
+import { getStudyFocus } from "../lib/study-focus";
 import { subjectVideoCount } from "../lib/videos";
-import { getUserStream } from "../lib/users";
 
 export const metadata: Metadata = {
   title: "Subjects",
@@ -22,16 +20,11 @@ export const metadata: Metadata = {
 export default async function SubjectsPage() {
   const session = await getSession();
   if (!session) redirect("/auth/login");
-  const [progress, stream] = await Promise.all([
+  const [progress, focus] = await Promise.all([
     getUserProgressMap(session.id),
-    getUserStream(session.id),
+    getStudyFocus(session.id),
   ]);
-  const streamSubjects = subjectsForStream(stream);
-  const trio = await getImprovementSubjects(session.id, stream);
-  const visible =
-    trio.length > 0
-      ? streamSubjects.filter((s) => trio.includes(s.slug))
-      : streamSubjects;
+  const { stream, trio, visible } = focus;
 
   return (
     <div className="relative min-h-screen overflow-clip">
@@ -75,7 +68,7 @@ export default async function SubjectsPage() {
             <p className="mt-2 text-xs text-slate-500 dark:text-neutral-400">
               Showing only your improvement subjects.{" "}
               <Link
-                href="/calculator"
+                href="/dashboard#improvement"
                 className="font-semibold text-emerald-700 hover:underline dark:text-indigo-400"
               >
                 Change
