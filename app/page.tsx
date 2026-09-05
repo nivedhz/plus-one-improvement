@@ -61,9 +61,6 @@ export default async function Home() {
 
   return (
     <div id="top" className="relative min-h-screen overflow-clip">
-      {/* Minimal backdrop: soft glow + faint dots, no grid lines */}
-      <div aria-hidden className="backdrop-mesh absolute inset-0" />
-      <div aria-hidden className="backdrop-dots absolute inset-0" />
       <div
         aria-hidden
         className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent dark:via-indigo-400/50"
@@ -74,7 +71,7 @@ export default async function Home() {
 
         <main className="mx-auto max-w-6xl px-5">
           {/* Hero */}
-          <section className="grid gap-10 py-12 sm:py-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <section className="grid gap-10 py-14 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <Stagger>
               <Item>
                 <p className="inline-flex items-center gap-2 rounded-full border border-emerald-600/20 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-semibold text-emerald-800 dark:border-indigo-500/25 dark:bg-indigo-500/10 dark:text-indigo-300">
@@ -113,7 +110,7 @@ export default async function Home() {
                   </a>
                   <a
                     href="#how"
-                    className="inline-flex items-center justify-center rounded-full border border-slate-300/80 bg-white/70 px-7 py-3 text-sm font-semibold text-slate-800 backdrop-blur transition hover:border-slate-400 dark:border-neutral-700 dark:bg-neutral-900/70 dark:text-slate-100 dark:hover:border-slate-600"
+                    className="inline-flex items-center justify-center rounded-full border border-slate-300/80 bg-white px-7 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-slate-100 dark:hover:border-slate-600"
                   >
                     See how it works
                   </a>
@@ -138,7 +135,7 @@ export default async function Home() {
             <Reveal
               y={26}
               delay={0.15}
-              className="rounded-3xl border border-white/60 bg-white/75 p-6 shadow-xl shadow-slate-900/5 ring-1 ring-slate-900/5 backdrop-blur-xl sm:p-7 dark:border-neutral-800 dark:bg-neutral-900/75 dark:ring-white/5"
+              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7 dark:border-neutral-800 dark:bg-neutral-900"
             >
               <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">
                 <CalendarDays size={14} aria-hidden />
@@ -168,7 +165,7 @@ export default async function Home() {
             <div className="mt-7 grid gap-4 md:grid-cols-3">
               {FEATURES.map((f, i) => (
                 <Reveal key={f.title} delay={i * 0.07} className="h-full">
-                  <article className="group h-full rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70">
+                  <article className="group h-full rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900">
                     <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
                       <f.icon size={19} aria-hidden />
                     </span>
@@ -210,7 +207,7 @@ export default async function Home() {
                     href={p.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex h-full items-center gap-3.5 rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:border-emerald-500/40 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70 dark:hover:border-indigo-400/30"
+                    className="group flex h-full items-center gap-3.5 rounded-2xl border border-slate-200/80 bg-white p-4 transition hover:-translate-y-0.5 hover:border-emerald-500/40 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-indigo-400/30"
                   >
                     <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-900/[0.04] text-slate-700 dark:bg-white/[0.06] dark:text-slate-200">
                       {p.kind === "youtube" ? (
@@ -263,7 +260,7 @@ export default async function Home() {
             <div className="mt-7 grid gap-4 md:grid-cols-3">
               {STEPS.map((s, i) => (
                 <Reveal key={s.title} delay={i * 0.07} className="h-full">
-                  <article className="h-full rounded-3xl border border-slate-200/80 bg-white/80 p-6 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70">
+                  <article className="h-full rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
                     <div className="flex items-center justify-between">
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-neutral-900 text-white text-sm font-bold dark:bg-white dark:text-black">
                         {i + 1}
@@ -293,7 +290,7 @@ export default async function Home() {
             <Reveal
               y={28}
               scale={0.98}
-              className="relative overflow-hidden rounded-3xl bg-[#111] px-6 py-12 text-center text-white ring-1 ring-black/5 sm:px-12 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
+              className="relative overflow-hidden rounded-2xl bg-[#111] px-6 py-12 text-center text-white ring-1 ring-black/5 sm:px-12 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
             >
               <div
                 aria-hidden

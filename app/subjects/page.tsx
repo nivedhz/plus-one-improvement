@@ -29,9 +29,6 @@ export default async function SubjectsPage() {
 
   return (
     <div className="relative min-h-screen overflow-clip">
-      <div aria-hidden className="backdrop-mesh absolute inset-0" />
-      <div aria-hidden className="backdrop-dots absolute inset-0" />
-
       <div className="relative">
         <Navbar />
 
@@ -79,7 +76,7 @@ export default async function SubjectsPage() {
                 <Reveal key={s.slug} delay={Math.min(i * 0.05, 0.3)} className="h-full">
                   <Link
                     href={`/subjects/${s.slug}`}
-                    className="group block h-full rounded-3xl border border-slate-200/80 bg-white/80 p-6 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/70"
+                    className="group block h-full rounded-2xl border border-slate-200/80 bg-white p-6 transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900"
                   >
                     <div className="flex items-center gap-3.5">
                       <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">

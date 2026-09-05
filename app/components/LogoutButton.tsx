@@ -85,7 +85,7 @@ export default function LogoutButton() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.96, y: 6 }}
                   transition={{ duration: 0.28, ease: CALM_EASE }}
-                  className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900"
+                  className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-red-500/10 text-red-600 dark:text-red-400">
@@ -128,8 +128,7 @@ export default function LogoutButton() {
             )}
           </AnimatePresence>,
           document.body,
-        )
-      }
+        )}
     </>
   );
 }

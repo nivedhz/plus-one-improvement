@@ -58,9 +58,6 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
 
   return (
     <div className="relative min-h-screen overflow-clip">
-      <div aria-hidden className="backdrop-mesh absolute inset-0" />
-      <div aria-hidden className="backdrop-dots absolute inset-0" />
-
       <div className="relative">
         <Navbar />
 
@@ -99,12 +96,12 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
             </h1>
             <div className="mt-4 flex flex-wrap gap-2.5 text-xs font-medium">
               {videos.length > 0 && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/70 px-3.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900/70">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
                   <Play size={13} aria-hidden />
                   {videos.length} video lessons
                 </span>
               )}
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/70 px-3.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900/70">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900">
                 {completed ? "Completed" : "Not started"}
               </span>
             </div>
@@ -114,7 +111,7 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
             <Reveal className="h-full">
               <section
                 aria-labelledby="keys-heading"
-                className="h-full rounded-3xl border border-slate-200/80 bg-white/80 p-6 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70"
+                className="h-full rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
               >
                 <h2 id="keys-heading" className="text-lg font-bold tracking-tight">
                   Key points
@@ -141,7 +138,7 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
               <div className="h-full space-y-4">
                 <section
                   aria-labelledby="tutor-heading"
-                  className="rounded-3xl bg-[#111] p-6 text-white ring-1 ring-black/5 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
+                  className="rounded-2xl bg-[#111] p-6 text-white ring-1 ring-black/5 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
                 >
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10">
                     <Bot size={19} aria-hidden />
@@ -163,7 +160,7 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
 
                 <section
                   aria-labelledby="res-heading"
-                  className="rounded-3xl border border-slate-200/80 bg-white/80 p-6 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70"
+                  className="rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
                 >
                   <h2 id="res-heading" className="text-lg font-bold tracking-tight">
                     Trusted resources
@@ -221,7 +218,7 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
           <Reveal>
             <section
               aria-labelledby="done-heading"
-              className="mt-8 rounded-3xl border border-slate-200/80 bg-white/80 p-6 text-center backdrop-blur sm:p-8 dark:border-neutral-800 dark:bg-neutral-900/70"
+              className="mt-8 rounded-2xl border border-slate-200/80 bg-white p-6 text-center sm:p-8 dark:border-neutral-800 dark:bg-neutral-900"
             >
               <h2 id="done-heading" className="text-lg font-bold tracking-tight">
                 {completed ? "Nice work — chapter done." : "Done with this chapter?"}
@@ -270,7 +267,7 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
             {prev ? (
               <Link
                 href={`/subjects/${subject.slug}/${prev.slug}`}
-                className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
+                className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900"
               >
                 <ArrowLeft
                   size={17}
@@ -292,7 +289,7 @@ export default async function ChapterPage({ params }: { params: Promise<Params> 
             {next && (
               <Link
                 href={`/subjects/${subject.slug}/${next.slug}`}
-                className="group flex items-center justify-end gap-3 rounded-2xl border border-slate-200/80 bg-white/80 p-4 text-right backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
+                className="group flex items-center justify-end gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 text-right transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900"
               >
                 <span className="min-w-0">
                   <span className="block text-xs text-slate-500 dark:text-neutral-400">

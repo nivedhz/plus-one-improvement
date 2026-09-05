@@ -24,7 +24,7 @@ export default function VideoFacade({ video }: { video: ChapterVideo }) {
     (video.startAt ? `&t=${video.startAt}s` : "");
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70">
+    <article className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white dark:border-neutral-800 dark:bg-neutral-900">
       <AnimatePresence mode="wait" initial={false}>
         {playing ? (
           <motion.div

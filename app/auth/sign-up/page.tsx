@@ -15,9 +15,6 @@ export default async function SignUpPage() {
   if (await getSession()) redirect("/");
   return (
     <div className="relative flex min-h-screen flex-col overflow-clip">
-      <div aria-hidden className="backdrop-mesh absolute inset-0" />
-      <div aria-hidden className="backdrop-dots absolute inset-0" />
-
       <div className="relative mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-5 py-12">
         <Link
           href="/"
@@ -27,7 +24,7 @@ export default async function SignUpPage() {
           Back home
         </Link>
 
-        <Reveal className="mt-6 rounded-3xl border border-white/60 bg-white/80 p-7 shadow-xl shadow-slate-900/5 ring-1 ring-slate-900/5 backdrop-blur-xl sm:p-8 dark:border-neutral-800 dark:bg-neutral-900/80 dark:ring-white/5 dark:shadow-black/40">
+        <Reveal className="mt-6 rounded-2xl border border-slate-200 bg-white p-7 shadow-xl shadow-slate-900/5 sm:p-8 dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-black/40">
           <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-sm dark:bg-indigo-600">
             <GraduationCap size={22} aria-hidden />
           </span>

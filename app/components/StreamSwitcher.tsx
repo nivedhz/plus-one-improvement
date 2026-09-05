@@ -41,7 +41,11 @@ export default function StreamSwitcher({ initial }: { initial: string }) {
 
   return (
     <div>
-      <div className="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Choose your stream">
+      <div
+        className="grid gap-3 sm:grid-cols-2"
+        role="radiogroup"
+        aria-label="Choose your stream"
+      >
         {OPTIONS.map((o) => {
           const active = selected === o.value;
           return (
@@ -55,7 +59,7 @@ export default function StreamSwitcher({ initial }: { initial: string }) {
               className={`flex items-center gap-3.5 rounded-2xl border p-4 text-left transition disabled:opacity-60 ${
                 active
                   ? "border-emerald-600 bg-emerald-500/[0.06] dark:border-indigo-500 dark:bg-indigo-500/[0.08]"
-                  : "border-slate-200/80 bg-white/80 hover:border-slate-300 dark:border-neutral-800 dark:bg-neutral-900/70 dark:hover:border-neutral-700"
+                  : "border-slate-200/80 bg-white hover:border-slate-300 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700"
               }`}
             >
               <span

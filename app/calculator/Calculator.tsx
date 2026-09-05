@@ -94,7 +94,7 @@ export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
       <form
         onSubmit={onSubmit}
         aria-labelledby="input-heading"
-        className="self-start rounded-3xl border border-slate-200/80 bg-white/80 p-6 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70"
+        className="self-start rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -164,7 +164,7 @@ export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
       <section
         aria-labelledby="result-heading"
         aria-live="polite"
-        className="h-fit rounded-3xl bg-[#111] p-6 text-white ring-1 ring-black/5 sm:p-7 lg:sticky lg:top-24 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
+        className="h-fit rounded-2xl bg-[#111] p-6 text-white ring-1 ring-black/5 sm:p-7 lg:sticky lg:top-24 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
       >
         <h2
           id="result-heading"
