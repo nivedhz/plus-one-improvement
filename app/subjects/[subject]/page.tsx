@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ArrowLeft, ArrowRight, Check, FileText, Layers, Play } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { Reveal } from "../../components/animate";
 import Navbar from "../../components/Navbar";
 import ResourceCard from "../../components/ResourceCard";
 import SubjectIcon from "../../components/SubjectIcon";
@@ -79,19 +80,21 @@ export default async function SubjectPage({
             </span>
           </nav>
 
-          <div className="mt-6 flex items-center gap-4">
-            <span className="inline-flex h-13 w-13 shrink-0 items-center justify-center rounded-2xl bg-emerald-600/10 p-3.5 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
-              <SubjectIcon slug={subject.slug} size={26} />
-            </span>
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                {subject.name}
-              </h1>
-              <p className="mt-1 text-sm text-slate-600 dark:text-neutral-300">
-                {subject.tagline}
-              </p>
+          <Reveal>
+            <div className="mt-6 flex items-center gap-4">
+              <span className="inline-flex h-13 w-13 shrink-0 items-center justify-center rounded-2xl bg-emerald-600/10 p-3.5 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+                <SubjectIcon slug={subject.slug} size={26} />
+              </span>
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                  {subject.name}
+                </h1>
+                <p className="mt-1 text-sm text-slate-600 dark:text-neutral-300">
+                  {subject.tagline}
+                </p>
+              </div>
             </div>
-          </div>
+          </Reveal>
 
           <div className="mt-6 flex flex-wrap gap-2.5 text-xs font-medium">
             {[
@@ -117,89 +120,97 @@ export default async function SubjectPage({
               const nCount = chapterNotes(subject.slug, c.slug).length;
               return (
                 <li key={c.slug}>
-                  <Link
-                    href={`/subjects/${subject.slug}/${c.slug}`}
-                    className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
-                  >
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-900/[0.05] text-sm font-bold tabular-nums dark:bg-white/[0.07]">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate font-semibold">{c.title}</span>
-                      <span className="mt-0.5 block text-xs text-slate-500 dark:text-neutral-400">
-                        {vCount} {vCount === 1 ? "video" : "videos"} · {nCount}{" "}
-                        {nCount === 1 ? "note" : "notes"}
+                  <Reveal delay={Math.min(i * 0.04, 0.4)}>
+                    <Link
+                      href={`/subjects/${subject.slug}/${c.slug}`}
+                      className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white/80 p-4 backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
+                    >
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-900/[0.05] text-sm font-bold tabular-nums dark:bg-white/[0.07]">
+                        {String(i + 1).padStart(2, "0")}
                       </span>
-                    </span>
-                    {done ? (
-                      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-600/10 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
-                        <Check size={13} aria-hidden />
-                        Done
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate font-semibold">{c.title}</span>
+                        <span className="mt-0.5 block text-xs text-slate-500 dark:text-neutral-400">
+                          {vCount} {vCount === 1 ? "video" : "videos"} · {nCount}{" "}
+                          {nCount === 1 ? "note" : "notes"}
+                        </span>
                       </span>
-                    ) : (
-                      <span
-                        className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-slate-200 dark:border-neutral-700"
-                        aria-label="Not started"
+                      {done ? (
+                        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-600/10 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+                          <Check size={13} aria-hidden />
+                          Done
+                        </span>
+                      ) : (
+                        <span
+                          className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-slate-200 dark:border-neutral-700"
+                          aria-label="Not started"
+                        />
+                      )}
+                      <ArrowRight
+                        size={17}
+                        aria-hidden
+                        className="shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500 dark:group-hover:text-neutral-300"
                       />
-                    )}
-                    <ArrowRight
-                      size={17}
-                      aria-hidden
-                      className="shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500 dark:group-hover:text-neutral-300"
-                    />
-                  </Link>
+                    </Link>
+                  </Reveal>
                 </li>
               );
             })}
           </ol>
 
           {guides.length > 0 && (
-            <section aria-labelledby="notes-heading" className="mt-10">
-              <h2 id="notes-heading" className="text-lg font-bold tracking-tight">
-                Study notes
-              </h2>
-              <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
-                Whole-subject guides, hand-picked from HSSLive — start here before diving
-                into chapters.
-              </p>
-              <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
-                {guides.map((note) => (
-                  <ResourceCard key={note.url} title={note.title} url={note.url} />
-                ))}
-              </div>
-            </section>
+            <Reveal>
+              <section aria-labelledby="notes-heading" className="mt-10">
+                <h2 id="notes-heading" className="text-lg font-bold tracking-tight">
+                  Study notes
+                </h2>
+                <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
+                  Whole-subject guides, hand-picked from HSSLive — start here before
+                  diving into chapters.
+                </p>
+                <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+                  {guides.map((note) => (
+                    <ResourceCard key={note.url} title={note.title} url={note.url} />
+                  ))}
+                </div>
+              </section>
+            </Reveal>
           )}
 
           {pyqGroups.length > 0 && (
-            <section aria-labelledby="pyq-heading" className="mt-10">
-              <h2 id="pyq-heading" className="text-lg font-bold tracking-tight">
-                Previous Year Questions
-              </h2>
-              <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
-                Full papers with answers{pyqRange ? ` (${pyqRange})` : ""}, newest first —
-                linked from the original publishers.
-              </p>
-              <div className="mt-4 space-y-5">
-                {pyqGroups.map((group) => (
-                  <div key={group.year}>
-                    <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-neutral-400">
-                      {group.year}
-                    </h3>
-                    <ul className="mt-2 grid gap-2.5 sm:grid-cols-2">
-                      {group.papers.map((paper) => (
-                        <li key={paper.url}>
-                          <ResourceCard
-                            title={paper.title}
-                            url={paper.url}
-                            badge={pyqKindLabel(paper.kind)}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </section>
+            <Reveal>
+              <section aria-labelledby="pyq-heading" className="mt-10">
+                <h2 id="pyq-heading" className="text-lg font-bold tracking-tight">
+                  Previous Year Questions
+                </h2>
+                <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
+                  Full papers with answers{pyqRange ? ` (${pyqRange})` : ""}, newest first
+                  — linked from the original publishers.
+                </p>
+                <div className="mt-4 space-y-5">
+                  {pyqGroups.map((group, gi) => (
+                    <Reveal key={group.year} delay={Math.min(gi * 0.05, 0.2)}>
+                      <div>
+                        <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-neutral-400">
+                          {group.year}
+                        </h3>
+                        <ul className="mt-2 grid gap-2.5 sm:grid-cols-2">
+                          {group.papers.map((paper) => (
+                            <li key={paper.url}>
+                              <ResourceCard
+                                title={paper.title}
+                                url={paper.url}
+                                badge={pyqKindLabel(paper.kind)}
+                              />
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
+              </section>
+            </Reveal>
           )}
         </main>
       </div>

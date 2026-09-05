@@ -2,7 +2,9 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ListOrdered, LoaderCircle, Lock, TriangleAlert } from "lucide-react";
+import { motion } from "motion/react";
 import { useState } from "react";
+import { ProgressBar } from "../components/animate";
 import { api, apiErrorMessage } from "../lib/api";
 
 export type CalcSubject = { slug: string; name: string; maxMarks: number };
@@ -164,25 +166,33 @@ export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
         aria-live="polite"
         className="h-fit rounded-3xl bg-[#111] p-6 text-white ring-1 ring-black/5 sm:p-7 lg:sticky lg:top-24 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
       >
-        <h2 id="result-heading" className="inline-flex items-center gap-2 text-lg font-bold tracking-tight">
+        <h2
+          id="result-heading"
+          className="inline-flex items-center gap-2 text-lg font-bold tracking-tight"
+        >
           <ListOrdered size={18} aria-hidden />
           Your subject priorities
         </h2>
         {priorities.length === 0 ? (
           <p className="mt-3 text-sm leading-relaxed text-white/65">
             No saved marks yet. Fill in last time&apos;s scores and hit{" "}
-            <strong className="text-white">Save and plan priorities</strong> —
-            each subject gets its own priority, ranked by need.
+            <strong className="text-white">Save and plan priorities</strong> — each
+            subject gets its own priority, ranked by need.
           </p>
         ) : (
           <>
             <p className="mt-2 text-sm text-white/65">
-              <strong className="text-white">{priorities[0].subjectName}</strong>{" "}
-              needs you most. Work down the list in order.
+              <strong className="text-white">{priorities[0].subjectName}</strong> needs
+              you most. Work down the list in order.
             </p>
             <ol className="mt-4 space-y-3">
               {priorities.map((p) => (
-                <li key={p.subjectSlug} className="rounded-2xl bg-white/[0.06] p-4">
+                <motion.li
+                  key={p.subjectSlug}
+                  layout
+                  transition={{ type: "spring", stiffness: 260, damping: 30 }}
+                  className="rounded-2xl bg-white/[0.06] p-4"
+                >
                   <div className="flex items-center gap-2.5">
                     <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-white/10 text-[11px] font-bold tabular-nums">
                       {p.rank}
@@ -199,24 +209,23 @@ export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
                       {p.level}
                     </span>
                   </div>
-                  <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-white/10">
-                    <div
-                      className={`h-full rounded-full ${LEVEL_BAR[p.level]}`}
-                      style={{ width: `${Math.max(4, 100 - p.pct)}%` }}
-                    />
-                  </div>
+                  <ProgressBar
+                    value={Math.max(4, 100 - p.pct)}
+                    trackClassName="mt-2.5 h-1.5 bg-white/10"
+                    barClassName={LEVEL_BAR[p.level]}
+                  />
                   <p className="mt-2 text-xs leading-relaxed text-white/55">
                     {p.guidance}
                   </p>
-                </li>
+                </motion.li>
               ))}
             </ol>
           </>
         )}
         <p className="mt-5 inline-flex items-start gap-2 border-t border-white/10 pt-4 text-xs leading-relaxed text-white/55">
           <Lock size={14} aria-hidden className="mt-0.5 shrink-0" />
-          Private to your account: only you can see these marks. Nothing is
-          shared or published.
+          Private to your account: only you can see these marks. Nothing is shared or
+          published.
         </p>
       </section>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, type Variants } from "motion/react";
-import type { ReactNode } from "react";
+import { motion, useInView, useSpring, useTransform, type Variants } from "motion/react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 // Shared motion primitives (Motion library only — no CSS keyframes).
 // Calm language: short rises, soft ease-out, transform/opacity only so
@@ -81,5 +81,47 @@ export function Item({
     <motion.div className={className} variants={itemVariants}>
       {children}
     </motion.div>
+  );
+}
+
+// Animated 0→value% bar fill for progress and priority displays.
+// Color classes stay at the call site; only the width is Motion-driven.
+export function ProgressBar({
+  value,
+  trackClassName,
+  barClassName,
+}: {
+  value: number;
+  trackClassName: string;
+  barClassName: string;
+}) {
+  const pct = Math.max(0, Math.min(100, Math.round(value)));
+  return (
+    <span className={`block overflow-hidden rounded-full ${trackClassName}`}>
+      <motion.span
+        className={`block h-full rounded-full ${barClassName}`}
+        initial={{ width: 0 }}
+        whileInView={{ width: `${pct}%` }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.9, ease: CALM_EASE }}
+      />
+    </span>
+  );
+}
+
+// Spring count-up for stats like the study streak. Renders the final value
+// for reduced-motion users (MotionConfig handles that globally).
+export function CountUp({ value, className }: { value: number; className?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+  const spring = useSpring(0, { stiffness: 80, damping: 20 });
+  const text = useTransform(spring, (v) => String(Math.round(v)));
+  useEffect(() => {
+    if (inView) spring.set(value);
+  }, [inView, value, spring]);
+  return (
+    <motion.span ref={ref} className={className}>
+      {text}
+    </motion.span>
   );
 }
