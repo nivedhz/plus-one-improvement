@@ -80,16 +80,16 @@ export default async function Home() {
                 Kerala Plus One Improvement · October 2026
               </p>
               <h1 className="mt-5 text-4xl font-bold leading-[1.04] tracking-tight sm:text-6xl">
-                All your notes,
+                Make this comeback
                 <br />
                 <span className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 bg-clip-text dark:from-indigo-400 dark:via-violet-400 dark:to-fuchsia-400 text-transparent">
-                  in one space.
+                  <i>amazing.</i>
                 </span>
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
-                Stop jumping between YouTube, PDFs and random sites. improve.
-                groups chapter summaries, trusted videos and previous questions
-                — so you always know what to study next.
+                Last time didn&apos;t go your way — fine. improve. groups all your notes,
+                trusted videos and previous questions in one space, so every day from now
+                is a step in the comeback.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a
@@ -138,11 +138,7 @@ export default async function Home() {
           </section>
 
           {/* Why */}
-          <section
-            id="why"
-            aria-labelledby="why-heading"
-            className="scroll-mt-24 py-12"
-          >
+          <section id="why" aria-labelledby="why-heading" className="scroll-mt-24 py-12">
             <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-indigo-400">
               Why improve.
             </p>
@@ -186,8 +182,8 @@ export default async function Home() {
               Learn from creators you already trust.
             </h2>
             <p className="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">
-              We organise and link to the originals. Every view and credit goes
-              to them — you save hours of searching.
+              We organise and link to the originals. Every view and credit goes to them —
+              you save hours of searching.
             </p>
             <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {PARTNERS.map((p) => (
@@ -267,7 +263,11 @@ export default async function Home() {
           </section>
 
           {/* Final CTA */}
-          <section id="start" aria-labelledby="start-heading" className="scroll-mt-24 pb-14">
+          <section
+            id="start"
+            aria-labelledby="start-heading"
+            className="scroll-mt-24 pb-14"
+          >
             <div className="relative overflow-hidden rounded-3xl bg-[#111] px-6 py-12 text-center text-white ring-1 ring-black/5 sm:px-12 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10">
               <div
                 aria-hidden
@@ -281,8 +281,8 @@ export default async function Home() {
                   Your October self will thank you.
                 </h2>
                 <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-300">
-                  Pick one chapter today. Revise its key points. Solve 5
-                  previous questions. Repeat tomorrow.
+                  Pick one chapter today. Revise its key points. Solve 5 previous
+                  questions. Repeat tomorrow.
                 </p>
                 <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
                   <a
@@ -307,8 +307,7 @@ export default async function Home() {
         <footer className="border-t border-slate-200/70 dark:border-neutral-800/70">
           <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between dark:text-slate-400">
             <p>
-              improve. — a student-built companion for Kerala Plus One
-              improvement exams.
+              improve. — a student-built companion for Kerala Plus One improvement exams.
             </p>
             <p>All learning resources belong to their original creators.</p>
           </div>
