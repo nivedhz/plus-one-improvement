@@ -1,7 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Providers from "./components/Providers";
 import "./globals.css";
+
+const siteUrl =
+  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
+  "http://localhost:3000";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,9 +18,38 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "improve. | All your notes, in one space",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "improve. | All your notes, in one space",
+    template: "%s | improve.",
+  },
   description:
     "A focused study companion for Kerala Plus One improvement exams — key points, trusted videos and previous questions, organised by chapter.",
+  manifest: "/manifest.webmanifest",
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    url: siteUrl,
+    siteName: "improve.",
+    title: "improve. | All your notes, in one space",
+    description:
+      "A calm, practical study companion for Kerala Plus One improvement exams.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "improve. | All your notes, in one space",
+    description:
+      "Key points, trusted videos and previous questions, organised by chapter.",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#10b981" },
+    { media: "(prefers-color-scheme: dark)", color: "#111111" },
+  ],
 };
 
 const themeInitScript = `(function(){try{var t=localStorage.getItem("improve-theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark")}else{document.documentElement.classList.remove("dark")}}catch(e){}})();`;
