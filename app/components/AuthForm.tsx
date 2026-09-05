@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { Eye, EyeOff, LoaderCircle, TriangleAlert } from "lucide-react";
+import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { api, apiErrorMessage } from "../lib/api";
@@ -24,9 +25,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const payload = isSignUp
-        ? { name, email, password, stream }
-        : { email, password };
+      const payload = isSignUp ? { name, email, password, stream } : { email, password };
       const { data } = await api.post(`/auth/${mode}`, payload);
       return data;
     },
@@ -48,21 +47,22 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   return (
     <form onSubmit={onSubmit} className="mt-6 space-y-4">
       {error && (
-        <p
+        <motion.p
+          key={error}
           role="alert"
+          initial={{ x: 0, opacity: 0 }}
+          animate={{ x: [0, -9, 9, -6, 6, 0], opacity: 1 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="flex items-start gap-2.5 rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300"
         >
           <TriangleAlert size={16} aria-hidden className="mt-0.5 shrink-0" />
           {error}
-        </p>
+        </motion.p>
       )}
 
       {isSignUp && (
         <div>
-          <label
-            htmlFor="auth-name"
-            className="mb-1.5 block text-sm font-medium"
-          >
+          <label htmlFor="auth-name" className="mb-1.5 block text-sm font-medium">
             Full name
           </label>
           <input
@@ -142,10 +142,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
       </div>
 
       <div>
-        <label
-          htmlFor="auth-password"
-          className="mb-1.5 block text-sm font-medium"
-        >
+        <label htmlFor="auth-password" className="mb-1.5 block text-sm font-medium">
           Password
           {isSignUp && (
             <span className="ml-2 text-xs font-normal text-slate-500 dark:text-neutral-400">

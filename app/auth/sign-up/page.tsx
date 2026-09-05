@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ArrowLeft, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Reveal } from "../../components/animate";
 import AuthForm from "../../components/AuthForm";
 import { getSession } from "../../lib/auth";
 
@@ -26,7 +27,7 @@ export default async function SignUpPage() {
           Back home
         </Link>
 
-        <div className="mt-6 rounded-3xl border border-white/60 bg-white/80 p-7 shadow-xl shadow-slate-900/5 ring-1 ring-slate-900/5 backdrop-blur-xl sm:p-8 dark:border-neutral-800 dark:bg-neutral-900/80 dark:ring-white/5 dark:shadow-black/40">
+        <Reveal className="mt-6 rounded-3xl border border-white/60 bg-white/80 p-7 shadow-xl shadow-slate-900/5 ring-1 ring-slate-900/5 backdrop-blur-xl sm:p-8 dark:border-neutral-800 dark:bg-neutral-900/80 dark:ring-white/5 dark:shadow-black/40">
           <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-sm dark:bg-indigo-600">
             <GraduationCap size={22} aria-hidden />
           </span>
@@ -48,7 +49,7 @@ export default async function SignUpPage() {
               Log in
             </Link>
           </p>
-        </div>
+        </Reveal>
       </div>
     </div>
   );

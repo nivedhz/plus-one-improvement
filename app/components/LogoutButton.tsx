@@ -2,14 +2,20 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { LoaderCircle, LogOut } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { api } from "../lib/api";
+import { CALM_EASE } from "./animate";
 
 export default function LogoutButton() {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
+  // Portal target must only resolve on the client — `document` doesn't
+  // exist during SSR, and the AnimatePresence exit needs the portal mounted.
+  // `typeof` is safe to evaluate during server render.
+  const [mounted] = useState(() => typeof document !== "undefined");
 
   const mutation = useMutation({
     mutationFn: () => api.post("/auth/logout"),
@@ -30,8 +36,7 @@ export default function LogoutButton() {
     // there is no strip left behind to mismatch the modal scrim.
     const prevOverflow = document.body.style.overflow;
     const prevPaddingRight = document.body.style.paddingRight;
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = "hidden";
     if (scrollbarWidth > 0) {
       document.body.style.paddingRight = `${scrollbarWidth}px`;
@@ -54,70 +59,77 @@ export default function LogoutButton() {
         Log out
       </button>
 
-      {confirming &&
+      {mounted &&
         // Portaled to <body> so the sticky navbar's backdrop-blur can't trap
         // the fixed overlay inside the header — this keeps the modal at a
         // true 50%/50% viewport center.
         createPortal(
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#111]/10 p-5"
-            onClick={() => !pending && setConfirming(false)}
-          >
-            <div
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="logout-title"
-              aria-describedby="logout-desc"
-              className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-red-500/10 text-red-600 dark:text-red-400">
-                <LogOut size={19} aria-hidden />
-              </span>
-              <h2
-                id="logout-title"
-                className="mt-4 text-lg font-bold tracking-tight"
+          <AnimatePresence>
+            {confirming && (
+              <motion.div
+                key="logout-scrim"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                className="fixed inset-0 z-50 flex items-center justify-center bg-[#111]/10 p-5"
+                onClick={() => !pending && setConfirming(false)}
               >
-                Are you sure you want to log out?
-              </h2>
-              <p
-                id="logout-desc"
-                className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-neutral-300"
-              >
-                You&apos;ll be signed out on this device and will need to log
-                in again to continue your prep. Your account and saved progress
-                stay safe.
-              </p>
-              <div className="mt-6 flex gap-3">
-                <button
-                  type="button"
-                  autoFocus
-                  disabled={pending}
-                  onClick={() => setConfirming(false)}
-                  className="flex-1 rounded-full border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:opacity-60 dark:border-neutral-700 dark:text-neutral-200 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
+                <motion.div
+                  key="logout-dialog"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="logout-title"
+                  aria-describedby="logout-desc"
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96, y: 6 }}
+                  transition={{ duration: 0.28, ease: CALM_EASE }}
+                  className="w-full max-w-sm rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-neutral-800 dark:bg-neutral-900"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  disabled={pending}
-                  onClick={() => mutation.mutate()}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-full bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
-                >
-                  {pending && (
-                    <LoaderCircle
-                      size={15}
-                      aria-hidden
-                      className="animate-spin"
-                    />
-                  )}
-                  {pending ? "Logging out…" : "Log out"}
-                </button>
-              </div>
-            </div>
-          </div>,
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-red-500/10 text-red-600 dark:text-red-400">
+                    <LogOut size={19} aria-hidden />
+                  </span>
+                  <h2 id="logout-title" className="mt-4 text-lg font-bold tracking-tight">
+                    Are you sure you want to log out?
+                  </h2>
+                  <p
+                    id="logout-desc"
+                    className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-neutral-300"
+                  >
+                    You&apos;ll be signed out on this device and will need to log in again
+                    to continue your prep. Your account and saved progress stay safe.
+                  </p>
+                  <div className="mt-6 flex gap-3">
+                    <button
+                      type="button"
+                      autoFocus
+                      disabled={pending}
+                      onClick={() => setConfirming(false)}
+                      className="flex-1 rounded-full border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:opacity-60 dark:border-neutral-700 dark:text-neutral-200 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      disabled={pending}
+                      onClick={() => mutation.mutate()}
+                      className="flex flex-1 items-center justify-center gap-2 rounded-full bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      {pending && (
+                        <LoaderCircle size={15} aria-hidden className="animate-spin" />
+                      )}
+                      {pending ? "Logging out…" : "Log out"}
+                    </button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
           document.body,
-        )}
+        )
+      }
     </>
   );
 }

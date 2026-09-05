@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { Reveal } from "../components/animate";
 import Navbar from "../components/Navbar";
 import { redirect } from "next/navigation";
 import { getSession } from "../lib/auth";
@@ -37,27 +38,31 @@ export default async function CalculatorPage() {
             <ArrowLeft size={15} aria-hidden />
             Dashboard
           </Link>
-          <p className="mt-6 text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-indigo-400">
-            Improvement planner · {STREAM_LABELS[stream] ?? stream}
-          </p>
-          <Link
-            href="/subjects"
-            className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-slate-500 transition hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white"
-          >
-            Wrong stream? Change it in Subjects
-            <ArrowRight size={13} aria-hidden />
-          </Link>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-            Where should your hours go?
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-neutral-300">
-            Enter your last Plus One marks. The server ranks each subject on
-            its own need — lower marks, higher priority. Only you can see this.
-          </p>
+          <Reveal>
+            <p className="mt-6 text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-indigo-400">
+              Improvement planner · {STREAM_LABELS[stream] ?? stream}
+            </p>
+            <Link
+              href="/subjects"
+              className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-slate-500 transition hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white"
+            >
+              Wrong stream? Change it in Subjects
+              <ArrowRight size={13} aria-hidden />
+            </Link>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+              Where should your hours go?
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-neutral-300">
+              Enter your last Plus One marks. The server ranks each subject on its own
+              need — lower marks, higher priority. Only you can see this.
+            </p>
+          </Reveal>
 
-          <div className="mt-8">
-            <Calculator subjects={subjects} />
-          </div>
+          <Reveal delay={0.08}>
+            <div className="mt-8">
+              <Calculator subjects={subjects} />
+            </div>
+          </Reveal>
         </main>
       </div>
     </div>

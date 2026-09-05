@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { Check, LoaderCircle } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { api, apiErrorMessage } from "../lib/api";
@@ -51,11 +52,31 @@ export default function CompleteToggle({
             : "border-2 border-slate-900 bg-transparent text-slate-900 hover:bg-slate-900 hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black"
         }`}
       >
-        {mutation.isPending ? (
-          <LoaderCircle size={16} aria-hidden className="animate-spin" />
-        ) : shown ? (
-          <Check size={16} aria-hidden />
-        ) : null}
+        <AnimatePresence mode="wait" initial={false}>
+          {mutation.isPending ? (
+            <motion.span
+              key="saving"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="inline-flex"
+            >
+              <LoaderCircle size={16} aria-hidden className="animate-spin" />
+            </motion.span>
+          ) : shown ? (
+            <motion.span
+              key="done"
+              initial={{ scale: 0.4, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.4, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 500, damping: 22 }}
+              className="inline-flex"
+            >
+              <Check size={16} aria-hidden />
+            </motion.span>
+          ) : null}
+        </AnimatePresence>
         {mutation.isPending
           ? "Saving…"
           : shown
