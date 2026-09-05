@@ -25,6 +25,9 @@ export type CalendarDay = {
   isPast: boolean;
   // True for the pre-exam revision buffer (no new chapters planned).
   buffer: boolean;
+  // True for planned rest: backlog too light to fill the day. Only set
+  // while work remains — an empty backlog renders plain empty days.
+  rest: boolean;
   subjects: { slug: string; name: string }[];
   chapters: PlannedChapter[];
   // Chapters planned for the day (0 once the backlog is exhausted).
@@ -33,12 +36,16 @@ export type CalendarDay = {
 };
 
 export type Schedule = {
+  // Display days: the current calendar month only. Allocation still runs
+  // the full horizon, so totals and goals stay correct.
   days: CalendarDay[];
+  // Blank cells before the 1st so the month aligns to Monday.
+  leadBlanks: number;
   mode: "priority" | "load";
   rangeLabel: string;
   // Weekday chapter pace: ceil(remaining / daysLeft), min 1 (0 when done).
   dailyGoal: number;
-  // Chapters that can't fit even at a sustainable max pace.
+  // Chapters left over after the exam day — the load detector.
   behindBy: number;
   remaining: number;
   daysLeft: number;
@@ -48,11 +55,9 @@ export type Schedule = {
 
 const DAY_MS = 86_400_000;
 
-// The plan ends this many days before the exam — the buffer week is for
-// revision and mocks, never new chapters.
+// The plan ends this many days before the exam — the buffer stays free
+// for revision unless overload spills into it.
 const EXAM_BUFFER_DAYS = 6;
-// Above this daily pace we call the plan behind instead of compressing.
-const SUSTAINABLE_MAX = 4;
 
 // Weekly toughness rhythm (periodization, not linear sorting):
 // Fri + Sun go hardest (drain the weakest backlog), Wed is the mid-week
@@ -94,16 +99,25 @@ function short(d: Date): string {
   return d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 }
 
+// Past this daily pace the overflow spills into the buffer (then behind).
+const SUSTAINABLE_MAX = 4;
+
 export function dailyGoal(remaining: number, daysLeft: number): number {
   if (remaining <= 0) return 0;
   if (daysLeft <= 1) return remaining;
-  return Math.max(1, Math.ceil(remaining / daysLeft));
+  return Math.min(SUSTAINABLE_MAX, Math.max(1, Math.ceil(remaining / daysLeft)));
 }
 
 // Pure planner: subjects with their UNFINISHED chapters in, dated chapter
 // plan out. Nothing is stored — every load recomputes from current
 // progress, so skipped work automatically redistributes across the days
 // that remain (rollover by recompute, no bookkeeping).
+//
+// Condition stack, in order:
+//  1. Fill plan days (today → exam minus buffer) under the weekly rhythm.
+//  2. Light load leaves far days empty → those become rest days.
+//  3. Heavy overflow spills into buffer days, earliest first.
+//  4. Anything left past the exam is behindBy — the load detector.
 export function planSchedule(opts: {
   subjects: ScheduleSubject[];
   // Unfinished chapters per subject slug, in catalog order.
@@ -119,14 +133,10 @@ export function planSchedule(opts: {
   );
   const gridEnd = new Date(Math.max(exam.getTime(), today.getTime()));
 
-  const gridStart = new Date(today);
-  gridStart.setDate(gridStart.getDate() - ((gridStart.getDay() + 6) % 7));
-
   // planEnd never predates today, so at least 1 day remains.
   const daysLeft = Math.round((planEnd.getTime() - today.getTime()) / DAY_MS) + 1;
   const remaining = subjects.reduce((sum, s) => sum + (backlogs[s.slug]?.length ?? 0), 0);
   const goal = dailyGoal(remaining, daysLeft);
-  const behindBy = Math.max(0, remaining - SUSTAINABLE_MAX * daysLeft);
   const bufferDays = Math.max(
     0,
     Math.round((exam.getTime() - planEnd.getTime()) / DAY_MS),
@@ -152,35 +162,7 @@ export function planSchedule(opts: {
     };
   };
 
-  const blank = (
-    date: Date,
-    key: string,
-    isPast: boolean,
-    buffer: boolean,
-  ): CalendarDay => ({
-    key,
-    dayNum: date.getDate(),
-    isToday: false,
-    isPast,
-    buffer,
-    subjects: [],
-    chapters: [],
-    goal: 0,
-    tone: null,
-  });
-
-  const days: CalendarDay[] = [];
-  for (let d = new Date(gridStart); d <= gridEnd; d.setDate(d.getDate() + 1)) {
-    const date = new Date(d);
-    const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-    if (date < today) {
-      days.push(blank(date, key, true, false));
-      continue;
-    }
-    if (date > planEnd) {
-      days.push(blank(date, key, false, true));
-      continue;
-    }
+  const fillDay = (date: Date): PlannedChapter[] => {
     const { mult, drain } = intensityOf(date);
     const cap = Math.round(goal * mult);
     const chapters: PlannedChapter[] = [];
@@ -208,7 +190,15 @@ export function planSchedule(opts: {
         if (!took) break;
       }
     }
+    return chapters;
+  };
 
+  const shapeDay = (
+    date: Date,
+    key: string,
+    flags: { isPast?: boolean; buffer?: boolean; rest?: boolean },
+    chapters: PlannedChapter[],
+  ): CalendarDay => {
     const seen = new Set<string>();
     const daySubjects = chapters
       .map((c) => ({ slug: c.subjectSlug, name: c.subjectName }))
@@ -226,21 +216,88 @@ export function planSchedule(opts: {
     else if (daySubjects.length === 1) tone = "green";
     else tone = null;
 
-    days.push({
+    return {
       key,
       dayNum: date.getDate(),
       isToday: date.getTime() === today.getTime(),
-      isPast: false,
-      buffer: false,
+      isPast: flags.isPast ?? false,
+      buffer: flags.buffer ?? false,
+      rest: flags.rest ?? false,
       subjects: daySubjects,
       chapters,
       goal: chapters.length,
       tone,
+    };
+  };
+
+  // Full-horizon allocation first (plan days, then buffer spill), so
+  // totals stay correct even though display shows one month at a time.
+  const planned = new Map<string, CalendarDay>();
+  const keyOf = (date: Date) =>
+    `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  for (let d = new Date(today); d <= gridEnd; d.setDate(d.getDate() + 1)) {
+    const date = new Date(d);
+    const key = keyOf(date);
+    if (date > planEnd) {
+      planned.set(key, shapeDay(date, key, { buffer: true }, []));
+      continue;
+    }
+    planned.set(key, shapeDay(date, key, {}, fillDay(date)));
+  }
+  // Spill: leftover backlog flows into buffer days, earliest first, under
+  // the same rhythm. Converted days stop being buffer days.
+  for (let d = new Date(today); d <= gridEnd; d.setDate(d.getDate() + 1)) {
+    const date = new Date(d);
+    if (date <= planEnd) continue;
+    const key = keyOf(date);
+    const chapters = fillDay(date);
+    if (chapters.length > 0) {
+      planned.set(key, shapeDay(date, key, {}, chapters));
+    }
+  }
+  const behindBy = [...queues.values()].reduce((n, q) => n + q.length, 0);
+
+  // Light load leaves far days empty — those become rest days (never when
+  // the backlog is already clear, and never for past or buffer days).
+  if (remaining > 0) {
+    for (const day of planned.values()) {
+      if (!day.isPast && !day.buffer && day.chapters.length === 0) {
+        day.rest = true;
+      }
+    }
+  }
+
+  // Display: current calendar month only; next month appears next month.
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const leadBlanks = (monthStart.getDay() + 6) % 7;
+  const days: CalendarDay[] = [];
+  for (let d = new Date(monthStart); d <= gridEnd; d.setDate(d.getDate() + 1)) {
+    const date = new Date(d);
+    if (date.getMonth() !== today.getMonth()) continue;
+    const key = keyOf(date);
+    const hit = planned.get(key);
+    if (hit) {
+      days.push(hit);
+      continue;
+    }
+    // Past days of this month (before today): blanked, never planned.
+    days.push({
+      key,
+      dayNum: date.getDate(),
+      isToday: false,
+      isPast: true,
+      buffer: false,
+      rest: false,
+      subjects: [],
+      chapters: [],
+      goal: 0,
+      tone: null,
     });
   }
 
   return {
     days,
+    leadBlanks,
     mode,
     rangeLabel: `${short(today)} – ${short(planEnd)}`,
     dailyGoal: goal,

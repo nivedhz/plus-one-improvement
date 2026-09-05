@@ -10,6 +10,8 @@ import {
 // Monday 7 Sep 2026 — pins weekday positions deterministically.
 // (Sep 2026: Fri 4th, Sat 5th, Sun 6th, Mon 7th, Tue 8th, Wed 9th, Thu 10th.)
 const MONDAY = new Date(2026, 8, 7, 12, 0, 0);
+// Monday 5 Oct 2026 — short horizon week (plan Oct 5–6, buffer Oct 7–12).
+const OCTOBER_MONDAY = new Date(2026, 9, 5, 12, 0, 0);
 
 function ch(n: number, prefix = "ch"): BacklogChapter[] {
   return Array.from({ length: n }, (_, i) => ({
@@ -31,6 +33,10 @@ describe("dailyGoal", () => {
     expect(dailyGoal(10, 35)).toBe(1);
     expect(dailyGoal(70, 35)).toBe(2);
     expect(dailyGoal(71, 35)).toBe(3);
+  });
+
+  it("caps at a sustainable pace so overload spills instead", () => {
+    expect(dailyGoal(200, 30)).toBe(4);
   });
 
   it("assigns everything on the last day", () => {
@@ -62,17 +68,26 @@ describe("weekly rhythm", () => {
 });
 
 describe("planSchedule", () => {
+  it("shows only the current month with alignment blanks", () => {
+    const sep = planSchedule({ subjects: [PHY], backlogs: {}, now: MONDAY });
+    expect(sep.days.every((d) => d.dayNum >= 1)).toBe(true);
+    // September 2026 starts on a Tuesday → one leading blank.
+    expect(sep.leadBlanks).toBe(1);
+    const oct = planSchedule({ subjects: [PHY], backlogs: {}, now: OCTOBER_MONDAY });
+    // October 2026 starts on a Thursday → three blanks; exam ends the view.
+    expect(oct.leadBlanks).toBe(3);
+    expect(oct.days.at(-1)?.dayNum).toBe(12);
+  });
+
   it("ends the plan ~a week before the exam, buffer flagged", () => {
     // Mon 7 Sep → plan ends Tue 6 Oct (30 days), buffer 7–12 Oct.
     const s = planSchedule({ subjects: [PHY], backlogs: {}, now: MONDAY });
     expect(s.daysLeft).toBe(30);
     expect(s.bufferDays).toBe(6);
-    const future = s.days.filter((d) => !d.isPast);
-    const lastPlanned = future.filter((d) => !d.buffer).at(-1);
-    expect([lastPlanned?.dayNum, lastPlanned?.goal]).toEqual([6, 0]);
-    const buffer = future.filter((d) => d.buffer);
-    expect(buffer).toHaveLength(6);
-    expect(buffer[0].dayNum).toBe(7);
+    const oct = planSchedule({ subjects: [PHY], backlogs: {}, now: OCTOBER_MONDAY });
+    expect(oct.daysLeft).toBe(2);
+    const buffer = oct.days.filter((d) => d.buffer);
+    expect(buffer.map((d) => d.dayNum)).toEqual([7, 8, 9, 10, 11, 12]);
     for (const d of buffer) {
       expect(d.chapters).toEqual([]);
       expect(d.tone).toBeNull();
@@ -96,6 +111,62 @@ describe("planSchedule", () => {
     const sunday = future[6];
     expect(sunday.chapters).toHaveLength(2);
     expect(sunday.chapters.every((c) => c.subjectSlug === "physics")).toBe(true);
+  });
+
+  it("rests light days and never rests heavy ones", () => {
+    const light = planSchedule({
+      subjects: [PHY, CHE],
+      backlogs: { physics: ch(3, "p"), chemistry: ch(2, "c") },
+      now: MONDAY,
+    });
+    const restDays = light.days.filter((d) => d.rest);
+    expect(restDays.length).toBeGreaterThan(0);
+    for (const d of restDays) {
+      expect(d.chapters).toEqual([]);
+      expect(d.buffer).toBe(false);
+      expect(d.isPast).toBe(false);
+    }
+    expect(
+      light.days
+        .filter((d) => !d.isPast && !d.buffer)
+        .reduce((n, d) => n + d.chapters.length, 0),
+    ).toBe(5);
+    const heavy = planSchedule({
+      subjects: [PHY],
+      backlogs: { physics: ch(200, "p") },
+      now: MONDAY,
+    });
+    expect(heavy.days.filter((d) => d.rest)).toEqual([]);
+  });
+
+  it("spills overload into buffer days, earliest first", () => {
+    // Oct 5–6 plan caps (4 + 4) can't hold 20 chapters.
+    const s = planSchedule({
+      subjects: [PHY],
+      backlogs: { physics: ch(20, "p") },
+      now: OCTOBER_MONDAY,
+    });
+    expect(s.behindBy).toBe(0);
+    const converted = s.days.filter((d) => !d.buffer && d.chapters.length > 0);
+    // Plan days plus converted buffer days hold all 20 exactly once.
+    const allocated = s.days.flatMap((d) =>
+      d.chapters.map((c) => `${c.subjectSlug}:${c.chapterSlug}`),
+    );
+    expect(allocated).toHaveLength(20);
+    expect(new Set(allocated).size).toBe(20);
+    expect(converted.length).toBeGreaterThan(2);
+    // Untouched tail buffer stays revision.
+    expect(s.days.filter((d) => d.buffer).length).toBeGreaterThan(0);
+  });
+
+  it("reports behindBy only past the exam", () => {
+    // Plan caps 4 + 4, buffer caps 6 + 4 + 8 + 6 + 8 + 4 = 36; 60 leaves 16.
+    const s = planSchedule({
+      subjects: [PHY],
+      backlogs: { physics: ch(60, "p") },
+      now: OCTOBER_MONDAY,
+    });
+    expect(s.behindBy).toBe(16);
   });
 
   it("round-robins balanced days across equal subjects", () => {
@@ -152,24 +223,14 @@ describe("planSchedule", () => {
     expect(after.dailyGoal).toBeLessThanOrEqual(before.dailyGoal);
   });
 
-  it("reports behindBy when the backlog cannot fit a sustainable pace", () => {
-    const probe = planSchedule({ subjects: [PHY], backlogs: {}, now: MONDAY });
-    const big = ch(probe.daysLeft * 4 + 7, "p");
-    const s = planSchedule({
-      subjects: [PHY],
-      backlogs: { physics: big },
-      now: MONDAY,
-    });
-    expect(s.behindBy).toBe(7);
-  });
-
-  it("rests when the backlog is empty", () => {
+  it("rests when the backlog is light but stays blank when clear", () => {
     const s = planSchedule({ subjects: [PHY, CHE], backlogs: {}, now: MONDAY });
     expect(s.remaining).toBe(0);
     expect(s.dailyGoal).toBe(0);
     expect(s.behindBy).toBe(0);
     for (const d of s.days.filter((d) => !d.isPast && !d.buffer)) {
       expect(d.chapters).toEqual([]);
+      expect(d.rest).toBe(false);
       expect(d.tone).toBeNull();
     }
   });

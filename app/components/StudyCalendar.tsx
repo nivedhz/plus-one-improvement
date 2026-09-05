@@ -76,6 +76,9 @@ export default function StudyCalendar({ schedule }: { schedule: Schedule }) {
             {d}
           </p>
         ))}
+        {Array.from({ length: schedule.leadBlanks }).map((_, i) => (
+          <span key={`pad-${i}`} aria-hidden />
+        ))}
         {schedule.days.map((day) =>
           day.isPast ? (
             <div
@@ -90,19 +93,19 @@ export default function StudyCalendar({ schedule }: { schedule: Schedule }) {
                 aria-hidden
               />
             </div>
-          ) : day.buffer ? (
+          ) : day.buffer || day.rest ? (
             <div
               key={day.key}
               role="gridcell"
               tabIndex={0}
-              aria-label={`${day.dayNum}: revision buffer`}
+              aria-label={`${day.dayNum}: ${day.buffer ? "revision buffer" : "rest day"}`}
               className="flex min-h-10 cursor-default flex-col items-center justify-center gap-0.5 rounded-lg border border-dashed border-slate-300 p-0.5 sm:min-h-12 dark:border-neutral-700"
             >
               <span className="text-xs tabular-nums text-slate-400 dark:text-neutral-500">
                 {day.dayNum}
               </span>
               <span className="px-1 text-center text-[9px] font-semibold uppercase tracking-wide text-slate-400 dark:text-neutral-500">
-                Revise
+                {day.buffer ? "Revise" : "Rest"}
               </span>
             </div>
           ) : (
