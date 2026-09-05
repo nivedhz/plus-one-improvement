@@ -18,23 +18,28 @@ Shipped and merged to `main`:
 
 - Marketing homepage (`/`, visitors only) with hero, exam countdown, quotes, and CTAs.
 - Auth pages (`/auth/login`, `/auth/sign-up`) with mutual redirects for signed-in users.
-- Member dashboard (`/dashboard`, login required) with countdown, focus card, subject progress, and tutor teaser.
-- 8-subject catalog (Physics, Chemistry, Mathematics, English, Malayalam, Computer Science, Zoology, Botany) with chapter pages, key points, and resource links.
+- Member dashboard (`/dashboard`, login required) with study-schedule calendar, countdown + streak, today's focus, subject strip, continue learning, and tutor teaser.
+- 8-subject catalog (Physics, Chemistry, Mathematics, English, Malayalam, Computer Science, Zoology, Botany) with a CS/Biology stream split, chapter pages, key points, and real video/note counts.
+- Curated video lessons per chapter (click-to-play privacy-enhanced embeds, deep-link timestamps), linked chapter notes, and year-grouped previous-year papers with answers.
+- Real binary chapter progress (`CompleteToggle`), per-user streaks, and recent completions — no mock data anywhere in the UI.
+- Priority planner (`/calculator`, login required): last-exam marks in, per-subject study priorities out. Marks stay private to the account.
 - JWT sessions in an `httpOnly` cookie, logout with server-side revocation, production-only rate limits.
 - Light/dark themes with a persisted switcher; logout confirmation modal.
 
-Still mock (not yet backed by real data):
+Still open (not yet built):
 
-- All chapter/subject progress bars and streaks.
-- Chapter key points, lesson counts, and previous-question counts.
-- "Continue learning" recommendations and the AI tutor (teaser UI only).
+- Quizzes and chapter performance breakdowns.
+- Study planner with revision and mock-test days (schedule display exists).
+- AI tutor (teaser UI only).
+- Email verification and password reset (required before public launch).
+- Malayalam/English explanations and low-bandwidth/PWA support.
 
 ## Architecture snapshot
 
 - Next.js 16 App Router + TypeScript + Tailwind CSS 4.
 - SSR-first pages; interactivity lives in small `"use client"` islands (countdown, quotes, theme toggle, forms, logout modal).
 - Backend is Route Handlers (`app/api/**/route.ts`); no separate server.
-- Postgres via Prisma 6. Models: `User` (uuid id, unique email, bcrypt hash, `tokenVersion`, timestamps).
+- Postgres via Prisma 7. Models: `User` (uuid id, unique email, bcrypt hash, `tokenVersion`, `stream`), `ChapterProgress` (unique per user+subject+chapter), `PreviousMark` (unique per user+subject).
 - Auth: JWT (`HS256`, 7-day expiry, `iss: improve`, `aud: improve-web`) in the `improve_session` cookie (`httpOnly`, `SameSite=Lax`, `secure` in production). `AUTH_SECRET` must be 32+ chars or boot fails.
 - Route guards are page-level `getSession()` checks (middleware can't use Prisma on the Edge): `/` and `/auth/*` redirect sessions inward; `/dashboard` and `/subjects/**` redirect visitors to login.
 - Client data fetching uses axios (`app/lib/api.ts`, base URL from env) + TanStack Query `useMutation`. No native `fetch` in components.
@@ -52,6 +57,10 @@ Still mock (not yet backed by real data):
 - Login errors stay generic ("Invalid email or password") so emails can't be enumerated.
 - Local `data/users.json` store is retired and gitignored; Postgres is the only user store.
 - Modals render via `createPortal` to `document.body` (sticky blurred navbars trap `position: fixed` children) and compensate for the disappearing scrollbar with measured `padding-right` instead of a persistent gutter.
+- Progress is binary (done / not done) — never percentage steps; the `percent` column only ever holds `0`/`100`.
+- Streams: science batches split into CS vs Biology (Botany + Zoology); all subject lists, dashboard, and planner filter to the active stream.
+- Counts shown in UI (videos, notes, papers, chapters) are always derived from the content maps — invented counts were removed on sight.
+- Videos/notes/papers are hand-verified links with attribution; titles checked via oEmbed and URLs checked live (HTTP 200) before adding. Unverifiable links are excluded, not guessed.
 - Git: feature branches (`feat/<scope>-<short>`), Conventional Commits, stacked PRs merged oldest-first. See `AGENTS.md`.
 
 ## Trusted starting resources
@@ -68,17 +77,16 @@ Every external resource should retain its original URL, creator/source name, res
 
 ## Product roadmap
 
-1. ~~Official syllabus and chapter catalog~~ — done in mock form; replace names/counts with the official SCERT lists.
-2. Resources as metadata plus original links — partially done (partner links); needs per-chapter mapping.
-3. Chapter notes, key points, formulas, diagrams, common mistakes — mock key points exist; needs verified content.
-4. Marks calculator for previous marks, target marks, and chapter priorities — **up next after progress**.
-5. Quizzes and chapter performance breakdowns — needs progress persistence first.
-6. Study planner with revision and mock-test days — needs progress persistence first.
-7. Chapter-specific AI tutor using verified chapter content as retrieval context — needs real content plus cost/limit strategy.
-8. Malayalam/English explanations and low-bandwidth/PWA support.
-9. Account essentials before public launch: email verification, password reset.
-
-Immediate next slice: real progress persistence (`ChapterProgress` model, session-guarded progress API, wire all progress UI to it, delete mock progress).
+1. ~~Official syllabus and chapter catalog~~ — done with real chapter lists (Physics 14, Chemistry 9, Maths 14, English 19, Malayalam 19, CS 12, Zoology 12, Botany 10).
+2. ~~Resources as metadata plus original links~~ — done per chapter: videos, notes, and papers.
+3. Chapter notes, key points, formulas, diagrams — key points exist per chapter; formulas/diagrams still open.
+4. ~~Marks calculator~~ — done as the privacy-first priority planner (per-subject ranks, no grouped totals).
+5. ~~Progress persistence~~ — done and binary (done/not done everywhere).
+6. Quizzes and chapter performance breakdowns — **natural next slice** (progress + priorities already feed it).
+7. Study planner with revision and mock-test days — schedule display exists; needs interactivity.
+8. Chapter-specific AI tutor using verified chapter content as retrieval context — needs a free-provider decision plus cost/limit strategy first.
+9. Malayalam/English explanations and low-bandwidth/PWA support.
+10. Account essentials before public launch: email verification, password reset.
 
 ## AI tutor principles
 
