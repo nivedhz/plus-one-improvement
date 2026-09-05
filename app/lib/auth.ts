@@ -42,6 +42,8 @@ export const signUpSchema = z.object({
     .max(60, "Name is too long."),
   email: emailField,
   password: z.string().min(8, "Password must be at least 8 characters."),
+  // Inline enum (not imported from users.ts) to keep this module Edge-safe.
+  stream: z.enum(["cs", "biology"]).default("biology"),
 });
 
 export const loginSchema = z.object({

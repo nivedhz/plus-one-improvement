@@ -18,12 +18,15 @@ export default function AuthForm({ mode }: { mode: Mode }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [stream, setStream] = useState<"cs" | "biology">("biology");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const payload = isSignUp ? { name, email, password } : { email, password };
+      const payload = isSignUp
+        ? { name, email, password, stream }
+        : { email, password };
       const { data } = await api.post(`/auth/${mode}`, payload);
       return data;
     },
@@ -73,6 +76,52 @@ export default function AuthForm({ mode }: { mode: Mode }) {
             placeholder="Aarav Menon"
             className={inputClass}
           />
+        </div>
+      )}
+
+      {isSignUp && (
+        <div>
+          <span id="auth-stream-label" className="mb-1.5 block text-sm font-medium">
+            Your stream
+          </span>
+          <div
+            role="radiogroup"
+            aria-labelledby="auth-stream-label"
+            className="grid grid-cols-2 gap-2"
+          >
+            {(
+              [
+                {
+                  value: "biology",
+                  title: "Biology",
+                  detail: "Botany + Zoology",
+                },
+                {
+                  value: "cs",
+                  title: "Computer Science",
+                  detail: "CS instead of Biology",
+                },
+              ] as const
+            ).map((o) => (
+              <button
+                key={o.value}
+                type="button"
+                role="radio"
+                aria-checked={stream === o.value}
+                onClick={() => setStream(o.value)}
+                className={`rounded-xl border p-3 text-left transition ${
+                  stream === o.value
+                    ? "border-emerald-600 bg-emerald-500/[0.06] dark:border-indigo-500 dark:bg-indigo-500/[0.08]"
+                    : "border-slate-200 hover:border-slate-300 dark:border-neutral-800 dark:hover:border-neutral-700"
+                }`}
+              >
+                <span className="block text-sm font-semibold">{o.title}</span>
+                <span className="mt-0.5 block text-xs text-slate-500 dark:text-neutral-400">
+                  {o.detail}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
       )}
 

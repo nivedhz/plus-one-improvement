@@ -46,12 +46,14 @@ export async function createUser(input: {
   name: string;
   email: string;
   passwordHash: string;
+  stream?: Stream;
 }): Promise<User> {
   return db.user.create({
     data: {
       name: input.name,
       email: input.email.toLowerCase(),
       passwordHash: input.passwordHash,
+      stream: input.stream ?? "biology",
     },
   });
 }

@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const { name, email, password } = parsed.data;
+  const { name, email, password, stream } = parsed.data;
 
   if (await findUserByEmail(email)) {
     return apiError(
@@ -69,6 +69,7 @@ export async function POST(req: Request) {
       name,
       email,
       passwordHash: await hashPassword(password),
+      stream,
     });
   } catch (err) {
     if (
