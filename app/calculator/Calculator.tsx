@@ -47,7 +47,7 @@ export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
   const marksQuery = useQuery({
     queryKey: ["marks"],
     queryFn: async (): Promise<MarksResponse> => {
-      const { data } = await api.get("/marks");
+      const { data } = await api.get<MarksResponse>("/marks");
       return data;
     },
   });
@@ -67,8 +67,8 @@ export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
         ),
         max: s.maxMarks,
       }));
-      const { data } = await api.put("/marks", { marks });
-      return data as MarksResponse;
+      const { data } = await api.put<MarksResponse>("/marks", { marks });
+      return data;
     },
     onSuccess: () => {
       setError(null);
