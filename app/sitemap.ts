@@ -2,8 +2,7 @@ import type { MetadataRoute } from "next";
 import { SUBJECTS } from "./lib/subjects";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
-  "http://localhost:3000";
+  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "http://localhost:3000";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

@@ -31,11 +31,7 @@ async function request<T>(path: string, init: RequestInit): Promise<ApiResult<T>
       ...init,
     });
   } catch {
-    throw new ApiError(
-      "Could not reach the server. Check your connection.",
-      0,
-      null,
-    );
+    throw new ApiError("Could not reach the server. Check your connection.", 0, null);
   }
 
   let body: unknown = null;
