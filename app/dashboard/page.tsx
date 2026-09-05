@@ -4,6 +4,7 @@ import {
   Bot,
   Calculator,
   CalendarDays,
+  Check,
   Flame,
   Layers,
   Play,
@@ -19,7 +20,7 @@ import { getSession } from "../lib/auth";
 import { computePriorities, getUserMarks } from "../lib/marks";
 import { buildSchedule } from "../lib/schedule";
 import {
-  activeChapters,
+  completedChapters,
   getUserProgressMap,
   studyStreakFor,
 } from "../lib/progress";
@@ -38,10 +39,10 @@ export default async function DashboardPage() {
   if (!session) redirect("/auth/login");
 
   const firstName = session.name.split(" ")[0];
-  const [progressMap, streak, active, stream, savedMarks] = await Promise.all([
+  const [progressMap, streak, done, stream, savedMarks] = await Promise.all([
     getUserProgressMap(session.id),
     studyStreakFor(session.id),
-    activeChapters(session.id, 3),
+    completedChapters(session.id, 3),
     getUserStream(session.id),
     getUserMarks(session.id),
   ]);
@@ -52,14 +53,30 @@ export default async function DashboardPage() {
     }),
   );
   const visibleSubjects = subjectsForStream(stream);
-  const subjectAvg = (slug: string) => {
+  const subjectDone = (slug: string) => {
     const s = visibleSubjects.find((x) => x.slug === slug);
-    if (!s) return 0;
-    return Math.round(
-      s.chapters.reduce((sum, c) => sum + (progressMap[`${slug}:${c.slug}`] ?? 0), 0) /
-        s.chapters.length,
-    );
+    if (!s || s.chapters.length === 0) return { done: 0, total: 0 };
+    const done = s.chapters.filter(
+      (c) => (progressMap[`${slug}:${c.slug}`] ?? 0) >= 100,
+    ).length;
+    return { done, total: s.chapters.length };
   };
+  // First unfinished chapter in stream order — the suggested next step.
+  const nextUp = (() => {
+    for (const s of visibleSubjects) {
+      for (const c of s.chapters) {
+        if ((progressMap[`${s.slug}:${c.slug}`] ?? 0) < 100) {
+          return {
+            subjectSlug: s.slug,
+            subjectName: s.name,
+            chapterSlug: c.slug,
+            title: c.title,
+          };
+        }
+      }
+    }
+    return null;
+  })();
 
   return (
     <div id="top" className="relative min-h-screen overflow-clip">
@@ -119,39 +136,28 @@ export default async function DashboardPage() {
                 Today&apos;s focus
               </p>
               <h2 id="focus-heading" className="mt-3 text-2xl font-bold tracking-tight">
-                {active[0]?.title ?? "Motion in a Straight Line"}
+                {nextUp?.title ?? "Everything is complete"}
               </h2>
               <p className="mt-1 text-sm text-white/60">
-                {active[0]
-                  ? `${active[0].subjectName} · ${active[0].percent}% so far`
-                  : "Physics · a good place to start"}
+                {nextUp
+                  ? `${nextUp.subjectName} · up next`
+                  : "Every chapter in your stream is done"}
               </p>
-              <div
-                className="mt-5 h-2 overflow-hidden rounded-full bg-white/15"
-                role="progressbar"
-                aria-valuenow={active[0]?.percent ?? 0}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label="Chapter progress"
-              >
-                <div
-                  className="h-full rounded-full bg-emerald-400 dark:bg-indigo-400"
-                  style={{ width: `${active[0]?.percent ?? 0}%` }}
-                />
-              </div>
-              <p className="mt-2 text-xs text-white/60">
-                {active[0] ? `${active[0].percent}% complete` : "Not started yet"}
+              <p className="mt-5 text-sm leading-relaxed text-white/75">
+                {nextUp
+                  ? "Open it, study it, and mark it complete when finished."
+                  : "Sit back — or revisit any chapter for revision."}
               </p>
               <Link
                 href={
-                  active[0]
-                    ? `/subjects/${active[0].subjectSlug}/${active[0].chapterSlug}`
-                    : "/subjects/physics/motion-in-a-straight-line"
+                  nextUp
+                    ? `/subjects/${nextUp.subjectSlug}/${nextUp.chapterSlug}`
+                    : "/subjects"
                 }
                 className="group mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-emerald-500 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-400 dark:bg-indigo-500 dark:hover:bg-indigo-400"
               >
                 <Play size={15} aria-hidden />
-                Continue learning
+                {nextUp ? "Open chapter" : "Browse subjects"}
                 <ArrowRight
                   size={15}
                   aria-hidden
@@ -183,7 +189,8 @@ export default async function DashboardPage() {
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {visibleSubjects.map((s) => {
-                const progress = subjectAvg(s.slug);
+                const { done, total } = subjectDone(s.slug);
+                const fraction = total > 0 ? done / total : 0;
                 return (
                   <Link
                     key={s.slug}
@@ -197,12 +204,12 @@ export default async function DashboardPage() {
                       {s.name}
                     </span>
                     <span className="mt-1 block text-xs tabular-nums text-slate-500 dark:text-neutral-400">
-                      {s.chapters.length} chapters · {progress}%
+                      {done}/{total} done
                     </span>
                     <span className="mt-2 block h-1 overflow-hidden rounded-full bg-slate-200/80 dark:bg-neutral-800">
                       <span
                         className="block h-full rounded-full bg-emerald-500 dark:bg-indigo-500"
-                        style={{ width: `${progress}%` }}
+                        style={{ width: `${Math.round(fraction * 100)}%` }}
                       />
                     </span>
                   </Link>
@@ -240,21 +247,24 @@ export default async function DashboardPage() {
               className="scroll-mt-24 rounded-3xl border border-slate-200/80 bg-white/80 p-6 backdrop-blur dark:border-neutral-800 dark:bg-neutral-900/70"
             >
               <h2 id="continue-heading" className="text-lg font-bold tracking-tight">
-                Pick up where you left off
+                Recently completed
               </h2>
-              {active.length === 0 ? (
+              {done.length === 0 ? (
                 <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-neutral-300">
-                  Nothing in progress yet. Open any chapter and set your
-                  progress — it will show up here.
+                  Nothing completed yet. Open any chapter and mark it complete
+                  — it will show up here.
                 </p>
               ) : (
               <ul className="mt-4 space-y-3">
-                {active.map((c) => (
+                {done.map((c) => (
                   <li key={`${c.subjectSlug}:${c.chapterSlug}`}>
                     <Link
                       href={`/subjects/${c.subjectSlug}/${c.chapterSlug}`}
                       className="group flex items-center gap-3 rounded-2xl border border-transparent p-2 transition hover:border-slate-200 hover:bg-slate-50 dark:hover:border-neutral-800 dark:hover:bg-neutral-800/50"
                     >
+                      <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+                        <Check size={14} aria-hidden />
+                      </span>
                       <span className="min-w-0 flex-1">
                         <span className="block text-xs text-slate-500 dark:text-neutral-400">
                           {c.subjectName}
@@ -262,9 +272,6 @@ export default async function DashboardPage() {
                         <span className="block truncate text-sm font-semibold">
                           {c.title}
                         </span>
-                      </span>
-                      <span className="text-xs font-bold tabular-nums text-slate-500 dark:text-neutral-400">
-                        {c.percent}%
                       </span>
                       <ArrowRight
                         size={16}

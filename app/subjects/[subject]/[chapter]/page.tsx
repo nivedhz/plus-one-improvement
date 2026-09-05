@@ -10,10 +10,10 @@ import {
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Navbar from "../../../components/Navbar";
-import ProgressUpdater from "../../../components/ProgressUpdater";
+import CompleteToggle from "../../../components/CompleteToggle";
 import VideoFacade from "../../../components/VideoFacade";
 import { getSession } from "../../../lib/auth";
-import { getUserProgressMap } from "../../../lib/progress";
+import { getUserProgressMap, isComplete } from "../../../lib/progress";
 import { PARTNERS } from "../../../lib/site";
 import { getChapter, getSubject } from "../../../lib/subjects";
 import { chapterVideos } from "../../../lib/videos";
@@ -47,7 +47,7 @@ export default async function ChapterPage({
   if (!subject || !chapter) notFound();
 
   const progressMap = await getUserProgressMap(session.id);
-  const progress = progressMap[`${subject.slug}:${chapter.slug}`] ?? 0;
+  const completed = isComplete(progressMap[`${subject.slug}:${chapter.slug}`]);
   const videos = chapterVideos(subject.slug, chapter.slug);
   const index = subject.chapters.findIndex((c) => c.slug === chapter.slug);
   const prev = subject.chapters[index - 1];
@@ -101,7 +101,7 @@ export default async function ChapterPage({
               </span>
             )}
             <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/70 px-3.5 py-1.5 dark:border-neutral-800 dark:bg-neutral-900/70">
-              {progress}% complete
+              {completed ? "Completed" : "Not started"}
             </span>
           </div>
 
@@ -113,13 +113,6 @@ export default async function ChapterPage({
               <h2 id="keys-heading" className="text-lg font-bold tracking-tight">
                 Key points
               </h2>
-              <div className="mt-4">
-                <ProgressUpdater
-                  subject={subject.slug}
-                  chapter={chapter.slug}
-                  initial={progress}
-                />
-              </div>
               <ul className="mt-4 space-y-3">
                 {chapter.keyPoints.map((k) => (
                   <li key={k} className="flex items-start gap-2.5 text-sm leading-relaxed">
@@ -205,6 +198,27 @@ export default async function ChapterPage({
               </div>
             </section>
           )}
+
+          <section
+            aria-labelledby="done-heading"
+            className="mt-8 rounded-3xl border border-slate-200/80 bg-white/80 p-6 text-center backdrop-blur sm:p-8 dark:border-neutral-800 dark:bg-neutral-900/70"
+          >
+            <h2 id="done-heading" className="text-lg font-bold tracking-tight">
+              {completed ? "Nice work — chapter done." : "Done with this chapter?"}
+            </h2>
+            <p className="mx-auto mt-2 max-w-md text-sm text-slate-600 dark:text-neutral-300">
+              {completed
+                ? "This chapter counts toward your progress. Changed your mind? Mark it incomplete."
+                : "Mark it complete and watch your subjects fill up."}
+            </p>
+            <div className="mt-5 flex justify-center">
+              <CompleteToggle
+                subject={subject.slug}
+                chapter={chapter.slug}
+                completed={completed}
+              />
+            </div>
+          </section>
 
           <nav
             aria-label="Chapter navigation"

@@ -65,12 +65,11 @@ export default async function SubjectsPage() {
 
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {visible.map((s) => {
-              const avg = Math.round(
-                s.chapters.reduce(
-                  (sum, c) => sum + (progress[`${s.slug}:${c.slug}`] ?? 0),
-                  0,
-                ) / s.chapters.length,
-              );
+              const done = s.chapters.filter(
+                (c) => (progress[`${s.slug}:${c.slug}`] ?? 0) >= 100,
+              ).length;
+              const fraction =
+                s.chapters.length > 0 ? done / s.chapters.length : 0;
               return (
                 <Link
                   key={s.slug}
@@ -95,18 +94,18 @@ export default async function SubjectsPage() {
                       </span>
                     </div>
                     <span className="text-sm font-bold tabular-nums">
-                      {avg}%
+                      {done}/{s.chapters.length}
                     </span>
                   </div>
                   <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-neutral-300">
                     {s.tagline}
                   </p>
-                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-neutral-800">
-                    <div
-                      className="h-full rounded-full bg-emerald-500 dark:bg-indigo-500"
-                      style={{ width: `${avg}%` }}
-                    />
-                  </div>
+                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-neutral-800">
+                      <div
+                        className="h-full rounded-full bg-emerald-500 dark:bg-indigo-500"
+                        style={{ width: `${Math.round(fraction * 100)}%` }}
+                      />
+                    </div>
                 </Link>
               );
             })}

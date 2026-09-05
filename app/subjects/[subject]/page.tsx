@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowLeft, ArrowRight, Layers, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Layers, Play } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Navbar from "../../components/Navbar";
@@ -95,7 +95,8 @@ export default async function SubjectPage({
 
           <ol className="mt-8 space-y-2.5">
             {subject.chapters.map((c, i) => {
-              const progress = progressMap[`${subject.slug}:${c.slug}`] ?? 0;
+              const done =
+                (progressMap[`${subject.slug}:${c.slug}`] ?? 0) >= 100;
               return (
                 <li key={c.slug}>
                   <Link
@@ -112,16 +113,15 @@ export default async function SubjectPage({
                       <span className="mt-0.5 block text-xs text-slate-500 dark:text-neutral-400">
                         {chapterVideos(subject.slug, c.slug).length} videos
                       </span>
-                      <span className="mt-2 block h-1 overflow-hidden rounded-full bg-slate-200/80 dark:bg-neutral-800">
-                        <span
-                          className="block h-full rounded-full bg-emerald-500 dark:bg-indigo-500"
-                          style={{ width: `${progress}%` }}
-                        />
+                    </span>
+                    {done ? (
+                      <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-600/10 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+                        <Check size={13} aria-hidden />
+                        Done
                       </span>
-                    </span>
-                    <span className="shrink-0 text-xs font-bold tabular-nums text-slate-500 dark:text-neutral-400">
-                      {progress}%
-                    </span>
+                    ) : (
+                      <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-slate-200 dark:border-neutral-700" aria-label="Not started" />
+                    )}
                     <ArrowRight
                       size={17}
                       aria-hidden
