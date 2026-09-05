@@ -1,6 +1,10 @@
 export const EXAM_DATE_ISO = "2026-10-12T09:30:00+05:30";
 export const EXAM_LABEL = "12 October 2026 · 9:30 AM IST";
 
+// REPLACE BEFORE PUBLIC LAUNCH: where data requests (export/deletion)
+// and legal questions go. Shown on /privacy and /terms.
+export const SUPPORT_EMAIL = "support@example.com";
+
 export type Quote = { text: string; author: string };
 
 export const QUOTES: Quote[] = [

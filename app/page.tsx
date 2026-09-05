@@ -332,7 +332,15 @@ export default async function Home() {
             <p>
               improve. — a student-built companion for Kerala Plus One improvement exams.
             </p>
-            <p>All learning resources belong to their original creators.</p>
+            <p className="flex flex-wrap gap-x-4 gap-y-1">
+              <span>All learning resources belong to their original creators.</span>
+              <a href="/privacy" className="hover:underline">
+                Privacy
+              </a>
+              <a href="/terms" className="hover:underline">
+                Terms
+              </a>
+            </p>
           </div>
         </footer>
       </div>
