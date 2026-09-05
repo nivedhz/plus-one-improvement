@@ -32,7 +32,8 @@ export default function StudyCalendar({ schedule }: { schedule: Schedule }) {
           </h2>
           <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
             {schedule.rangeLabel} · weakest subjects first
-            {schedule.remaining > 0 && ` · ${schedule.dailyGoal} a day, weekends double`}
+            {schedule.remaining > 0 && ` · ${schedule.dailyGoal} a day, Fri & Sun peak`}
+            {schedule.bufferDays > 0 && ` · ${schedule.bufferDays}-day revision buffer`}
           </p>
         </div>
         <ul
@@ -88,6 +89,21 @@ export default function StudyCalendar({ schedule }: { schedule: Schedule }) {
                 className="h-1.5 w-1.5 rounded-full bg-slate-200 dark:bg-neutral-700"
                 aria-hidden
               />
+            </div>
+          ) : day.buffer ? (
+            <div
+              key={day.key}
+              role="gridcell"
+              tabIndex={0}
+              aria-label={`${day.dayNum}: revision buffer`}
+              className="flex min-h-10 cursor-default flex-col items-center justify-center gap-0.5 rounded-lg border border-dashed border-slate-300 p-0.5 sm:min-h-12 dark:border-neutral-700"
+            >
+              <span className="text-xs tabular-nums text-slate-400 dark:text-neutral-500">
+                {day.dayNum}
+              </span>
+              <span className="px-1 text-center text-[9px] font-semibold uppercase tracking-wide text-slate-400 dark:text-neutral-500">
+                Revise
+              </span>
             </div>
           ) : (
             <div

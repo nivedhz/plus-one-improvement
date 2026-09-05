@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
   dailyGoal,
+  intensityOf,
   planSchedule,
   type BacklogChapter,
   type ScheduleSubject,
 } from "./schedule";
 
-// Monday 7 Sep 2026 — pins weekday/weekend positions deterministically.
+// Monday 7 Sep 2026 — pins weekday positions deterministically.
+// (Sep 2026: Fri 4th, Sat 5th, Sun 6th, Mon 7th, Tue 8th, Wed 9th, Thu 10th.)
 const MONDAY = new Date(2026, 8, 7, 12, 0, 0);
 
 function ch(n: number, prefix = "ch"): BacklogChapter[] {
@@ -37,24 +39,66 @@ describe("dailyGoal", () => {
   });
 });
 
+describe("weekly rhythm", () => {
+  it("peaks Fri and Sun, hard Wed, spread elsewhere", () => {
+    // Fri 4th, Sun 6th: toughest (double capacity, drain weakest).
+    expect(intensityOf(new Date(2026, 8, 4, 12))).toEqual({ mult: 2, drain: true });
+    expect(intensityOf(new Date(2026, 8, 6, 12))).toEqual({ mult: 2, drain: true });
+    // Wed 9th: the hard day in between.
+    expect(intensityOf(new Date(2026, 8, 9, 12))).toEqual({ mult: 1.5, drain: true });
+    // Mon/Tue/Thu: spread, base pace.
+    for (const day of [7, 8, 10]) {
+      expect(intensityOf(new Date(2026, 8, day, 12))).toEqual({
+        mult: 1,
+        drain: false,
+      });
+    }
+    // Sat 5th: high volume, still spread.
+    expect(intensityOf(new Date(2026, 8, 5, 12))).toEqual({
+      mult: 1.5,
+      drain: false,
+    });
+  });
+});
+
 describe("planSchedule", () => {
-  it("fills weakest-first with weekend double capacity", () => {
+  it("ends the plan ~a week before the exam, buffer flagged", () => {
+    // Mon 7 Sep → plan ends Tue 6 Oct (30 days), buffer 7–12 Oct.
+    const s = planSchedule({ subjects: [PHY], backlogs: {}, now: MONDAY });
+    expect(s.daysLeft).toBe(30);
+    expect(s.bufferDays).toBe(6);
+    const future = s.days.filter((d) => !d.isPast);
+    const lastPlanned = future.filter((d) => !d.buffer).at(-1);
+    expect([lastPlanned?.dayNum, lastPlanned?.goal]).toEqual([6, 0]);
+    const buffer = future.filter((d) => d.buffer);
+    expect(buffer).toHaveLength(6);
+    expect(buffer[0].dayNum).toBe(7);
+    for (const d of buffer) {
+      expect(d.chapters).toEqual([]);
+      expect(d.tone).toBeNull();
+    }
+  });
+
+  it("spreads Saturdays, drains Sundays into the weakest backlog", () => {
     const s = planSchedule({
       subjects: [PHY, CHE],
       backlogs: { physics: ch(10, "p"), chemistry: ch(10, "c") },
       now: MONDAY,
     });
-    // Monday (weekday, goal 1): single weakest chapter.
-    const first = s.days.filter((d) => !d.isPast)[0];
-    expect(first.chapters).toHaveLength(1);
-    expect(first.chapters[0].subjectSlug).toBe("physics");
-    // Saturday (weekend, goal 2): both chapters from the weakest backlog.
-    const saturday = s.days.filter((d) => !d.isPast)[5];
+    const future = s.days.filter((d) => !d.isPast);
+    // Monday: single weakest chapter.
+    expect(future[0].chapters.map((c) => c.subjectSlug)).toEqual(["physics"]);
+    // Saturday (spread day, cap 2): one chapter each.
+    const saturday = future[5];
     expect(saturday.chapters).toHaveLength(2);
-    expect(saturday.chapters.every((c) => c.subjectSlug === "physics")).toBe(true);
+    expect(new Set(saturday.chapters.map((c) => c.subjectSlug)).size).toBe(2);
+    // Sunday (peak drain, cap 2): both from the weakest backlog.
+    const sunday = future[6];
+    expect(sunday.chapters).toHaveLength(2);
+    expect(sunday.chapters.every((c) => c.subjectSlug === "physics")).toBe(true);
   });
 
-  it("round-robins weekdays across equal subjects", () => {
+  it("round-robins balanced days across equal subjects", () => {
     const even: ScheduleSubject[] = [
       { slug: "a", name: "A", level: null },
       { slug: "b", name: "B", level: null },
@@ -124,7 +168,7 @@ describe("planSchedule", () => {
     expect(s.remaining).toBe(0);
     expect(s.dailyGoal).toBe(0);
     expect(s.behindBy).toBe(0);
-    for (const d of s.days.filter((d) => !d.isPast)) {
+    for (const d of s.days.filter((d) => !d.isPast && !d.buffer)) {
       expect(d.chapters).toEqual([]);
       expect(d.tone).toBeNull();
     }
