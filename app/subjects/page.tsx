@@ -7,6 +7,7 @@ import StreamSwitcher from "../components/StreamSwitcher";
 import SubjectIcon from "../components/SubjectIcon";
 import { getSession } from "../lib/auth";
 import { getUserProgressMap } from "../lib/progress";
+import { subjectNoteCount } from "../lib/notes";
 import { subjectsForStream } from "../lib/subjects";
 import { subjectVideoCount } from "../lib/videos";
 import { getUserStream } from "../lib/users";
@@ -90,7 +91,7 @@ export default async function SubjectsPage() {
                         />
                       </span>
                       <span className="block text-xs text-slate-500 dark:text-neutral-400">
-                        {s.chapters.length} chapters · {subjectVideoCount(s.slug)} videos
+                        {s.chapters.length} chapters · {subjectVideoCount(s.slug)} videos · {subjectNoteCount(s.slug)} notes
                       </span>
                     </div>
                     <span className="text-sm font-bold tabular-nums">
