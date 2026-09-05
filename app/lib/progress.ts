@@ -5,12 +5,18 @@ import { getChapter, getSubject } from "./subjects";
 export const progressInputSchema = z.object({
   subject: z.string().min(1),
   chapter: z.string().min(1),
-  percent: z.number().int().min(0).max(100),
+  completed: z.boolean(),
 });
 
 export type ProgressInput = z.infer<typeof progressInputSchema>;
 
-export type ProgressMap = Record<string, number>; // "subject:chapter" -> percent
+// "subject:chapter" -> percent. Only 0 and 100 are ever written now —
+// anything below 100 simply means "not done yet".
+export type ProgressMap = Record<string, number>;
+
+export function isComplete(percent: number | undefined): boolean {
+  return (percent ?? 0) >= 100;
+}
 
 export async function getUserProgressMap(userId: string): Promise<ProgressMap> {
   const rows = await db.chapterProgress.findMany({ where: { userId } });
@@ -22,13 +28,14 @@ export async function getUserProgressMap(userId: string): Promise<ProgressMap> {
 export async function setChapterProgress(
   userId: string,
   input: ProgressInput,
-): Promise<{ percent: number }> {
+): Promise<{ completed: boolean }> {
   // Reject slugs outside the catalog so junk can't pollute progress.
   const subject = getSubject(input.subject);
   if (!subject || !getChapter(subject, input.chapter)) {
     throw new Error("Unknown subject or chapter.");
   }
-  const row = await db.chapterProgress.upsert({
+  const percent = input.completed ? 100 : 0;
+  await db.chapterProgress.upsert({
     where: {
       userId_subject_chapter: {
         userId,
@@ -36,15 +43,15 @@ export async function setChapterProgress(
         chapter: input.chapter,
       },
     },
-    update: { percent: input.percent },
+    update: { percent },
     create: {
       userId,
       subject: input.subject,
       chapter: input.chapter,
-      percent: input.percent,
+      percent,
     },
   });
-  return { percent: row.percent };
+  return { completed: input.completed };
 }
 
 // Consecutive-day streak ending today (or yesterday, to be kind) from the
@@ -71,25 +78,24 @@ export async function studyStreakFor(userId: string): Promise<number> {
   return studyStreak(rows.map((r) => r.updatedAt));
 }
 
-export type ActiveChapter = {
+export type CompletedChapter = {
   subjectSlug: string;
   subjectName: string;
   chapterSlug: string;
   title: string;
-  percent: number;
 };
 
-// Most recently touched unfinished chapters, resolved to catalog titles.
-export async function activeChapters(
+// Most recently completed chapters, resolved to catalog titles.
+export async function completedChapters(
   userId: string,
   limit = 3,
-): Promise<ActiveChapter[]> {
+): Promise<CompletedChapter[]> {
   const rows = await db.chapterProgress.findMany({
-    where: { userId, percent: { lt: 100 } },
+    where: { userId, percent: { gte: 100 } },
     orderBy: { updatedAt: "desc" },
     take: limit,
   });
-  const out: ActiveChapter[] = [];
+  const out: CompletedChapter[] = [];
   for (const r of rows) {
     const subject = getSubject(r.subject);
     const chapter = subject && getChapter(subject, r.chapter);
@@ -99,7 +105,6 @@ export async function activeChapters(
       subjectName: subject.name,
       chapterSlug: chapter.slug,
       title: chapter.title,
-      percent: r.percent,
     });
   }
   return out;
