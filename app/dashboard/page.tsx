@@ -13,6 +13,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CountUp, ProgressBar, Reveal } from "../components/animate";
 import CountdownTimer from "../components/CountdownTimer";
+import ImprovementPicker from "../components/ImprovementPicker";
 import Navbar from "../components/Navbar";
 import QuoteRotator from "../components/QuoteRotator";
 import SubjectIcon from "../components/SubjectIcon";
@@ -110,6 +111,20 @@ export default async function DashboardPage() {
               </div>
             </div>
           </Reveal>
+
+          {trio.length === 0 && (
+            <Reveal delay={0.03}>
+              <div className="mt-4">
+                <ImprovementPicker
+                  subjects={streamSubjects.map((s) => ({
+                    slug: s.slug,
+                    name: s.name,
+                  }))}
+                  initialTrio={[]}
+                />
+              </div>
+            </Reveal>
+          )}
 
           <Reveal delay={0.05}>
             <StudyCalendar schedule={schedule} />
@@ -211,7 +226,7 @@ export default async function DashboardPage() {
                   <ArrowRight size={15} aria-hidden />
                 </Link>
               </div>
-              {trio.length > 0 ? (
+              {trio.length > 0 && (
                 <p className="mt-2 text-xs text-slate-500 dark:text-neutral-400">
                   Improving {improvingNames.join(" · ")} —{" "}
                   <Link
@@ -219,16 +234,6 @@ export default async function DashboardPage() {
                     className="font-semibold text-emerald-700 hover:underline dark:text-indigo-400"
                   >
                     Change
-                  </Link>
-                </p>
-              ) : (
-                <p className="mt-2 text-xs text-slate-500 dark:text-neutral-400">
-                  You can improve at most 3 subjects.{" "}
-                  <Link
-                    href="/calculator"
-                    className="font-semibold text-emerald-700 hover:underline dark:text-indigo-400"
-                  >
-                    Pick your 3
                   </Link>
                 </p>
               )}

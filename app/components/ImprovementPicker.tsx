@@ -5,7 +5,6 @@ import { Check, LoaderCircle, Sparkles, TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import { api, apiErrorMessage } from "../lib/api";
 import { MAX_IMPROVEMENT_SUBJECTS, recommendedTrio } from "../lib/improvement";
-import type { CalcSubject } from "./Calculator";
 
 type ImprovementResponse = { subjects: string[] };
 
@@ -15,11 +14,13 @@ type Priority = { subjectSlug: string; rank: number };
 // second fetch — the recommendation simply follows the saved priorities.
 type MarksResponse = { priorities: Priority[] };
 
+export type PickerSubject = { slug: string; name: string };
+
 export default function ImprovementPicker({
   subjects,
   initialTrio,
 }: {
-  subjects: CalcSubject[];
+  subjects: PickerSubject[];
   initialTrio: string[];
 }) {
   const queryClient = useQueryClient();

@@ -9,7 +9,7 @@ import { getImprovementSubjects } from "../lib/users";
 import { STREAM_LABELS, subjectsForStream } from "../lib/subjects";
 import { getUserStream } from "../lib/users";
 import Calculator from "./Calculator";
-import ImprovementPicker from "./ImprovementPicker";
+import ImprovementPicker from "../components/ImprovementPicker";
 
 export const metadata: Metadata = {
   title: "Marks calculator",
