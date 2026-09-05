@@ -23,7 +23,7 @@ import { computePriorities, getUserMarks } from "../lib/marks";
 import { planSchedule } from "../lib/schedule";
 import { completedChapters, getUserProgressMap, studyStreakFor } from "../lib/progress";
 import { getStudyFocus } from "../lib/study-focus";
-import { EXAM_LABEL } from "../lib/site";
+import { EXAM_LABEL, mailto } from "../lib/site";
 import { STREAM_LABELS } from "../lib/subjects";
 import { MOTIVATION_VIDEOS, recentVideos } from "../lib/videos";
 import VideoFacade from "../components/VideoFacade";
@@ -465,17 +465,26 @@ export default async function DashboardPage() {
           </Reveal>
 
           <footer className="mt-12 border-t border-slate-200/70 py-6 text-xs text-slate-500 dark:border-neutral-800/70 dark:text-neutral-400">
-            <p>
-              improve. — your study companion for Kerala Plus One improvement exams. All
-              learning resources belong to their original creators.{" "}
-              <Link href="/privacy" className="hover:underline">
-                Privacy
-              </Link>{" "}
-              ·{" "}
-              <Link href="/terms" className="hover:underline">
-                Terms
-              </Link>
-            </p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <p>
+                improve. — your study companion for Kerala Plus One improvement exams. All
+                learning resources belong to their original creators.
+              </p>
+              <p className="flex flex-wrap gap-x-4 gap-y-1">
+                <Link href="/privacy" className="hover:underline">
+                  Privacy
+                </Link>
+                <Link href="/terms" className="hover:underline">
+                  Terms
+                </Link>
+                <a
+                  href={mailto("improve. suggestion", "Your suggestion:")}
+                  className="hover:underline"
+                >
+                  Suggestions
+                </a>
+              </p>
+            </div>
           </footer>
         </main>
       </div>
