@@ -19,19 +19,13 @@ export type PyqYear = {
 
 const H = "https://www.hsslive.guru";
 
-function paper(
-  slug: string,
-  title: string,
-  kind: PyqKind,
-): PyqPaper {
+function paper(slug: string, title: string, kind: PyqKind): PyqPaper {
   return { title, url: `${H}/${slug}/`, kind };
 }
 
 function board(sub: string, label: string): PyqPaper {
   return paper(
-    `kerala-plus-one-${sub}-question-paper-${label
-      .toLowerCase()
-      .replace(/ /g, "-")}`,
+    `kerala-plus-one-${sub}-question-paper-${label.toLowerCase().replace(/ /g, "-")}`,
     `${label} Board Paper`,
     "board",
   );
@@ -46,11 +40,7 @@ function old(sub: string, year: number): PyqPaper {
 }
 
 function modelSet(sub: string, n: number): PyqPaper {
-  return paper(
-    `plus-one-${sub}-model-question-paper-${n}`,
-    `Model Set ${n}`,
-    "model",
-  );
+  return paper(`plus-one-${sub}-model-question-paper-${n}`, `Model Set ${n}`, "model");
 }
 
 function boardModel(sub: string, year: number): PyqPaper {
@@ -90,11 +80,7 @@ export const SUBJECT_PYQ: Record<string, PyqYear[]> = {
       year: "2019",
       papers: [
         board("physics", "March 2019"),
-        paper(
-          "kerala-plus-one-physics-question-paper-say-2019",
-          "SAY 2019",
-          "say",
-        ),
+        paper("kerala-plus-one-physics-question-paper-say-2019", "SAY 2019", "say"),
       ],
     },
     {
@@ -284,6 +270,19 @@ export const SUBJECT_PYQ: Record<string, PyqYear[]> = {
     models("computer-science", [2023, 2022, 2021, 2020], [1, 2, 3]),
   ],
 };
+
+export function pyqKindLabel(kind: PyqKind): string {
+  switch (kind) {
+    case "board":
+      return "Board";
+    case "say":
+      return "SAY";
+    case "improvement":
+      return "Improvement";
+    case "model":
+      return "Model";
+  }
+}
 
 export function subjectPyq(subject: string): PyqYear[] {
   return SUBJECT_PYQ[subject] ?? [];

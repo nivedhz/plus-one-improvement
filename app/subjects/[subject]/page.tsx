@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { ArrowLeft, ArrowRight, Check, ExternalLink, FileText, Layers, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, FileText, Layers, Play } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Navbar from "../../components/Navbar";
+import ResourceCard from "../../components/ResourceCard";
 import SubjectIcon from "../../components/SubjectIcon";
 import { getSession } from "../../lib/auth";
-import { chapterNotes, subjectNoteCount } from "../../lib/notes";
+import { chapterNotes, subjectNoteCount, subjectNotes } from "../../lib/notes";
 import { getUserProgressMap } from "../../lib/progress";
-import { subjectPyq, subjectPyqCount } from "../../lib/pyq";
+import { pyqKindLabel, subjectPyq, subjectPyqCount } from "../../lib/pyq";
 import { getSubject } from "../../lib/subjects";
 import { chapterVideos, subjectVideoCount } from "../../lib/videos";
 
@@ -35,6 +36,15 @@ export default async function SubjectPage({
   if (!subject) notFound();
 
   const progressMap = await getUserProgressMap(session.id);
+  const guides = subjectNotes(subject.slug);
+  const pyqGroups = subjectPyq(subject.slug);
+  const boardYears = pyqGroups
+    .filter((g) => g.year !== "Model papers")
+    .map((g) => g.year);
+  const pyqRange =
+    boardYears.length > 0
+      ? `${boardYears[0]}–${boardYears[boardYears.length - 1]}`
+      : null;
 
   return (
     <div className="relative min-h-screen overflow-clip">
@@ -57,7 +67,10 @@ export default async function SubjectPage({
               Dashboard
             </Link>
             <span aria-hidden>/</span>
-            <Link href="/subjects" className="transition hover:text-slate-900 dark:hover:text-white">
+            <Link
+              href="/subjects"
+              className="transition hover:text-slate-900 dark:hover:text-white"
+            >
               Subjects
             </Link>
             <span aria-hidden>/</span>
@@ -99,8 +112,7 @@ export default async function SubjectPage({
 
           <ol className="mt-8 space-y-2.5">
             {subject.chapters.map((c, i) => {
-              const done =
-                (progressMap[`${subject.slug}:${c.slug}`] ?? 0) >= 100;
+              const done = (progressMap[`${subject.slug}:${c.slug}`] ?? 0) >= 100;
               const vCount = chapterVideos(subject.slug, c.slug).length;
               const nCount = chapterNotes(subject.slug, c.slug).length;
               return (
@@ -113,11 +125,10 @@ export default async function SubjectPage({
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate font-semibold">
-                        {c.title}
-                      </span>
+                      <span className="block truncate font-semibold">{c.title}</span>
                       <span className="mt-0.5 block text-xs text-slate-500 dark:text-neutral-400">
-                        {vCount} {vCount === 1 ? "video" : "videos"} · {nCount} {nCount === 1 ? "note" : "notes"}
+                        {vCount} {vCount === 1 ? "video" : "videos"} · {nCount}{" "}
+                        {nCount === 1 ? "note" : "notes"}
                       </span>
                     </span>
                     {done ? (
@@ -126,7 +137,10 @@ export default async function SubjectPage({
                         Done
                       </span>
                     ) : (
-                      <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-slate-200 dark:border-neutral-700" aria-label="Not started" />
+                      <span
+                        className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-slate-200 dark:border-neutral-700"
+                        aria-label="Not started"
+                      />
                     )}
                     <ArrowRight
                       size={17}
@@ -139,51 +153,46 @@ export default async function SubjectPage({
             })}
           </ol>
 
-          {subjectPyq(subject.slug).length > 0 && (
+          {guides.length > 0 && (
+            <section aria-labelledby="notes-heading" className="mt-10">
+              <h2 id="notes-heading" className="text-lg font-bold tracking-tight">
+                Study notes
+              </h2>
+              <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
+                Whole-subject guides, hand-picked from HSSLive — start here before diving
+                into chapters.
+              </p>
+              <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+                {guides.map((note) => (
+                  <ResourceCard key={note.url} title={note.title} url={note.url} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {pyqGroups.length > 0 && (
             <section aria-labelledby="pyq-heading" className="mt-10">
               <h2 id="pyq-heading" className="text-lg font-bold tracking-tight">
                 Previous Year Questions
               </h2>
               <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">
-                Full papers with answers, newest first — linked from the
-                original publishers.
+                Full papers with answers{pyqRange ? ` (${pyqRange})` : ""}, newest first —
+                linked from the original publishers.
               </p>
               <div className="mt-4 space-y-5">
-                {subjectPyq(subject.slug).map((group) => (
+                {pyqGroups.map((group) => (
                   <div key={group.year}>
                     <h3 className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-neutral-400">
                       {group.year}
                     </h3>
-                    <ul className="mt-2 space-y-2">
+                    <ul className="mt-2 grid gap-2.5 sm:grid-cols-2">
                       {group.papers.map((paper) => (
                         <li key={paper.url}>
-                          <a
-                            href={paper.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/80 p-3.5 backdrop-blur transition hover:-translate-y-px hover:shadow-sm dark:border-neutral-800 dark:bg-neutral-900/70"
-                          >
-                            <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600/10 text-emerald-700 dark:bg-indigo-500/10 dark:text-indigo-300">
-                              <FileText size={17} aria-hidden />
-                            </span>
-                            <span className="min-w-0 flex-1 truncate text-sm font-semibold">
-                              {paper.title}
-                            </span>
-                            <span className="shrink-0 rounded-full bg-slate-900/[0.05] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-500 dark:bg-white/[0.07] dark:text-neutral-400">
-                              {paper.kind === "board"
-                                ? "Board"
-                                : paper.kind === "say"
-                                  ? "SAY"
-                                  : paper.kind === "improvement"
-                                    ? "Improvement"
-                                    : "Model"}
-                            </span>
-                            <ExternalLink
-                              size={15}
-                              aria-hidden
-                              className="shrink-0 text-slate-300 transition group-hover:text-slate-500 dark:group-hover:text-neutral-300"
-                            />
-                          </a>
+                          <ResourceCard
+                            title={paper.title}
+                            url={paper.url}
+                            badge={pyqKindLabel(paper.kind)}
+                          />
                         </li>
                       ))}
                     </ul>
