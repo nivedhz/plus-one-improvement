@@ -10,6 +10,11 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1).optional(),
   NEXT_PUBLIC_APP_URL: z.string().url().optional().or(z.literal("").optional()),
   NODE_ENV: z.enum(["development", "production", "test"]).optional(),
+  // Optional: without these, reset links are logged server-side (dev) or
+  // fail closed with a server log (production). Resend free tier ($0)
+  // covers this flow.
+  RESEND_API_KEY: z.string().min(1).optional(),
+  RESET_FROM_EMAIL: z.string().email().optional(),
 });
 
 export type AppEnv = z.infer<typeof envSchema>;

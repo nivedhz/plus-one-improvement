@@ -18,6 +18,9 @@ model User {
   tokenVersion Int      @default(0)
   // Science stream: "cs" (Computer Science) or "biology" (Botany + Zoology).
   stream       String   @default("biology")
+  // Set when the address is verified. Owned by the parallel
+  // email-verification work — declared here so `db push` preserves it.
+  emailVerified DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now()) @updatedAt
 
@@ -26,6 +29,37 @@ model User {
 
   progress ChapterProgress[]
   marks    PreviousMark[]
+  passwordResetTokens PasswordResetToken[]
+  verificationTokens VerificationToken[]
+}
+
+// Single-use password-reset tokens. Only SHA-256 hashes are stored, so a
+// DB leak alone can never redeem a token. Consuming = deleting the row,
+// so no token can ever be used twice. Maps the pre-existing table.
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+// Owned by the parallel email-verification work — declared here so
+// `db push` never proposes to drop it. Not touched by the reset flow.
+model VerificationToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("verification_tokens")
 }
 
 // Per-user, per-chapter study progress (0–100).
