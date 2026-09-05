@@ -2,6 +2,17 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  /* Brand tokens: fresh green (light) / indigo glow (dark). Red stays destructive-only. */
+  --color-brand-400: #34d399;
+  --color-brand-500: #10b981;
+  --color-brand-600: #059669;
+  --color-brand-glow-500: #6366f1;
+  --color-brand-glow-600: #4f46e5;
+  --color-canvas-light: #fafaf8;
+  --color-canvas-dark: #111111;
+}
+
 :root {
   color-scheme: light;
 }

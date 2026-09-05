@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "../../lib/db";
+import { logger } from "../../lib/logger";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,8 +11,11 @@ export async function GET() {
   try {
     await db.$queryRaw`SELECT 1`;
     database = "up";
-  } catch {
+  } catch (err) {
     database = "down";
+    logger.warn("health.db.down", {
+      error: err instanceof Error ? err.message : "unknown",
+    });
   }
   const status = database === "up" ? "ok" : "degraded";
   return NextResponse.json(
