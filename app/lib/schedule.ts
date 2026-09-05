@@ -60,20 +60,25 @@ const DAY_MS = 86_400_000;
 const EXAM_BUFFER_DAYS = 6;
 
 // Weekly toughness rhythm (periodization, not linear sorting):
-// Fri + Sun go hardest (drain the weakest backlog), Wed is the mid-week
-// hard day, Sat carries high volume but spread out, Mon/Tue/Thu recover.
-const WEEK_RHYTHM: Record<number, { mult: number; drain: boolean }> = {
-  0: { mult: 2, drain: true }, // Sunday — toughest
-  1: { mult: 1, drain: false }, // Monday
-  2: { mult: 1, drain: false }, // Tuesday
-  3: { mult: 1.5, drain: true }, // Wednesday — hard day in between
-  4: { mult: 1, drain: false }, // Thursday
-  5: { mult: 2, drain: true }, // Friday — toughest
-  6: { mult: 1.5, drain: false }, // Saturday — volume, spread
-};
+// school days (Mon–Thu) never exceed 2 chapters — these kids sit through
+// ~2-hour classes all day already. Only free days (Fri/Sat/Sun) may reach
+// 3, and only when the pace demands it. Wed/Fri/Sun drain the weakest
+// backlog first; every other day spreads round-robin.
+const FREE_DAYS = new Set([0, 5, 6]); // Sun, Fri, Sat
+const DRAIN_DAYS = new Set([0, 3, 5]); // Sun, Wed, Fri
 
-export function intensityOf(date: Date): { mult: number; drain: boolean } {
-  return WEEK_RHYTHM[date.getDay()];
+export function isFreeDay(date: Date): boolean {
+  return FREE_DAYS.has(date.getDay());
+}
+
+export function isDrainDay(date: Date): boolean {
+  return DRAIN_DAYS.has(date.getDay());
+}
+
+export function dayCapacity(date: Date, goal: number): number {
+  if (goal <= 0) return 0;
+  if (!isFreeDay(date)) return goal;
+  return Math.min(3, goal + 1);
 }
 
 // Weakness weights: lowest marks first. Unknown levels share the base.
@@ -99,13 +104,14 @@ function short(d: Date): string {
   return d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 }
 
-// Past this daily pace the overflow spills into the buffer (then behind).
-const SUSTAINABLE_MAX = 4;
+// A school day holds at most 2 chapters of ~2-hour classes — past that,
+// overflow spills into the buffer (then behind) instead of crushing days.
+const DAILY_MAX = 2;
 
 export function dailyGoal(remaining: number, daysLeft: number): number {
   if (remaining <= 0) return 0;
   if (daysLeft <= 1) return remaining;
-  return Math.min(SUSTAINABLE_MAX, Math.max(1, Math.ceil(remaining / daysLeft)));
+  return Math.min(DAILY_MAX, Math.max(1, Math.ceil(remaining / daysLeft)));
 }
 
 // Pure planner: subjects with their UNFINISHED chapters in, dated chapter
@@ -163,10 +169,9 @@ export function planSchedule(opts: {
   };
 
   const fillDay = (date: Date): PlannedChapter[] => {
-    const { mult, drain } = intensityOf(date);
-    const cap = Math.round(goal * mult);
+    const cap = dayCapacity(date, goal);
     const chapters: PlannedChapter[] = [];
-    if (drain) {
+    if (isDrainDay(date)) {
       // Hard days: drain the weakest backlog first while time is ample.
       while (chapters.length < cap) {
         const next = ordered.find((s) => (queues.get(s.slug)?.length ?? 0) > 0);
