@@ -467,7 +467,14 @@ export default async function DashboardPage() {
           <footer className="mt-12 border-t border-slate-200/70 py-6 text-xs text-slate-500 dark:border-neutral-800/70 dark:text-neutral-400">
             <p>
               improve. — your study companion for Kerala Plus One improvement exams. All
-              learning resources belong to their original creators.
+              learning resources belong to their original creators.{" "}
+              <Link href="/privacy" className="hover:underline">
+                Privacy
+              </Link>{" "}
+              ·{" "}
+              <Link href="/terms" className="hover:underline">
+                Terms
+              </Link>
             </p>
           </footer>
         </main>

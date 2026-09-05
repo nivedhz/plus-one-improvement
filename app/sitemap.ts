@@ -13,6 +13,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/dashboard",
     "/subjects",
     "/calculator",
+    "/privacy",
+    "/terms",
   ].map((path) => ({ url: `${siteUrl}${path}`, lastModified: now }));
 
   const subjectRoutes = SUBJECTS.flatMap((s) => [
