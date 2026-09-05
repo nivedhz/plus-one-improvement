@@ -460,21 +460,125 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
   },
   zoology: {
     "animal-kingdom": [
-      v("bdwP48JBah0", "The Living World — Chapter 1", "Xylem"),
+      v("rTFyvekBb-k", "Plus One Biology | Chapter 4 | Animal Kingdom | Oneshot", "Exam Winner"),
+      v("3vrJtWo2JWc", "Animal Kingdom | One Shot | Plus One Biology Chapter 4", "Eduport"),
+      v("HQS_T9Q7I8A", "Plus One Biology Public Exam | Chapters 1, 2, 3, 4, 5, 6, 8, 9 & 10 | Full Chapter", "Exam Winner", 4133),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 157),
+    ],
+    "structural-organisation": [
+      v("aUtOs-8UGEI", "+1 Biology Onam Exam | Chapter 7 | Structural Organisation In Animals | Oneshot", "Exam Winner"),
+      v("3yH4feQfCUk", "Plus One Zoology | Structural Organisation In Animals - Revision", "Xylem"),
+      v("0zusmy1Vi0M", "Structural Organisation in Animals | One Shot | Plus One Biology Chapter 7", "Eduport"),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 32211),
+    ],
+    "cell-the-unit-of-life": [
+      v("M9qiOsTGhRs", "Plus One Biology | Cell the Unit Of Life", "Exam Winner"),
+      v("YotYDIpyPUU", "Plus One Botany | Cell The Unit Of Life - Complete Revision In One Video", "Xylem"),
+      v("GYqkx2U9Jvg", "Plus One Biology | Chapter 8 | Cell: The Unit of Life - One Shot", "Eduport"),
+      v("HQS_T9Q7I8A", "Plus One Biology Public Exam | Chapters 1, 2, 3, 4, 5, 6, 8, 9 & 10 | Full Chapter", "Exam Winner", 25205),
     ],
     biomolecules: [
-      v("fs_h8kFzOww", "Biomolecules — Full Chapter Revision", "Xylem"),
+      v("0naYRk2bgW4", "Plus One Zoology | 9. Biomolecules - One Shot", "Eduport"),
+      v("fs_h8kFzOww", "Plus One Biology | Biomolecules Full Chapter Revision", "Xylem"),
+      v("HQS_T9Q7I8A", "Plus One Biology Public Exam | Chapters 1, 2, 3, 4, 5, 6, 8, 9 & 10 | Full Chapter", "Exam Winner", 15144),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 10316),
+    ],
+    "cell-cycle": [
+      v("PhpJlwEaAZ0", "Plus One Biology | Cell Cycle and Cell Division | Full Chapter in 10 Minutes", "Exam Winner"),
+      v("Vc-6ymhIqQU", "Plus One Biology | Cell Cycle and Cell Division | Chapter 10 | Full Chapter Revision", "Exam Winner"),
+      v("VU1_qf9Atro", "Plus One Biology Cell Cycle and Cell Division Chapter 10 Christmas Exam 2025", "Eduport"),
+      v("HQS_T9Q7I8A", "Plus One Biology Public Exam | Chapters 1, 2, 3, 4, 5, 6, 8, 9 & 10 | Full Chapter", "Exam Winner", 28871),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 34438),
+    ],
+    "digestion-and-absorption": [
+      v("3qRdKSZDk_Y", "REVISION 2.0; DIGESTION & ABSORPTION | BIO-WAR | +1 FOCUS AREA BIOLOGY", "Xylem Plus Two"),
+      v("dKt67UpEeBM", "Plus One | Biology Focus Area | Chap-16 | Digestion and Absorption", "Exam Winner"),
+    ],
+    "breathing-and-exchange": [
+      v("4VqDpH618Lg", "Plus One Biology | Breathing And Exchange Of Gases | Full Chapter", "Exam Winner"),
+      v("-ORQgBMA8zI", "Plus One Zoology Breathing and Exchange of Gases Christmas Exam Important Portions Chapter 14", "Eduport"),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 7621),
+    ],
+    "body-fluids-and-circulation": [
+      v("SxHGlZdEjUk", "Plus One Zoology Body Fluids and Circulation Christmas Exam Important Portions Chapter 15", "Eduport"),
+      v("fy81GLg9now", "Plus One Biology | Bodyfluids And Circulation | Chapter 18 | Full Chapter Revision", "Exam Winner"),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 23793),
+    ],
+    "excretory-products-and-their-elimination": [
+      v("j4FoJK9m1Js", "Plus One Biology | Excretory Products and Their Elimination | Chapter 16 | Full Chapter", "Exam Winner"),
+      v("wIR9DXX9vfk", "Plus One Improvement Exam - Biology - Excretory Products and Their Elimination", "Xylem Plus Two"),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 26826),
+    ],
+    "locomotion-and-movement": [
+      v("xTIsy_V4SjM", "Plus One Biology | 17. Locomotion and Movement", "Eduport"),
+      v("RUcFlrgXJaY", "Plus One Zoology - Locomotion and Movement", "Xylem"),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 13496),
+    ],
+    "neural-control": [
+      v("nx58mBqMT9Y", "Plus One Zoology - Neural Control and Coordination", "Xylem"),
+      v("Di1zgSgqDgM", "Plus One Biology | 18. Neural Control and Coordination", "Eduport"),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 29689),
+    ],
+    "chemical-coordination-and-integration": [
+      v("m2rhapvrdL8", "Plus One Zoology - Chemical Coordination and Integration", "Xylem"),
+      v("8QbE9NUZ0PI", "Plus One Improvement Exam - Biology - Chemical Coordination And Integration", "Eduport"),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 15707),
     ],
   },
   botany: {
     "the-living-world": [
-      v("XYpHPMdYm6g", "Biological Classification — Full Chapter Revision", "Xylem"),
+      v("zCiCc8DQS9U", "Plus One Biology | Chapter 1 The Living World Summary", "Eduport"),
+      v("3a6EitDusqs", "Plus One Biology | Chapter 1 - The Living World | Full Chapter Oneshot", "Exam Winner"),
+      v("HQS_T9Q7I8A", "Plus One Biology Public Exam | Chapters 1, 2, 3, 4, 5, 6, 8, 9 & 10 | Full Chapter", "Exam Winner", 515),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 33221),
+    ],
+    "biological-classification": [
+      v("hvZlr9d_VZU", "Plus One Biology | Chapter 2 - Biological Classification | Full Chapter Oneshot", "Exam Winner"),
+      v("XKZLJ9CiY8A", "+1 Biology Onam Exam | Chapter 2 | Biological Classification | Oneshot", "Exam Winner"),
+      v("DMf4hYDa5rc", "Plus Two Botany | Biological Classifications | One Shot Revision", "Xylem"),
+      v("HQS_T9Q7I8A", "Plus One Biology Public Exam | Chapters 1, 2, 3, 4, 5, 6, 8, 9 & 10 | Full Chapter", "Exam Winner", 1296),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 18580),
     ],
     "plant-kingdom": [
-      v("JX2WCF7KHu8", "Plant Kingdom", "Xylem"),
+      v("jFBukFHKY6c", "Plus One Biology | Plant Kingdom Summary", "Eduport"),
+      v("s2sx3mCDiF0", "PLUS ONE BIOLOGY ONAM EXAM | PLANT KINGDOM PART 1 | CHAPTER 3", "Exam Winner"),
+      v("JX2WCF7KHu8", "Plus One - Botany - Plant Kingdom", "Xylem"),
+      v("HQS_T9Q7I8A", "Plus One Biology Public Exam | Chapters 1, 2, 3, 4, 5, 6, 8, 9 & 10 | Full Chapter", "Exam Winner", 19026),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 21708),
+    ],
+    "morphology-of-flowering-plants": [
+      v("FgXcmFvbmn4", "Plus One Botany | Morphology of Flowering Plants | One Shot Revision", "Xylem"),
+      v("iTEmhalDNsE", "Plus One Christmas Exam | Biology | Morphology of Flowering Plants | Full Chapter", "Exam Winner"),
+      v("HQS_T9Q7I8A", "Plus One Biology Public Exam | Chapters 1, 2, 3, 4, 5, 6, 8, 9 & 10 | Full Chapter", "Exam Winner", 11724),
+    ],
+    "anatomy-of-flowering-plants": [
+      v("rtiqxE5rG9I", "Plus One Biology Christmas Exam | Anatomy of Flowering Plants | Full Chapter", "Exam Winner"),
+      v("nK-eMYMdvRk", "Plus One Botany - Anatomy of Flowering Plants in 15 Minutes", "Xylem"),
+    ],
+    "transport-in-plants": [
+      v("xSUtLNhoLow", "Plus One | Biology Focus Area | Chap-11 | Transport in Plants", "Exam Winner"),
+      v("f0o3geEsK84", "TRANSPORT IN PLANTS & MINERAL NUTRITION | PLUS ONE FOCUS AREA", "Xylem Plus Two"),
+    ],
+    "mineral-nutrition": [
+      v("JMy_o22mTA0", "Plus One | Biology Focus Area | Chap-12 | Mineral Nutrition", "Exam Winner"),
+      v("6WXf5RWyyL4", "REVISION 2.0; MINERAL NUTRITION | BIO-WAR | +1 FOCUS AREA BIOLOGY", "Xylem Plus Two"),
     ],
     photosynthesis: [
+      v("VR-7Tj3JvdI", "Plus One Botany | Photosynthesis in Higher Plants in 30 Minutes", "Eduport"),
+      v("jdqS0IbR7ZA", "Plus One Biology | Photosynthesis In Higher Plants | Oneshot", "Exam Winner"),
       v("PeVNtXctTM0", "Photosynthesis in Higher Plants — Full", "Exam Winner"),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 36477),
+    ],
+    "respiration-in-plants": [
+      v("bnz_45dkbc4", "Respiration in Plants", "Exam Winner"),
+      v("xvy9iLe7654", "Plus One Biology | Respiration in Plants | Chapter 14 | Full Chapter", "Exam Winner"),
+      v("BCm2bdgLRtg", "Plus One Biology | Respiration in Plants | Sure Questions", "Eduport"),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 38751),
+    ],
+    "plant-growth": [
+      v("L6IaDUR6dz0", "Plus One Biology | Plant Growth & Development | Full Chapter", "Exam Winner"),
+      v("UTLfdVXrXcM", "Plant Growth and Development", "Xylem"),
+      v("gPK7ih63SVM", "Plus One Model Exam Biology | Full Chapters In One Live - Mega Marathon", "Xylem", 41055),
     ],
   },
 };
