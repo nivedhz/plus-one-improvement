@@ -62,6 +62,11 @@ export default function VideoFacade({ video }: { video: ChapterVideo }) {
               <Play size={22} className="ml-0.5" fill="currentColor" />
             </span>
           </span>
+          {video.recent && (
+            <span className="absolute left-3 top-3 rounded-full bg-emerald-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-lg dark:bg-indigo-500">
+              New
+            </span>
+          )}
         </button>
       )}
       <div className="flex items-start justify-between gap-3 p-4">

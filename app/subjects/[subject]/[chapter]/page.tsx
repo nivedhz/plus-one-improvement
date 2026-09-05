@@ -50,7 +50,10 @@ export default async function ChapterPage({
 
   const progressMap = await getUserProgressMap(session.id);
   const completed = isComplete(progressMap[`${subject.slug}:${chapter.slug}`]);
-  const videos = chapterVideos(subject.slug, chapter.slug);
+  // New videos first — recency is a manual flag, not upload dates.
+  const videos = chapterVideos(subject.slug, chapter.slug).sort(
+    (a, b) => Number(b.recent ?? false) - Number(a.recent ?? false),
+  );
   const notes = chapterNotes(subject.slug, chapter.slug);
   const index = subject.chapters.findIndex((c) => c.slug === chapter.slug);
   const prev = subject.chapters[index - 1];
