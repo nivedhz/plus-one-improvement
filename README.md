@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# improve. — Kerala Plus One study companion
 
-## Getting Started
+A calm, mobile-first study companion for Kerala Plus One improvement exams:
+subject catalog, chapter key points, trusted video links, progress tracking,
+marks-based priorities, and an exam countdown.
 
-First, run the development server:
+## Tech stack
+
+- **Framework:** Next.js 16 App Router + React 19 + TypeScript (strict)
+- **Styling:** Tailwind CSS 4 with brand `@theme` tokens, light/dark themes
+- **Backend:** Route Handlers (`app/api/**/route.ts`); Edge `proxy.ts` for auth redirects
+- **DB:** Postgres + Prisma 6 (`User`, `ChapterProgress`, `PreviousMark`)
+- **Auth:** JWT (`jose`, HS256, 7-day) in an `httpOnly` cookie + `tokenVersion` revocation, `bcryptjs` (cost 12), Zod validation, prod rate limits + same-origin guard
+- **Client data:** native `fetch` (`app/lib/api.ts`) + TanStack Query mutations
+- **Quality:** ESLint (next core-web-vitals), `tsc --noEmit`, Vitest, Prettier, GitHub Actions CI
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env   # fill in DATABASE_URL + AUTH_SECRET (32+ chars)
+npx prisma db push
+npm run db:seed        # validates the subject catalog
+npm run dev            # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Script                            | Purpose                  |
+| --------------------------------- | ------------------------ |
+| `npm run dev`                     | local dev server         |
+| `npm run build` / `start`         | production build / serve |
+| `npm run lint`                    | ESLint                   |
+| `npm run typecheck`               | `tsc --noEmit`           |
+| `npm run test:run`                | Vitest (unit)            |
+| `npm run format` / `format:check` | Prettier write / check   |
+| `npm run db:seed`                 | catalog integrity check  |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## API & health
 
-## Learn More
+- `GET /api/health` — liveness + DB readiness (`{ status, database, time }`)
+- Auth: `POST /api/auth/sign-up|login|logout`, `GET /api/auth/me`
+- Data: `GET|PUT /api/marks`, `GET|PUT /api/progress`, `GET|PUT /api/profile`
+- Errors: `{ error, code }` envelope (`UNAUTHORIZED`, `BAD_REQUEST`, `RATE_LIMITED`, …)
 
-To learn more about Next.js, take a look at the following resources:
+## Verify auth changes live
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+BASE=http://localhost:3000
+curl -c jar -X POST $BASE/api/auth/sign-up -H 'Content-Type: application/json' \
+  -d '{"name":"Test","email":"t@example.com","password":"password123"}'
+curl -b jar $BASE/api/auth/me
+curl -b jar -c jar -X POST $BASE/api/auth/logout
+curl -b jar $BASE/api/auth/me # -> 401
+# then delete the test user from Postgres
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See `GOAL.md` for product roadmap and `AGENTS.md` for git conventions
+(feature branches `feat/<scope>-<short>`, Conventional Commits, stacked PRs).
