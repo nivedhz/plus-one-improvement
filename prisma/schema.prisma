@@ -29,6 +29,22 @@ model User {
 
   progress ChapterProgress[]
   marks    PreviousMark[]
+  resetTokens PasswordResetToken[]
+}
+
+// Single-use password-reset tokens. Only SHA-256 hashes are stored, so a
+// DB leak alone can never redeem a token. Consuming = deleting the row,
+// so no token can ever be used twice.
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("password_reset_tokens")
 }
 
 // Per-user, per-chapter study progress (0–100).
