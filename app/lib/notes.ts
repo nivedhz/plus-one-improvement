@@ -205,20 +205,18 @@ const SUBJECT_NOTES: Record<string, ChapterNote[]> = {
     subjectNote("2026/06/python-installation.html", "Python installation guide"),
     subjectNote("2025/02/xi-cs-capsule-note.html", "Capsule notes"),
   ],
-  zoology: [
+  biology: [
     subjectNote("2024/09/plusone-zoology-notes.html", "Class notes by Navas Cheemadan"),
+    subjectNote("2022/12/hss-botany-notes-by-nandini.html", "Class notes by Nandini"),
     subjectNote(
       "2023/02/hse-biology-question-bank.html",
       "Question bank, chapter-wise (Minhad)",
     ),
-    subjectNote("2021/11/plusone-zoology-question-bank.html", "Previous questions bank"),
-  ],
-  botany: [
-    subjectNote("2022/12/hss-botany-notes-by-nandini.html", "Class notes by Nandini"),
     subjectNote(
       "2015/09/plus-one-botany-question-bank.html",
       "Question bank, chapter-wise",
     ),
+    subjectNote("2021/11/plusone-zoology-question-bank.html", "Previous questions bank"),
     subjectNote("2025/11/botany-picture-album.html", "Picture album (diagrams)"),
   ],
 };
