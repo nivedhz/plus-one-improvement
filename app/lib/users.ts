@@ -20,6 +20,22 @@ export async function revokeUserSessions(userId: string): Promise<void> {
   });
 }
 
+// New hash plus a tokenVersion bump so every other session dies — the same
+// revocation semantics as logout. Returns the updated row for session mint.
+export async function setUserPassword(
+  userId: string,
+  passwordHash: string,
+): Promise<User> {
+  return db.user.update({
+    where: { id: userId },
+    data: { passwordHash, tokenVersion: { increment: 1 } },
+  });
+}
+
+export async function findUserById(id: string): Promise<User | null> {
+  return db.user.findUnique({ where: { id } });
+}
+
 export const STREAMS = ["cs", "biology"] as const;
 export type Stream = (typeof STREAMS)[number];
 
