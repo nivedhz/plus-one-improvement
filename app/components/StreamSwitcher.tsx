@@ -16,7 +16,7 @@ const OPTIONS = [
   {
     value: "biology",
     title: "Biology",
-    detail: "Physics · Chemistry · Maths · English · Malayalam · Botany · Zoology",
+    detail: "Physics · Chemistry · Maths · English · Malayalam · Biology",
     icon: Bug,
   },
 ] as const;

@@ -19,7 +19,7 @@ Shipped and merged to `main`:
 - Marketing homepage (`/`, visitors only) with hero, exam countdown, quotes, and CTAs.
 - Auth pages (`/auth/login`, `/auth/sign-up`) with mutual redirects for signed-in users.
 - Member dashboard (`/dashboard`, login required) with study-schedule calendar, countdown + streak, today's focus, subject strip, continue learning, and tutor teaser.
-- 8-subject catalog (Physics, Chemistry, Mathematics, English, Malayalam, Computer Science, Zoology, Botany) with a CS/Biology stream split, chapter pages, and real video/note counts.
+- 7-subject catalog (Physics, Chemistry, Mathematics, English, Malayalam, Computer Science, Biology) with a CS/Biology stream split, chapter pages, and real video/note counts. Biology is one 60-mark subject (20 chapters, plant + animal units) — students improve it as a single pick.
 - Curated video lessons per chapter (click-to-play privacy-enhanced embeds, deep-link timestamps), linked chapter notes, and year-grouped previous-year papers with answers.
 - Real binary chapter progress (`CompleteToggle`), per-user streaks, and recent completions — no mock data anywhere in the UI.
 - Priority planner (`/calculator`, login required): last-exam marks in, per-subject study priorities out. Marks stay private to the account.
@@ -59,7 +59,7 @@ Still open (not yet built):
 - Local `data/users.json` store is retired and gitignored; Postgres is the only user store.
 - Modals render via `createPortal` to `document.body` (sticky blurred navbars trap `position: fixed` children) and compensate for the disappearing scrollbar with measured `padding-right` instead of a persistent gutter.
 - Progress is binary (done / not done) — never percentage steps; the `percent` column only ever holds `0`/`100`.
-- Streams: science batches split into CS vs Biology (Botany + Zoology); all subject lists, dashboard, and planner filter to the active stream.
+- Streams: science batches split into CS vs Biology (single Biology subject); all subject lists, dashboard, and planner filter to the active stream.
 - Counts shown in UI (videos, notes, papers, chapters) are always derived from the content maps — invented counts were removed on sight.
 - Videos/notes/papers are hand-verified links with attribution; titles checked via oEmbed and URLs checked live (HTTP 200) before adding. Unverifiable links are excluded, not guessed.
 - Git: feature branches (`feat/<scope>-<short>`), Conventional Commits, stacked PRs merged oldest-first. See `AGENTS.md`.
@@ -78,7 +78,7 @@ Every external resource should retain its original URL, creator/source name, res
 
 ## Product roadmap
 
-1. ~~Official syllabus and chapter catalog~~ — done with real chapter lists (Physics 14, Chemistry 9, Maths 14, English 19, Malayalam 19, CS 12, Zoology 12, Botany 10).
+1. ~~Official syllabus and chapter catalog~~ — done with real chapter lists (Physics 14, Chemistry 9, Maths 14, English 19, Malayalam 19, CS 12, Biology 20).
 2. ~~Resources as metadata plus original links~~ — done per chapter: videos, notes, and papers.
 3. Chapter notes, formulas, diagrams — mock key points removed (no trusted source); formulas/diagrams still open.
 4. ~~Marks calculator~~ — done as the privacy-first priority planner (per-subject ranks, no grouped totals).

@@ -1,7 +1,6 @@
 import {
   Atom,
   BookOpen,
-  Bug,
   Cpu,
   FlaskConical,
   Languages,
@@ -16,8 +15,7 @@ const MAP: Record<string, typeof Atom> = {
   english: BookOpen,
   malayalam: Languages,
   "computer-science": Cpu,
-  zoology: Bug,
-  botany: Sprout,
+  biology: Sprout,
 };
 
 export default function SubjectIcon({

@@ -12,19 +12,20 @@ describe("improvement trio", () => {
     // sanitizeTrio caps overflow (request-shape limits live in the route
     // schema; over-limit and unknown slugs are covered live via curl).
     expect(
-      sanitizeTrio(["physics", "chemistry", "zoology", "botany"], "biology"),
+      sanitizeTrio(["physics", "chemistry", "biology", "english"], "biology"),
     ).toHaveLength(3);
   });
 
   it("keeps only known in-stream slugs, deduped, in order", () => {
     expect(
       sanitizeTrio(
-        ["physics", "nope", "chemistry", "physics", "zoology", "botany"],
+        ["physics", "nope", "chemistry", "physics", "biology", "botany"],
         "biology",
       ),
-    ).toEqual(["physics", "chemistry", "zoology"]);
-    // CS stream excludes the biology pair.
+    ).toEqual(["physics", "chemistry", "biology"]);
+    // CS stream excludes biology; retired slugs drop everywhere.
     expect(sanitizeTrio(["botany", "physics"], "cs")).toEqual(["physics"]);
+    expect(sanitizeTrio(["zoology", "physics"], "biology")).toEqual(["physics"]);
   });
 
   it("recommends the 3 weakest subjects by rank", () => {
@@ -43,8 +44,8 @@ describe("improvement trio", () => {
   });
 
   it("reports picks orphaned by a stream switch", () => {
-    expect(orphanedSlugs(["zoology", "botany", "physics"], "cs")).toEqual([
-      "zoology",
+    expect(orphanedSlugs(["biology", "botany", "physics"], "cs")).toEqual([
+      "biology",
       "botany",
     ]);
     expect(orphanedSlugs(["physics", "chemistry"], "cs")).toEqual([]);

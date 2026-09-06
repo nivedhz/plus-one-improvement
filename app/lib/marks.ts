@@ -36,9 +36,11 @@ const LEVELS: { min: number; level: SubjectPriority["level"]; guidance: string }
 ];
 
 // Individual priorities only: each subject is scored against itself
-// (100 − percentage), never merged into an overall total.
+// (100 − percentage), never merged into an overall total. Marks for
+// subjects outside the catalog (e.g. retired slugs) are dropped so stale
+// rows can never render.
 export function computePriorities(marks: StoredMark[]): SubjectPriority[] {
-  const scored = marks.map((m) => {
+  const scored = marks.filter((m) => getSubject(m.subject)).map((m) => {
     const pct = Math.min(100, (m.got / m.max) * 100);
     const score = 100 - pct;
     const band = LEVELS.find((l) => score >= l.min) ?? LEVELS[LEVELS.length - 1];

@@ -78,24 +78,20 @@ export const CHAPTER_NOTES: Record<string, Record<string, ChapterNote[]>> = {
     statistics: [pc("maths", 15)],
     probability: [pc("maths", 16)],
   },
-  botany: {
+  biology: {
     "the-living-world": [pc("zoology", 1)],
     "biological-classification": [pc("botany", 1)],
     "plant-kingdom": [pc("botany", 2)],
     "morphology-of-flowering-plants": [pc("botany", 3)],
     "anatomy-of-flowering-plants": [pc("botany", 4)],
-    "transport-in-plants": [pc("botany", 7)],
-    "mineral-nutrition": [pc("botany", 8)],
-    photosynthesis: [pc("botany", 9)],
-    "respiration-in-plants": [pc("botany", 10)],
-    "plant-growth": [pc("botany", 11)],
-  },
-  zoology: {
-    "animal-kingdom": [pc("zoology", 2)],
-    "structural-organisation": [pc("zoology", 3)],
     "cell-the-unit-of-life": [pc("botany", 5)],
     biomolecules: [pc("zoology", 4)],
     "cell-cycle": [pc("botany", 6)],
+    photosynthesis: [pc("botany", 9)],
+    "respiration-in-plants": [pc("botany", 10)],
+    "plant-growth": [pc("botany", 11)],
+    "structural-organisation": [pc("zoology", 3)],
+    "animal-kingdom": [pc("zoology", 2)],
     "digestion-and-absorption": [pc("zoology", 5)],
     "breathing-and-exchange": [pc("zoology", 6)],
     "body-fluids-and-circulation": [pc("zoology", 7)],
@@ -209,20 +205,18 @@ const SUBJECT_NOTES: Record<string, ChapterNote[]> = {
     subjectNote("2026/06/python-installation.html", "Python installation guide"),
     subjectNote("2025/02/xi-cs-capsule-note.html", "Capsule notes"),
   ],
-  zoology: [
+  biology: [
     subjectNote("2024/09/plusone-zoology-notes.html", "Class notes by Navas Cheemadan"),
+    subjectNote("2022/12/hss-botany-notes-by-nandini.html", "Class notes by Nandini"),
     subjectNote(
       "2023/02/hse-biology-question-bank.html",
       "Question bank, chapter-wise (Minhad)",
     ),
-    subjectNote("2021/11/plusone-zoology-question-bank.html", "Previous questions bank"),
-  ],
-  botany: [
-    subjectNote("2022/12/hss-botany-notes-by-nandini.html", "Class notes by Nandini"),
     subjectNote(
       "2015/09/plus-one-botany-question-bank.html",
       "Question bank, chapter-wise",
     ),
+    subjectNote("2021/11/plusone-zoology-question-bank.html", "Previous questions bank"),
     subjectNote("2025/11/botany-picture-album.html", "Picture album (diagrams)"),
   ],
 };

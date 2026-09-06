@@ -170,16 +170,24 @@ export const SUBJECTS: Subject[] = [
     ],
   },
   {
-    slug: "zoology",
-    name: "Zoology",
-    tagline: "Diagrams, terms and processes of the animal world.",
-    maxMarks: 30,
+    slug: "biology",
+    name: "Biology",
+    tagline: "Plant and animal life in a single paper — diagrams examiners love.",
+    maxMarks: 60,
     chapters: [
-      ch("animal-kingdom", "Animal Kingdom"),
-      ch("structural-organisation", "Structural Organisation in Animals"),
+      ch("the-living-world", "The Living World"),
+      ch("biological-classification", "Biological Classification"),
+      ch("plant-kingdom", "Plant Kingdom"),
+      ch("morphology-of-flowering-plants", "Morphology of Flowering Plants"),
+      ch("anatomy-of-flowering-plants", "Anatomy of Flowering Plants"),
       ch("cell-the-unit-of-life", "Cell: The Unit of Life"),
       ch("biomolecules", "Biomolecules"),
       ch("cell-cycle", "Cell Cycle and Cell Division"),
+      ch("photosynthesis", "Photosynthesis in Higher Plants"),
+      ch("respiration-in-plants", "Respiration in Plants"),
+      ch("plant-growth", "Plant Growth and Development"),
+      ch("structural-organisation", "Structural Organisation in Animals"),
+      ch("animal-kingdom", "Animal Kingdom"),
       ch("digestion-and-absorption", "Digestion and Absorption"),
       ch("breathing-and-exchange", "Breathing and Exchange of Gases"),
       ch("body-fluids-and-circulation", "Body Fluids and Circulation"),
@@ -195,24 +203,6 @@ export const SUBJECTS: Subject[] = [
       ),
     ],
   },
-  {
-    slug: "botany",
-    name: "Botany",
-    tagline: "Plant science with diagrams examiners love.",
-    maxMarks: 30,
-    chapters: [
-      ch("the-living-world", "The Living World"),
-      ch("biological-classification", "Biological Classification"),
-      ch("plant-kingdom", "Plant Kingdom"),
-      ch("morphology-of-flowering-plants", "Morphology of Flowering Plants"),
-      ch("anatomy-of-flowering-plants", "Anatomy of Flowering Plants"),
-      ch("transport-in-plants", "Transport in Plants"),
-      ch("mineral-nutrition", "Mineral Nutrition"),
-      ch("photosynthesis", "Photosynthesis"),
-      ch("respiration-in-plants", "Respiration in Plants"),
-      ch("plant-growth", "Plant Growth and Development"),
-    ],
-  },
 ];
 
 export function getSubject(slug: string): Subject | undefined {
@@ -224,7 +214,7 @@ export function getChapter(subject: Subject, chapterSlug: string): Chapter | und
 }
 
 // Science batches split on the sixth subject: the CS group takes Computer
-// Science instead of the Biology pair (Botany + Zoology).
+// Science instead of Biology.
 export const STREAM_SUBJECTS: Record<string, string[]> = {
   cs: ["physics", "chemistry", "mathematics", "english", "malayalam", "computer-science"],
   biology: [
@@ -233,8 +223,7 @@ export const STREAM_SUBJECTS: Record<string, string[]> = {
     "mathematics",
     "english",
     "malayalam",
-    "botany",
-    "zoology",
+    "biology",
   ],
 };
 
