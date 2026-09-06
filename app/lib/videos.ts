@@ -1769,10 +1769,13 @@ export type RecentVideo = {
 // Recently added videos across all subjects, newest mapping first so fresh
 // additions surface instead of being cut by the limit. (True upload order
 // would need an addedAt field — mapping position is the proxy for now.)
-export function recentVideos(limit = 8): RecentVideo[] {
+// Pass onlySlugs (e.g. the visible trio/stream) to keep other subjects
+// from leaking into the strip after a switch.
+export function recentVideos(limit = 8, onlySlugs?: string[]): RecentVideo[] {
   const out: RecentVideo[] = [];
   const entries = Object.entries(CHAPTER_VIDEOS).reverse();
   for (const [subjectSlug, chapters] of entries) {
+    if (onlySlugs && !onlySlugs.includes(subjectSlug)) continue;
     const subject = getSubject(subjectSlug);
     if (!subject) continue;
     for (const [chapterSlug, list] of Object.entries(chapters)) {

@@ -41,13 +41,22 @@ const LEVEL_BAR: Record<Priority["level"], string> = {
   Maintain: "bg-slate-400 dark:bg-neutral-500",
 };
 
-export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
+export default function Calculator({
+  subjects,
+  stream,
+  trio,
+}: {
+  subjects: CalcSubject[];
+  stream: string;
+  trio: string[];
+}) {
   const queryClient = useQueryClient();
   const [edits, setEdits] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
 
+  // Stream-scoped key so post-switch caches can never serve old marks.
   const marksQuery = useQuery({
-    queryKey: ["marks"],
+    queryKey: ["marks", stream],
     queryFn: async (): Promise<MarksResponse> => {
       const { data } = await api.get<MarksResponse>("/marks");
       return data;
@@ -87,7 +96,43 @@ export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
   }
 
   const priorities = marksQuery.data?.priorities ?? [];
+  // The planner follows the trio: locked-in students see their 3 inputs
+  // and 3 priorities up front, everything else tucked into "others".
+  // Undecided students get the full stream (needed for discovery).
+  const trioSet = trio.length > 0;
+  const inputSubjects = trioSet
+    ? subjects.filter((s) => trio.includes(s.slug))
+    : subjects;
+  const otherSubjects = trioSet ? subjects.filter((s) => !trio.includes(s.slug)) : [];
+  const shownPriorities = trioSet
+    ? priorities.filter((p) => trio.includes(p.subjectSlug))
+    : priorities;
   const pending = save.isPending;
+
+  function markRow(s: CalcSubject) {
+    return (
+      <div
+        key={s.slug}
+        className="flex items-center gap-2 rounded-xl border border-slate-200/70 px-2.5 py-2 dark:border-neutral-800"
+      >
+        <span className="min-w-0 flex-1 truncate text-[13px] font-medium">{s.name}</span>
+        <input
+          type="number"
+          min={0}
+          max={s.maxMarks}
+          inputMode="numeric"
+          value={edits[s.slug] ?? saved[s.slug]?.got ?? ""}
+          onChange={(e) => setEdits((ed) => ({ ...ed, [s.slug]: e.target.value }))}
+          placeholder="0"
+          aria-label={`${s.name} marks obtained out of ${s.maxMarks}`}
+          className="w-14 rounded-lg border border-slate-200 bg-white px-2 py-1 text-right text-[13px] tabular-nums text-slate-900 outline-none focus:border-emerald-500 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+        />
+        <span className="shrink-0 text-xs tabular-nums text-slate-400 dark:text-neutral-500">
+          /{s.maxMarks}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="grid content-start gap-4 lg:grid-cols-[1.1fr_0.9fr]">
@@ -120,34 +165,23 @@ export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
             Loading your saved marks…
           </p>
         ) : (
-          <div className="mt-4 grid gap-2 sm:grid-cols-2">
-            {subjects.map((s) => (
-              <div
-                key={s.slug}
-                className="flex items-center gap-2 rounded-xl border border-slate-200/70 px-2.5 py-2 dark:border-neutral-800"
-              >
-                <span className="min-w-0 flex-1 truncate text-[13px] font-medium">
-                  {s.name}
-                </span>
-                <input
-                  type="number"
-                  min={0}
-                  max={s.maxMarks}
-                  inputMode="numeric"
-                  value={edits[s.slug] ?? saved[s.slug]?.got ?? ""}
-                  onChange={(e) =>
-                    setEdits((ed) => ({ ...ed, [s.slug]: e.target.value }))
-                  }
-                  placeholder="0"
-                  aria-label={`${s.name} marks obtained out of ${s.maxMarks}`}
-                  className="w-14 rounded-lg border border-slate-200 bg-white px-2 py-1 text-right text-[13px] tabular-nums text-slate-900 outline-none focus:border-emerald-500 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-                />
-                <span className="shrink-0 text-xs tabular-nums text-slate-400 dark:text-neutral-500">
-                  /{s.maxMarks}
-                </span>
-              </div>
-            ))}
-          </div>
+          <>
+            <div
+              className={`mt-4 grid gap-2 ${trioSet ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}
+            >
+              {inputSubjects.map(markRow)}
+            </div>
+            {trioSet && otherSubjects.length > 0 && (
+              <details className="mt-3 rounded-xl border border-slate-200/70 px-3 py-2.5 dark:border-neutral-800">
+                <summary className="cursor-pointer text-xs font-semibold text-slate-500 transition hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white">
+                  Other subjects — marks still count toward recommendations
+                </summary>
+                <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
+                  {otherSubjects.map(markRow)}
+                </div>
+              </details>
+            )}
+          </>
         )}
 
         {error && (
@@ -173,7 +207,7 @@ export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
           <ListOrdered size={18} aria-hidden />
           Your subject priorities
         </h2>
-        {priorities.length === 0 ? (
+        {shownPriorities.length === 0 ? (
           <p className="mt-3 text-sm leading-relaxed text-white/65">
             No saved marks yet. Fill in last time&apos;s scores and hit{" "}
             <strong className="text-white">Save</strong> — each subject gets its own
@@ -182,11 +216,11 @@ export default function Calculator({ subjects }: { subjects: CalcSubject[] }) {
         ) : (
           <>
             <p className="mt-2 text-sm text-white/65">
-              <strong className="text-white">{priorities[0].subjectName}</strong> needs
-              you most. Work down the list in order.
+              <strong className="text-white">{shownPriorities[0].subjectName}</strong>{" "}
+              needs you most. Work down the list in order.
             </p>
             <ol className="mt-4 space-y-3">
-              {priorities.map((p) => (
+              {shownPriorities.map((p) => (
                 <motion.li
                   key={p.subjectSlug}
                   layout

@@ -71,7 +71,10 @@ export default async function DashboardPage() {
   const todayPlan = schedule.days.find((d) => d.isToday);
   const focusChapters = (todayPlan?.chapters ?? []).slice(0, 3);
   const focusOverflow = (todayPlan?.chapters.length ?? 0) - focusChapters.length;
-  const fresh = recentVideos();
+  const fresh = recentVideos(
+    8,
+    visibleSubjects.map((s) => s.slug),
+  );
   const subjectDone = (slug: string) => {
     const s = visibleSubjects.find((x) => x.slug === slug);
     if (!s || s.chapters.length === 0) return { done: 0, total: 0 };
@@ -113,6 +116,7 @@ export default async function DashboardPage() {
                 }))}
                 initialTrio={trio}
                 dropped={dropped}
+                stream={stream}
               />
             </div>
           </Reveal>

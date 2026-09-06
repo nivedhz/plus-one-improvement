@@ -7,6 +7,8 @@ import {
   marksInputSchema,
   saveUserMarks,
 } from "../../lib/marks";
+import { subjectsForStream } from "../../lib/subjects";
+import { getUserStream } from "../../lib/users";
 
 export const runtime = "nodejs";
 
@@ -15,7 +17,11 @@ export async function GET() {
   if (!session) {
     return unauthorized();
   }
-  const marks = await getUserMarks(session.id);
+  // Stream-filtered: out-of-stream rows (pre-washup leftovers included)
+  // can never render as ghost priorities.
+  const stream = await getUserStream(session.id);
+  const valid = new Set(subjectsForStream(stream).map((s) => s.slug));
+  const marks = (await getUserMarks(session.id)).filter((m) => valid.has(m.subject));
   return NextResponse.json({ marks, priorities: computePriorities(marks) });
 }
 

@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, LoaderCircle, Sparkles, TriangleAlert } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { api, apiErrorMessage } from "../lib/api";
 import { MAX_IMPROVEMENT_SUBJECTS, recommendedTrio } from "../lib/improvement";
@@ -23,11 +24,14 @@ export default function ImprovementPicker({
   subjects,
   initialTrio,
   dropped,
+  stream,
 }: {
   subjects: PickerSubject[];
   initialTrio: string[];
   dropped: string[];
+  stream: string;
 }) {
+  const router = useRouter();
   const queryClient = useQueryClient();
   // Draft starts from server values — no effect sync needed. Remounts (via
   // key={stream}) refresh them after a stream switch.
@@ -40,8 +44,9 @@ export default function ImprovementPicker({
   const [hint, setHint] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Stream-scoped keys so post-switch caches can never serve old data.
   const marksQuery = useQuery({
-    queryKey: ["marks"],
+    queryKey: ["marks", stream],
     queryFn: async (): Promise<MarksResponse> => {
       const { data } = await api.get<MarksResponse>("/marks");
       return data;
@@ -74,13 +79,16 @@ export default function ImprovementPicker({
       return data;
     },
     onSuccess: (data) => {
+      // The trio reshapes dashboard schedule, focus, strip, and subjects:
+      // clear every client cache, sync local state, re-render servers.
       setError(null);
       setHint(null);
       setSelected(data.subjects);
       setSavedSnap(data.subjects);
       setNotice([]);
       if (data.subjects.length > 0) setExpanded(false);
-      queryClient.invalidateQueries({ queryKey: ["improvement"] });
+      queryClient.invalidateQueries();
+      router.refresh();
     },
     onError: (err) => setError(apiErrorMessage(err)),
   });
