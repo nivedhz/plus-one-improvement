@@ -406,7 +406,7 @@ export default async function DashboardPage() {
                 <div className="scroll-slim mt-4 flex gap-3 overflow-x-auto pb-2">
                   {fresh.map((item) => (
                     <Link
-                      key={item.video.youtubeId}
+                      key={`${item.subjectSlug}/${item.chapterSlug}/${item.video.youtubeId}`}
                       href={`/subjects/${item.subjectSlug}/${item.chapterSlug}`}
                       className="group w-56 shrink-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900"
                     >
