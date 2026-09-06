@@ -7,7 +7,9 @@ import {
   Check,
   Flame,
   Layers,
+  PartyPopper,
   Play,
+  Plus,
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -21,8 +23,14 @@ import SubjectIcon from "../components/SubjectIcon";
 import StudyCalendar from "../components/StudyCalendar";
 import { getSession } from "../lib/auth";
 import { computePriorities, getUserMarks } from "../lib/marks";
-import { planSchedule } from "../lib/schedule";
-import { completedChapters, getUserProgressMap, studyStreakFor } from "../lib/progress";
+import { dayCapacity, dailyGoal, planSchedule } from "../lib/schedule";
+import { buildTodayFocus } from "../lib/today-focus";
+import {
+  completedChapters,
+  completedTodayChapters,
+  getUserProgressMap,
+  studyStreakFor,
+} from "../lib/progress";
 import { getStudyFocus } from "../lib/study-focus";
 import { EXAM_LABEL, mailto } from "../lib/site";
 import { STREAM_LABELS } from "../lib/subjects";
@@ -41,13 +49,15 @@ export default async function DashboardPage() {
   if (!session) redirect("/auth/login");
 
   const firstName = session.name.split(" ")[0];
-  const [progressMap, streak, done, savedMarks, focus] = await Promise.all([
-    getUserProgressMap(session.id),
-    studyStreakFor(session.id),
-    completedChapters(session.id, 3),
-    getUserMarks(session.id),
-    getStudyFocus(session.id),
-  ]);
+  const [progressMap, streak, done, savedMarks, focus, doneTodayRaw] =
+    await Promise.all([
+      getUserProgressMap(session.id),
+      studyStreakFor(session.id),
+      completedChapters(session.id, 3),
+      getUserMarks(session.id),
+      getStudyFocus(session.id),
+      completedTodayChapters(session.id),
+    ]);
   // Locked-in trio focuses the dashboard alone — schedule, focus card and
   // subject strip. Empty means undecided: show the full stream.
   const { stream, trio, dropped, streamSubjects, visible: visibleSubjects } = focus;
@@ -70,8 +80,47 @@ export default async function DashboardPage() {
   });
   // Today's focus IS today's plan — calendar and goals finally agree.
   const todayPlan = schedule.days.find((d) => d.isToday);
-  const focusChapters = (todayPlan?.chapters ?? []).slice(0, 3);
-  const focusOverflow = (todayPlan?.chapters.length ?? 0) - focusChapters.length;
+  // Sticky focus: the schedule only sees unfinished chapters, so a
+  // completion would bubble tomorrow's chapter into today. Rebuild the
+  // start-of-day quota from unfinished + today's finishes, then tick
+  // completions instead of backfilling.
+  const visibleSlugs = new Set(visibleSubjects.map((s) => s.slug));
+  const doneToday = doneTodayRaw.filter((c) => visibleSlugs.has(c.subjectSlug));
+  const startRemaining = schedule.remaining + doneToday.length;
+  const quota = dayCapacity(new Date(), dailyGoal(startRemaining, schedule.daysLeft));
+  const todayFocus = buildTodayFocus({
+    todayPlanned: todayPlan?.chapters ?? [],
+    todayCompleted: doneToday,
+    quota,
+  });
+  const focusRemaining = todayFocus.remaining;
+  const futureCount = Math.max(0, schedule.remaining - focusRemaining.length);
+  // Bonus chooser once the goal is done: next unfinished chapters after today.
+  const seenChooser = new Set<string>();
+  const nextUp = schedule.days
+    .filter((d) => !d.isToday && !d.isPast && d.chapters.length > 0)
+    .flatMap((d) => d.chapters)
+    .filter((c) => {
+      const key = `${c.subjectSlug}:${c.chapterSlug}`;
+      if (seenChooser.has(key)) return false;
+      seenChooser.add(key);
+      return true;
+    })
+    .slice(0, 6);
+  // Calendar today shows what is left, not the original quota.
+  const calendarSchedule = {
+    ...schedule,
+    days: schedule.days.map((d) =>
+      d.isToday && quota > 0
+        ? {
+            ...d,
+            chapters: focusRemaining,
+            goal: focusRemaining.length,
+            tone: todayFocus.allDone ? ("green" as const) : d.tone,
+          }
+        : d,
+    ),
+  };
   const fresh = recentVideos(
     10,
     visibleSubjects.map((s) => s.slug),
@@ -158,7 +207,14 @@ export default async function DashboardPage() {
           </Reveal>
 
           <Reveal delay={0.05}>
-            <StudyCalendar schedule={schedule} />
+            <StudyCalendar
+              schedule={calendarSchedule}
+              todayProgress={{
+                quota: todayFocus.quota,
+                doneCount: todayFocus.countedDone,
+                allDone: todayFocus.allDone,
+              }}
+            />
           </Reveal>
 
           {schedule.behindBy > 0 && (
@@ -214,20 +270,49 @@ export default async function DashboardPage() {
                 className="flex h-full flex-col rounded-2xl bg-[#111] p-6 text-white ring-1 ring-black/5 sm:p-7 dark:bg-gradient-to-b dark:from-[#1a1a1a] dark:to-[#111] dark:ring-white/10"
               >
                 <p className="text-xs font-semibold uppercase tracking-widest text-white/60">
-                  Today&apos;s focus · {todayPlan?.goal ?? 0}{" "}
-                  {(todayPlan?.goal ?? 0) === 1 ? "chapter" : "chapters"}
+                  Today&apos;s focus · {todayFocus.quota}{" "}
+                  {todayFocus.quota === 1 ? "chapter" : "chapters"}
+                  {todayFocus.countedDone > 0 &&
+                    !todayFocus.allDone &&
+                    ` · ${todayFocus.countedDone} done`}
                 </p>
                 <h2 id="focus-heading" className="mt-3 text-2xl font-bold tracking-tight">
-                  {focusChapters[0]?.title ?? "Everything is complete"}
+                  {todayFocus.allDone
+                    ? "Today's goal is done"
+                    : (focusRemaining[0]?.title ?? "Everything is complete")}
                 </h2>
                 <p className="mt-1 text-sm text-white/60">
-                  {focusChapters[0]
-                    ? `${focusChapters[0].subjectName} · up next`
-                    : "Every chapter in your stream is done"}
+                  {todayFocus.allDone
+                    ? "Good job — every chapter for today is ticked off"
+                    : focusRemaining[0]
+                      ? `${focusRemaining[0].subjectName} · up next`
+                      : "Every chapter in your stream is done"}
                 </p>
-                {focusChapters.length > 0 && (
-                  <ul className="mt-5 space-y-2">
-                    {focusChapters.map((c) => (
+                {todayFocus.done.length > 0 && (
+                  <ul className="mt-5 space-y-2" aria-label="Completed today">
+                    {todayFocus.done.map((c) => (
+                      <li key={`${c.subjectSlug}:${c.chapterSlug}`}>
+                        <Link
+                          href={`/subjects/${c.subjectSlug}/${c.chapterSlug}`}
+                          className="group flex items-center gap-2.5 rounded-xl bg-emerald-500/15 px-4 py-2.5 text-sm transition hover:bg-emerald-500/25"
+                        >
+                          <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
+                            <Check size={13} aria-hidden />
+                          </span>
+                          <span className="min-w-0 flex-1 truncate font-medium line-through opacity-80">
+                            {c.title}
+                          </span>
+                          <span className="shrink-0 text-xs text-white/50">
+                            {c.subjectName}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {focusRemaining.length > 0 && (
+                  <ul className="mt-2 space-y-2">
+                    {focusRemaining.map((c) => (
                       <li key={`${c.subjectSlug}:${c.chapterSlug}`}>
                         <Link
                           href={`/subjects/${c.subjectSlug}/${c.chapterSlug}`}
@@ -249,26 +334,73 @@ export default async function DashboardPage() {
                     ))}
                   </ul>
                 )}
-                {focusOverflow > 0 && (
+                {futureCount > 0 && !todayFocus.allDone && (
                   <p className="mt-3 text-xs text-white/50">
-                    +{focusOverflow} more on the calendar below.
+                    +{futureCount} more in the plan.
                   </p>
                 )}
-                <p className="mt-5 text-sm leading-relaxed text-white/75">
-                  {focusChapters[0]
-                    ? "Open one, study it, and mark it complete when finished."
-                    : "Sit back — or revisit any chapter for revision."}
-                </p>
+                {todayFocus.allDone ? (
+                  <div className="mt-5 rounded-xl bg-white/[0.06] p-4">
+                    <p className="inline-flex items-center gap-2 text-sm font-semibold">
+                      <PartyPopper size={16} aria-hidden className="text-emerald-400" />
+                      Good job — today&apos;s goal is done.
+                    </p>
+                    <p className="mt-1 text-sm text-white/70">
+                      Want to continue studying? Pick a bonus chapter below — it
+                      counts extra, today stays complete.
+                    </p>
+                    {nextUp.length > 0 && (
+                      <ul className="mt-3 space-y-2">
+                        {nextUp.map((c) => (
+                          <li key={`${c.subjectSlug}:${c.chapterSlug}`}>
+                            <Link
+                              href={`/subjects/${c.subjectSlug}/${c.chapterSlug}`}
+                              className="group flex items-center gap-2.5 rounded-xl bg-white/[0.06] px-4 py-2.5 text-sm transition hover:bg-white/10"
+                            >
+                              <Plus
+                                size={14}
+                                aria-hidden
+                                className="shrink-0 text-emerald-400"
+                              />
+                              <span className="min-w-0 flex-1 truncate font-medium">
+                                {c.title}
+                              </span>
+                              <span className="shrink-0 text-xs text-white/50">
+                                {c.subjectName}
+                              </span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ) : (
+                  <p className="mt-5 text-sm leading-relaxed text-white/75">
+                    {focusRemaining[0]
+                      ? "Open one, study it, and mark it complete when finished."
+                      : "Sit back — or revisit any chapter for revision."}
+                  </p>
+                )}
                 <Link
                   href={
-                    focusChapters[0]
-                      ? `/subjects/${focusChapters[0].subjectSlug}/${focusChapters[0].chapterSlug}`
-                      : "/subjects"
+                    todayFocus.allDone
+                      ? nextUp[0]
+                        ? `/subjects/${nextUp[0].subjectSlug}/${nextUp[0].chapterSlug}`
+                        : "/subjects"
+                      : focusRemaining[0]
+                        ? `/subjects/${focusRemaining[0].subjectSlug}/${focusRemaining[0].chapterSlug}`
+                        : "/subjects"
                   }
                   className="group mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-emerald-500 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-400 dark:bg-indigo-500 dark:hover:bg-indigo-400"
                 >
                   <Play size={15} aria-hidden />
-                  {focusChapters[0] ? "Open chapter" : "Browse subjects"}
+                  {todayFocus.allDone
+                    ? nextUp[0]
+                      ? "Study a bonus chapter"
+                      : "Browse subjects"
+                    : focusRemaining[0]
+                      ? "Open chapter"
+                      : "Browse subjects"}
                   <ArrowRight
                     size={15}
                     aria-hidden
