@@ -85,6 +85,36 @@ export type CompletedChapter = {
   title: string;
 };
 
+// Chapters finished since local midnight — the sticky Today's Focus set.
+// The schedule only sees unfinished chapters, so without this a completion
+// would bubble tomorrow's chapter into today. Returning today's completions
+// lets the dashboard keep completed rows ticked instead of backfilling.
+export async function completedTodayChapters(
+  userId: string,
+  limit = 10,
+): Promise<CompletedChapter[]> {
+  const midnight = new Date();
+  midnight.setHours(0, 0, 0, 0);
+  const rows = await db.chapterProgress.findMany({
+    where: { userId, percent: { gte: 100 }, updatedAt: { gte: midnight } },
+    orderBy: { updatedAt: "desc" },
+    take: limit,
+  });
+  const out: CompletedChapter[] = [];
+  for (const r of rows) {
+    const subject = getSubject(r.subject);
+    const chapter = subject && getChapter(subject, r.chapter);
+    if (!subject || !chapter) continue;
+    out.push({
+      subjectSlug: subject.slug,
+      subjectName: subject.name,
+      chapterSlug: chapter.slug,
+      title: chapter.title,
+    });
+  }
+  return out;
+}
+
 // Most recently completed chapters, resolved to catalog titles.
 export async function completedChapters(
   userId: string,
