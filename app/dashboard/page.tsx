@@ -72,7 +72,7 @@ export default async function DashboardPage() {
   const focusChapters = (todayPlan?.chapters ?? []).slice(0, 3);
   const focusOverflow = (todayPlan?.chapters.length ?? 0) - focusChapters.length;
   const fresh = recentVideos(
-    8,
+    10,
     visibleSubjects.map((s) => s.slug),
   );
   const subjectDone = (slug: string) => {

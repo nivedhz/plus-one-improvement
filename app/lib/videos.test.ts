@@ -28,6 +28,22 @@ describe("recent videos", () => {
     }
   });
 
+  it("maps the english one-shot to three chapters with timestamps", () => {
+    const cases: [string, number][] = [
+      ["his-first-flight", 38],
+      ["i-will-fly", 765],
+      ["quest-for-a-theory-of-everything", 1267],
+    ];
+    for (const [chapter, startAt] of cases) {
+      const found = chapterVideos("english", chapter).find(
+        (v) => v.youtubeId === "-EdbpDX6q8s",
+      );
+      expect(found, chapter).toBeDefined();
+      expect(found?.startAt).toBe(startAt);
+      expect(found?.recent).toBe(true);
+    }
+  });
+
   it("lists new additions before older recents", () => {
     const firstFive = recentVideos()
       .slice(0, 5)
