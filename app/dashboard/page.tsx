@@ -71,7 +71,7 @@ export default async function DashboardPage() {
   const todayPlan = schedule.days.find((d) => d.isToday);
   const focusChapters = (todayPlan?.chapters ?? []).slice(0, 3);
   const focusOverflow = (todayPlan?.chapters.length ?? 0) - focusChapters.length;
-  const fresh = recentVideos(6);
+  const fresh = recentVideos();
   const subjectDone = (slug: string) => {
     const s = visibleSubjects.find((x) => x.slug === slug);
     if (!s || s.chapters.length === 0) return { done: 0, total: 0 };
@@ -404,14 +404,14 @@ export default async function DashboardPage() {
                     <Link
                       key={item.video.youtubeId}
                       href={`/subjects/${item.subjectSlug}/${item.chapterSlug}`}
-                      className="group w-44 shrink-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900"
+                      className="group w-56 shrink-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition hover:-translate-y-0.5 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900"
                     >
                       <span className="relative block aspect-video w-full">
                         <Image
                           src={`https://i.ytimg.com/vi/${item.video.youtubeId}/hqdefault.jpg`}
                           alt=""
                           fill
-                          sizes="176px"
+                          sizes="224px"
                           className="object-cover"
                         />
                       </span>
