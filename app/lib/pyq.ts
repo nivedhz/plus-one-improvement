@@ -154,43 +154,53 @@ export const SUBJECT_PYQ: Record<string, PyqYear[]> = {
     { year: "2017", papers: [old("mathematics", 2017)] },
     models("mathematics", [2023, 2022, 2021, 2018], [1, 2, 3, 4]),
   ],
-  botany: [
-    { year: "2023", papers: [board("botany", "March 2023")] },
-    { year: "2022", papers: [board("botany", "June 2022")] },
+  biology: [
+    {
+      year: "2023",
+      papers: [board("botany", "March 2023"), board("zoology", "March 2023")],
+    },
+    {
+      year: "2022",
+      papers: [board("botany", "June 2022"), board("zoology", "June 2022")],
+    },
     {
       year: "2021",
       papers: [
         paper(
           "kerala-plus-one-botany-question-paper-september-2021",
-          "September 2021 Board Paper",
+          "Botany September 2021 Board Paper",
           "board",
         ),
-      ],
-    },
-    { year: "2020", papers: [board("botany", "March 2020")] },
-    { year: "2019", papers: [board("botany", "March 2019")] },
-    { year: "2018", papers: [old("botany", 2018)] },
-    { year: "2017", papers: [old("botany", 2017)] },
-    models("botany", [2023, 2022, 2021, 2020], [1, 2, 3, 4, 5]),
-  ],
-  zoology: [
-    { year: "2023", papers: [board("zoology", "March 2023")] },
-    { year: "2022", papers: [board("zoology", "June 2022")] },
-    {
-      year: "2021",
-      papers: [
         paper(
           "kerala-plus-one-zoology-question-paper-september-2021",
-          "September 2021 Board Paper",
+          "Zoology September 2021 Board Paper",
           "board",
         ),
       ],
     },
-    { year: "2020", papers: [board("zoology", "March 2020")] },
-    { year: "2019", papers: [board("zoology", "March 2019")] },
-    { year: "2018", papers: [old("zoology", 2018)] },
-    { year: "2017", papers: [old("zoology", 2017)] },
-    models("zoology", [2023, 2022, 2021, 2020], [1, 2, 3, 4, 5]),
+    {
+      year: "2020",
+      papers: [board("botany", "March 2020"), board("zoology", "March 2020")],
+    },
+    {
+      year: "2019",
+      papers: [board("botany", "March 2019"), board("zoology", "March 2019")],
+    },
+    {
+      year: "2018",
+      papers: [old("botany", 2018), old("zoology", 2018)],
+    },
+    {
+      year: "2017",
+      papers: [old("botany", 2017), old("zoology", 2017)],
+    },
+    {
+      year: "Model papers",
+      papers: [
+        ...models("botany", [2023, 2022, 2021, 2020], [1, 2, 3, 4, 5]).papers,
+        ...models("zoology", [2023, 2022, 2021, 2020], [1, 2, 3, 4, 5]).papers,
+      ],
+    },
   ],
   english: [
     { year: "2023", papers: [board("english", "March 2023")] },

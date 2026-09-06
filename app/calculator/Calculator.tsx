@@ -68,7 +68,7 @@ export default function Calculator({
 
   const save = useMutation({
     mutationFn: async () => {
-      // Totals are fixed per subject (60 sciences, 80 languages, 30 botany/zoology)
+      // Totals are fixed per subject (60 sciences, 80 languages)
       // and never edited — percentages stay comparable across subjects.
       const marks = subjects.map((s) => ({
         subject: s.slug,

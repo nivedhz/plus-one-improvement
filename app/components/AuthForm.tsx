@@ -94,7 +94,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                 {
                   value: "biology",
                   title: "Biology",
-                  detail: "Botany + Zoology",
+                  detail: "Biology in one paper",
                 },
                 {
                   value: "cs",

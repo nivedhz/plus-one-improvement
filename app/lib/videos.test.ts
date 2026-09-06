@@ -15,9 +15,9 @@ const NEW_IDS = [
 describe("recent videos", () => {
   it("maps each new video to its chapter", () => {
     const expected: Record<string, [string, string]> = {
-      lJqvNoHQdi0: ["botany", "morphology-of-flowering-plants"],
-      igeezdakcKQ: ["botany", "plant-kingdom"],
-      iKRSnSsWOTA: ["botany", "biological-classification"],
+      lJqvNoHQdi0: ["biology", "morphology-of-flowering-plants"],
+      igeezdakcKQ: ["biology", "plant-kingdom"],
+      iKRSnSsWOTA: ["biology", "biological-classification"],
       FPhrsxmauvY: ["computer-science", "data-representation-and-boolean-algebra"],
       HehW4CzKLzE: ["computer-science", "discipline-of-computing"],
     };
