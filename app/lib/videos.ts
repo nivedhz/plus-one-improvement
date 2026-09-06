@@ -292,6 +292,13 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
         "Plus One Chemistry | Classification of Elements & Periodicity in Properties | Full Chapter Revision",
         "Xylem",
       ),
+      v(
+        "MFZ72II-Puw",
+        "Plus One Improvement Exam Chemistry | Classification Of Elements And Periodicity In Properties",
+        "Xylem Plus Two",
+        undefined,
+        true,
+      ),
     ],
     "chemical-bonding": [
       v(
