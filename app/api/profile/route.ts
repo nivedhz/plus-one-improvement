@@ -2,11 +2,18 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "../../lib/auth";
 import { apiError, rejectIfCrossSite, unauthorized } from "../../lib/http";
-import { getUserStream, isStream, setUserStream } from "../../lib/users";
+import {
+  getUserStream,
+  isStream,
+  purgeOutOfStreamMarks,
+  setUserStream,
+} from "../../lib/users";
 
 export const runtime = "nodejs";
 
-const profileSchema = z.object({ stream: z.string().refine(isStream, "Unknown stream.") });
+const profileSchema = z.object({
+  stream: z.string().refine(isStream, "Unknown stream."),
+});
 
 export async function GET() {
   const session = await getSession();
@@ -35,5 +42,7 @@ export async function PUT(req: Request) {
   if (!parsed.success) {
     return apiError("Unknown stream.", 400, "UNKNOWN_STREAM");
   }
-  return NextResponse.json({ stream: await setUserStream(session.id, parsed.data.stream) });
+  const stream = await setUserStream(session.id, parsed.data.stream);
+  await purgeOutOfStreamMarks(session.id, stream);
+  return NextResponse.json({ stream });
 }

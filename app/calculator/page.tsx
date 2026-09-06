@@ -8,7 +8,7 @@ import { getSession } from "../lib/auth";
 import { recommendedTrio } from "../lib/improvement";
 import { computePriorities, getUserMarks } from "../lib/marks";
 import { STREAM_LABELS, subjectsForStream } from "../lib/subjects";
-import { getUserStream } from "../lib/users";
+import { getImprovementSubjects, getUserStream } from "../lib/users";
 import Calculator from "./Calculator";
 
 export const metadata: Metadata = {
@@ -24,6 +24,7 @@ export default async function CalculatorPage() {
   if (!session) redirect("/auth/login");
   const stream = await getUserStream(session.id);
   const subjects = subjectsForStream(stream);
+  const trio = await getImprovementSubjects(session.id, stream);
   const weakest = recommendedTrio(computePriorities(await getUserMarks(session.id)));
   const weakestNames = weakest.map(
     (slug) => subjects.find((s) => s.slug === slug)?.name ?? slug,
@@ -79,7 +80,7 @@ export default async function CalculatorPage() {
 
           <Reveal delay={0.08}>
             <div className="mt-8">
-              <Calculator subjects={subjects} />
+              <Calculator key={stream} subjects={subjects} stream={stream} trio={trio} />
             </div>
           </Reveal>
         </main>

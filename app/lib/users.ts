@@ -1,7 +1,7 @@
 import type { User } from "../../prisma/generated/client";
 import { db } from "./db";
 import { orphanedSlugs, sanitizeTrio } from "./improvement";
-import { getSubject } from "./subjects";
+import { getSubject, subjectsForStream } from "./subjects";
 
 // User persistence backed by Postgres via Prisma.
 // Same function names as the old dev store, so API routes are unchanged
@@ -42,6 +42,20 @@ export async function setUserStream(userId: string, stream: Stream): Promise<Str
     select: { stream: true },
   });
   return isStream(user.stream) ? user.stream : "biology";
+}
+
+// Washup: drop saved marks for subjects outside the new stream so stale
+// rows can never render as ghost priorities. Chapter progress is kept —
+// it is filtered by slug everywhere and restores on switch-back.
+export async function purgeOutOfStreamMarks(
+  userId: string,
+  stream: Stream,
+): Promise<number> {
+  const slugs = subjectsForStream(stream).map((s) => s.slug);
+  const gone = await db.previousMark.deleteMany({
+    where: { userId, subject: { notIn: slugs } },
+  });
+  return gone.count;
 }
 
 export async function createUser(input: {

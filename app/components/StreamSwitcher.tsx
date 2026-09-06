@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Bug, Cpu, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -23,6 +23,7 @@ const OPTIONS = [
 
 export default function StreamSwitcher({ initial }: { initial: string }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [selected, setSelected] = useState(initial);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,8 +33,11 @@ export default function StreamSwitcher({ initial }: { initial: string }) {
       return data as { stream: string };
     },
     onSuccess: (data) => {
+      // A stream switch reshapes every server list and client cache:
+      // clear all queries, update local state, then re-render servers.
       setError(null);
       setSelected(data.stream);
+      queryClient.invalidateQueries();
       router.refresh();
     },
     onError: (err) => setError(apiErrorMessage(err)),
