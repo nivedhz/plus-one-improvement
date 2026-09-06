@@ -605,6 +605,13 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
         "Xylem",
         59,
       ),
+      v(
+        "-EdbpDX6q8s",
+        "Plus One Improvement English | His First Flight, I Will Fly, Quest For A Theory Of Everything",
+        "Xylem Plus Two",
+        38,
+        true,
+      ),
     ],
     "i-will-fly": [
       v(
@@ -618,6 +625,13 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
         "Xylem",
         646,
       ),
+      v(
+        "-EdbpDX6q8s",
+        "Plus One Improvement English | His First Flight, I Will Fly, Quest For A Theory Of Everything",
+        "Xylem Plus Two",
+        765,
+        true,
+      ),
     ],
     "quest-for-a-theory-of-everything": [
       v(
@@ -630,6 +644,13 @@ export const CHAPTER_VIDEOS: Record<string, Record<string, ChapterVideo[]>> = {
         "Plus One English - His First Flight | I Will Fly | Quest for a Theory of Everything - One Shot Revision",
         "Xylem",
         1181,
+      ),
+      v(
+        "-EdbpDX6q8s",
+        "Plus One Improvement English | His First Flight, I Will Fly, Quest For A Theory Of Everything",
+        "Xylem Plus Two",
+        1267,
+        true,
       ),
     ],
     if: [
