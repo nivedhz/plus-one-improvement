@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CountUp, ProgressBar, Reveal } from "../components/animate";
+import { daysUntilPaper, examsForSubjects } from "../lib/exams";
 import CountdownTimer from "../components/CountdownTimer";
 import ImprovementPicker from "../components/ImprovementPicker";
 import Navbar from "../components/Navbar";
@@ -75,6 +76,9 @@ export default async function DashboardPage() {
     10,
     visibleSubjects.map((s) => s.slug),
   );
+  const papers = examsForSubjects(
+    trio.length > 0 ? trio : streamSubjects.map((s) => s.slug),
+  );
   const subjectDone = (slug: string) => {
     const s = visibleSubjects.find((x) => x.slug === slug);
     if (!s || s.chapters.length === 0) return { done: 0, total: 0 };
@@ -91,7 +95,7 @@ export default async function DashboardPage() {
 
         <main className="mx-auto max-w-6xl px-5 py-10">
           <Reveal>
-            <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-indigo-400">
                   Your dashboard
@@ -103,6 +107,38 @@ export default async function DashboardPage() {
                   Small steps today. A stronger result in October.
                 </p>
               </div>
+              {papers.length > 0 && (
+                <section
+                  aria-labelledby="papers-heading"
+                  className="w-full shrink-0 rounded-2xl border border-slate-200/80 bg-white p-4 md:mt-1 md:w-64 dark:border-neutral-800 dark:bg-neutral-900"
+                >
+                  <h2
+                    id="papers-heading"
+                    className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-neutral-400"
+                  >
+                    Your papers
+                  </h2>
+                  <ul className="mt-2 space-y-1.5">
+                    {papers.map((p) => {
+                      const left = daysUntilPaper(p.startIso);
+                      return (
+                        <li key={p.slug}>
+                          <Link
+                            href={`/subjects/${p.slug}`}
+                            className="group flex items-center justify-between gap-2 text-[13px]"
+                          >
+                            <span className="truncate font-medium">{p.name}</span>
+                            <span className="shrink-0 tabular-nums text-slate-500 dark:text-neutral-400">
+                              {p.dayLabel} ·{" "}
+                              {left < 0 ? "Done" : left === 0 ? "Today" : `${left}d`}
+                            </span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              )}
             </div>
           </Reveal>
 

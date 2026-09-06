@@ -18,6 +18,7 @@ import Navbar from "./components/Navbar";
 import QuoteRotator from "./components/QuoteRotator";
 import { getSession } from "./lib/auth";
 import { EXAM_LABEL, PARTNERS, mailto } from "./lib/site";
+import { EXAM_TIMETABLE } from "./lib/exams";
 
 const FEATURES = [
   {
@@ -276,6 +277,45 @@ export default async function Home() {
                       {s.text}
                     </p>
                   </article>
+                </Reveal>
+              ))}
+            </div>
+          </section>
+
+          {/* Exam timetable */}
+          <section
+            id="exams"
+            aria-labelledby="exams-heading"
+            className="scroll-mt-24 border-t border-slate-200/70 py-12 dark:border-neutral-800/70"
+          >
+            <Reveal>
+              <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700 dark:text-indigo-400">
+                Exam timetable
+              </p>
+              <h2
+                id="exams-heading"
+                className="mt-2 max-w-2xl text-2xl font-bold tracking-tight sm:text-3xl"
+              >
+                Nine papers. Six days.
+              </h2>
+              <p className="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">
+                Improvement exams run 12–17 October, morning and afternoon sessions.
+              </p>
+            </Reveal>
+            <div className="mt-7 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+              {EXAM_TIMETABLE.map((s, i) => (
+                <Reveal key={`${s.startIso}-${i}`} delay={Math.min(i * 0.04, 0.2)}>
+                  <div className="h-full rounded-2xl border border-slate-200/80 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+                    <p className="flex items-center justify-between gap-2 text-xs">
+                      <span className="font-semibold">{s.dayLabel}</span>
+                      <span className="rounded-full bg-slate-900/[0.05] px-2.5 py-1 text-[10px] font-bold tabular-nums dark:bg-white/[0.07]">
+                        {s.session}
+                      </span>
+                    </p>
+                    <p className="mt-2 text-[13px] leading-relaxed text-slate-600 dark:text-slate-300">
+                      {s.subjects.join(" · ")}
+                    </p>
+                  </div>
                 </Reveal>
               ))}
             </div>
