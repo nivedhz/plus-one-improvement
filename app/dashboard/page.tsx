@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CountUp, ProgressBar, Reveal } from "../components/animate";
+import { daysUntilPaper, examsForSubjects } from "../lib/exams";
 import CountdownTimer from "../components/CountdownTimer";
 import ImprovementPicker from "../components/ImprovementPicker";
 import Navbar from "../components/Navbar";
@@ -120,6 +121,61 @@ export default async function DashboardPage() {
               />
             </div>
           </Reveal>
+
+          {(() => {
+            const papers = examsForSubjects(
+              trio.length > 0 ? trio : streamSubjects.map((s) => s.slug),
+            );
+            if (papers.length === 0) return null;
+            return (
+              <Reveal delay={0.04}>
+                <section
+                  aria-labelledby="papers-heading"
+                  className="mt-4 rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
+                >
+                  <h2 id="papers-heading" className="text-lg font-bold tracking-tight">
+                    Your papers
+                  </h2>
+                  <ul className="mt-4 space-y-2">
+                    {papers.map((p) => {
+                      const left = daysUntilPaper(p.startIso);
+                      return (
+                        <li key={p.slug}>
+                          <Link
+                            href={`/subjects/${p.slug}`}
+                            className="group flex items-center gap-3 rounded-xl border border-slate-200/70 px-3.5 py-2.5 transition hover:border-slate-300 dark:border-neutral-800 dark:hover:border-neutral-700"
+                          >
+                            <span className="min-w-0 flex-1 truncate text-sm font-semibold">
+                              {p.name}
+                            </span>
+                            <span className="shrink-0 text-xs tabular-nums text-slate-500 dark:text-neutral-400">
+                              {p.dayLabel} · {p.session}
+                            </span>
+                            <span
+                              className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${
+                                left < 0
+                                  ? "bg-slate-500/10 text-slate-500 dark:text-neutral-400"
+                                  : left === 0
+                                    ? "bg-red-500/10 text-red-600 dark:text-red-400"
+                                    : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                              }`}
+                            >
+                              {left < 0 ? "Done" : left === 0 ? "Today" : `${left}d left`}
+                            </span>
+                            <ArrowRight
+                              size={15}
+                              aria-hidden
+                              className="shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-slate-500 dark:group-hover:text-neutral-300"
+                            />
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              </Reveal>
+            );
+          })()}
 
           <Reveal delay={0.05}>
             <StudyCalendar schedule={schedule} />
